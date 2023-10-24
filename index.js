@@ -4,6 +4,7 @@ const bodyParser = require('body-parser');
 const cookieParser = require('cookie-parser')
 var { engine } = require('express-handlebars');
 const HomeController = require('./controllers/HomeController');
+const LoginController = require('./controllers/LoginController');
 const MusicController = require('./controllers/MusicController');
 const UserController = require('./controllers/UserController');
 const RevenueController = require('./controllers/RevenueController');
@@ -16,6 +17,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/home',HomeController);
+app.use('/login',LoginController);
 app.use('/music',MusicController);
 app.use('/user',UserController);
 app.use('/revenue',RevenueController);
