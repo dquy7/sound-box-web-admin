@@ -6,5 +6,4 @@ app.get('/', (req, res) => {
     res.render('music/music.hbs');
 })
 
-
 module.exports = app;
