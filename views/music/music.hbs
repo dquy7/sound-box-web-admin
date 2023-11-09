@@ -1,4 +1,4 @@
-    <!DOCTYPE html>
+<!DOCTYPE html>
     <html lang="en">
 
     <head>
@@ -531,6 +531,23 @@ function displaySearchResults(results) {
         } else {
             // Hiển thị toàn bộ danh sách
             displaySearchResults(originalSongsData);
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" 
+    rel="stylesheet" integrity="sha384-GLhlTQ8iRABdZLl6O3oVMWSktQOp6b7In1Zl3/Jr59b6EGGoI1aFkw7cmDA6j6gD"crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.bundle.min.js"></script>
+    <title>Document</title>
+    <style>
+        
+        *{
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+
         }
         });
     // Lắng nghe sự kiện lọc bài hát có bản quyền
@@ -563,6 +580,7 @@ function displaySearchResults(results) {
             currentPage--;
             displaySearchResults(originalSongsData); // Hiển thị lại danh sách với trang mới
         }
+
     });
     // Lắng nghe sự kiện khi nút "Trang sau" được nhấn
     document.getElementById("nextPage").addEventListener("click", function () {
@@ -658,3 +676,36 @@ function displaySearchResults(data) {
     </script>
     </body>
     </html>
+
+    </style>
+</head>
+<body>
+<h1>Quản lý music</h1>
+    <table class="table table-bordered table-striped">
+    <tr class="Textcenter">
+        <th>Tên Bài Hát</th>
+        <th>Ca Sĩ</th>
+        <th>Avatar</th>
+        <th>Url</th>
+        <th>Lượt Nghe</th>
+         <th>Bản Quyền</th>
+        <th>Chức Năng</th>
+    </tr>
+        <tr> 
+        <td class="Textcenter" style="width: 250px;"> Hãy Trao Cho Anh </td>
+        <td class="Textcenter"  style="width: 200px;"> Sơn Tùng-MTP </td>
+        <td class="Textcenter" style="width: 150px; ">
+        <img  style="height: 70px ;width: 70px " src=""/>
+        </td>
+        <td class="Textcenter" style="width:300px;"> </td> 
+        <td class="Textcenter" style="width:100px;"></td>
+        <td class="Textcenter" style="width:100px;"></td>        
+        <td class="btn">
+            <button type="button" class="btn btn-info" data-toggle="modal" data-target="#deleteModal">Xóa</button>
+            <button type="button" class="btn btn-info"  data-toggle="modal" data-target="#editModal">Sửa</button>
+        </td>
+    </tr>
+</table>
+</body>
+</html>
+

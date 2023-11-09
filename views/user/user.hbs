@@ -30,19 +30,34 @@
             <tr>
                 <th>ID</th>
                 <th>Tên Tài Khoản</th>
-                <th>Mật Khẩu</th>
+               
                 <th>Email</th>
+                <th>Thao Tác</th> 
             </tr>
         </thead>
         <tbody>
             <tr>
                 <td>1</td>
                 <td>user1</td>
-                <td>********</td>
+                
                 <td>user1@example.com</td>
+                <td>
+                    <button onclick="editUser(1)">Sửa</button>
+                    <button onclick="deleteUser(1)">Xóa</button>
+                </td>
             </tr>
-           
+            
         </tbody>
     </table>
+
+    <script>
+        function editUser(userId) {
+            
+        }
+
+        function deleteUser(userId) {
+            
+        }
+    </script>
 </body>
 </html>
