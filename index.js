@@ -18,7 +18,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use('/home',HomeController);
-app.use('/login',LoginController);
+app.use('/',LoginController);
 app.use('/music',MusicController);
 app.use('/signup',SingupController);
 app.use('/user',UserController);
