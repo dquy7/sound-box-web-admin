@@ -1,63 +1,65 @@
-<!DOCTYPE html>
+dd<!DOCTYPE html>
 <html>
 <head>
-    <title>Quản Lý Người Dùng</title>
+    <title>User List</title>
     <style>
         table {
             border-collapse: collapse;
             width: 100%;
         }
 
-        table, th, td {
-            border: 1px solid #000;
-        }
-
         th, td {
+            border: 1px solid black;
             padding: 8px;
             text-align: left;
         }
 
-        th {
-            background-color: #f2f2f2;
+        button {
+            border: none;
+            background-color: #f44336;
+            color: white;
+            padding: 5px 10px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 14px;
+            margin: 2px 2px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #f44336;
         }
     </style>
 </head>
 <body>
-    <h2>Quản Lý Người Dùng</h2>
-
+    <h1>User List</h1>
     <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Tên Tài Khoản</th>
-               
-                <th>Email</th>
-                <th>Thao Tác</th> 
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>user1</td>
-                
-                <td>user1@example.com</td>
-                <td>
-                    <button onclick="editUser(1)">Sửa</button>
-                    <button onclick="deleteUser(1)">Xóa</button>
-                </td>
-            </tr>
+        <tr>
+            <th>key</th>
+           
+            <th>Username</th>
+            <th>Email</th>
+            <th>Action</th>
+        </tr>
+        {{#each user}}
+        <tr>
+            <td>{{this.key}}</td>
             
-        </tbody>
+            <td>{{this.username}}</td>
+            <td>{{this.email}}</td>
+           
+           <td>
+        <form action="/user/delete/{{this.key}}" method="POST">
+            
+            <input type="hidden" name="id" value="{{this.id}}">
+            <button type="submit">Delete</button>
+        </form>
+    </td>
+        </tr>
+        {{/each}}
     </table>
 
-    <script>
-        function editUser(userId) {
-            
-        }
-
-        function deleteUser(userId) {
-            
-        }
-    </script>
+    
 </body>
 </html>
