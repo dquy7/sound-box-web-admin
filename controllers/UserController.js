@@ -41,7 +41,18 @@ app.get('/', async (req, res) => {
 });
 
 
-
+app.post('/delete/:slug', async (req, res) => {
+    const id = parseInt(req.params.slug, 10);
+    
+    try {
+      await dataRef.child(id).set(null);
+      console.log("Xóa thành công " + id);
+      res.send("Xóa thành công " + id); 
+    } catch (error) {
+      console.error("Lỗi khi xóa dữ liệu:", error);
+      res.status(500).send("Lỗi khi xóa dữ liệu");  
+    }
+  });
 
   
 
