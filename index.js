@@ -8,6 +8,8 @@ const LoginController = require('./controllers/LoginController');
 const SingupController = require('./controllers/SingupController');
 const MusicController = require('./controllers/MusicController');
 const UserController = require('./controllers/UserController');
+const HomeUserController = require('./controllers/UserVipController');
+const UserStatisticsController = require('./controllers/UserStatisticsController');
 const RevenueController = require('./controllers/RevenueController');
 const { Link } = require('react-router-dom');
 
@@ -22,6 +24,8 @@ app.use('/',LoginController);
 app.use('/music',MusicController);
 app.use('/signup',SingupController);
 app.use('/user',UserController);
+app.use('/uservip',HomeUserController);
+app.use('/userstatistics',UserStatisticsController);
 app.use('/revenue',RevenueController);
 
 app.listen(8000,()=>{

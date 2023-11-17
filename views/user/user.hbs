@@ -2,62 +2,335 @@
 <html>
 <head>
     <title>Quản Lý Người Dùng</title>
-    <style>
-        table {
-            border-collapse: collapse;
-            width: 100%;
-        }
-
-        table, th, td {
-            border: 1px solid #000;
-        }
-
-        th, td {
-            padding: 8px;
-            text-align: left;
-        }
-
-        th {
-            background-color: #f2f2f2;
-        }
-    </style>
+       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
 </head>
+<link rel="stylesheet" href="path/to/styles.css">
+<style>
+     .pagination {
+            display: flex;
+            list-style: none;
+            padding: 0;
+        }
+
+    .pagination li {
+        margin-right: 5px;
+        cursor: pointer;
+    }
+    /* Pagination styles */
+#pagination {   
+  list-style: none;
+  display: flex;
+  justify-content: center;
+  padding: 10px;
+}
+
+#pagination li {
+    width: 20px;
+  margin: 0 5px;
+  cursor: pointer;
+   display: flex;
+  justify-content: center;
+   border: 1px solid black;
+}
+
+</style>
 <body>
-    <h2>Quản Lý Người Dùng</h2>
+     <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="./user">Quản Lý Người Dùng</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./uservip">Người Dùng VIP</a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./userstatistics">Thống Kê</a>
+        </li>
+        <li class="nav-item dropdown">
+          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+            Dropdown
+          </a>
+          <ul class="dropdown-menu">
+            <li><a class="dropdown-item" href="#">Action</a></li>
+            <li><a class="dropdown-item" href="#">Another action</a></li>
+            <li><hr class="dropdown-divider"></li>
+            <li><a class="dropdown-item" href="#">Something else here</a></li>
+          </ul>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
 
-    <table>
-        <thead>
-            <tr>
-                <th>ID</th>
-                <th>Tên Tài Khoản</th>
-               
-                <th>Email</th>
-                <th>Thao Tác</th> 
-            </tr>
-        </thead>
-        <tbody>
-            <tr>
-                <td>1</td>
-                <td>user1</td>
+ <!-- Modal sửa bài hát -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Sửa Bài Hát</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <input type="hidden" id="editSongKey">
+                        <div class="form-group">
+                            <label for="editTitle">Tên Bài Hát</label>
+                            <input type="text" class="form-control" id="editTitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="editArtist">Ca Sĩ</label>
+                            <input type="text" class="form-control" id="editArtist">
+                        </div>
+                        <div class="form-group">
+                            <label for="editAuthor">Nhạc Sĩ</label>
+                            <input type="text" class="form-control" id="editAuthor">
+                        </div>
+                        <div class="form-group">
+                            <label for="exampleauthor">Bản Quyền</label>
+                            <div class="form-check">
+                                <input type="radio" class="form-check-input" id="editCopyrighted" name="radio-stacked"
+                                    required>
+                                <label class="form-check-label" for="editCopyrighted">Có Bản Quyền</label>
+                            </div>
+                            <div class="form-check mb-3">
+                                <input type="radio" class="form-check-input" id="editCopyrighted" name="radio-stacked"
+                                    required>
+                                <label class="form-check-label" for="uneditCopyrighted">Không Bản Quyền</label>
+                            </div>
+                        </div>
                 
-                <td>user1@example.com</td>
-                <td>
-                    <button onclick="editUser(1)">Sửa</button>
-                    <button onclick="deleteUser(1)">Xóa</button>
-                </td>
-            </tr>
-            
-        </tbody>
-    </table>
+                        <div class="form-group">
+                            <label for="editUrl">Link Bài Hát</label>
+                            <input type="text" class="form-control" id="editUrl">
+                        </div>
+                        <div class="form-group">
+                            <label for="editImage">Avatar</label>
+                            <input type="text" class="form-control" id="editImage">
+                        </div>
 
-    <script>
-        function editUser(userId) {
-            
-        }
+                    </form>
 
-        function deleteUser(userId) {
-            
-        }
-    </script>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="saveEdit">Lưu Sửa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+
+ <!-- Bảng hiển thị danh sách bài hát -->
+        <table class="table table-bordered mt-4">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Loại Đăng Ký</th>
+                      <th>Thời gian đăng ký</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+        </table>
+        
+        <ul class="pagination" id="pagination"></ul>
+
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+<!-- Firebase JavaScript SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
+
+  <script>
+      const firebaseConfig = {
+            apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
+            authDomain: "soundbox-du-an-md31.firebaseapp.com",
+            databaseURL: "https://soundbox-du-an-md31-default-rtdb.firebaseio.com",
+            projectId: "soundbox-du-an-md31",
+            storageBucket: "soundbox-du-an-md31.appspot.com",
+            messagingSenderId: "265264289877",
+            appId: "1:265264289877:web:0f88e2fa54c638685e9cdc",
+            measurementId: "G-FE9Z9NKJDR"
+        };
+        firebase.initializeApp(firebaseConfig);
+          // Định nghĩa songsRef ở mức toàn cục hoặc một phạm vi có thể truy cập bởi các sự kiện khác
+      const database = firebase.database();
+      const usersRef = database.ref("users");
+
+      let allUsers = []; // Biến toàn cục để lưu danh sách bài hát
+      const usersTable = document.getElementById("usersTable");
+      const pagination = document.getElementById("pagination");
+      const itemsPerPage = 5; // Số người dùng hiển thị trên mỗi trang
+      let currentPage = 1;
+      let totalUsers = 0;
+
+    // Lấy danh sách người dùng từ Firebase
+      function getAllUsers() {
+        return usersRef.once("value").then((snapshot) => {
+          allUsers = [];
+          snapshot.forEach((childSnapshot) => {
+                const userData = childSnapshot.val();
+                userData.key = childSnapshot.key; // Thêm khóa vào đối tượng songData
+                allUsers.push(userData);
+            });
+          return allUsers;
+        }).catch((error) => {
+          console.error("Lỗi khi lấy dữ liệu từ Firebase: " + error.message);
+          return [];
+        });
+      }
+      console.log(getAllUsers());
+  //Chức Năng Tìm kiếm 
+  const searchForm = document.querySelector("form[role='search']");
+  searchForm.addEventListener("submit", (event) => {
+    event.preventDefault();
+    const searchQuery = searchForm.querySelector("input").value.toLowerCase();
+
+    // Lọc người dùng dựa trên truy vấn tìm kiếm
+    const filteredUsers = allUsers.filter(user =>
+        user.email.toLowerCase().includes(searchQuery) || user.username.toLowerCase().includes(searchQuery)
+    );
+
+    // Hiển thị người dùng đã lọc
+    displayUsersOnPage(filteredUsers);
+});
+
+   // Hiển thị người dùng trên trang hiện tại
+function displayUsersOnPage(users) {
+  const startAt = (currentPage - 1) * itemsPerPage;
+  const usersOnCurrentPage = users.slice(startAt, startAt + itemsPerPage);
+  usersTable.innerHTML = ""; // Xóa nội dung bảng
+  usersOnCurrentPage.forEach((user, index) => {
+    const row = usersTable.insertRow();
+    const idCell = row.insertCell(0);
+    const emailCell = row.insertCell(1);
+    const usernameCell = row.insertCell(2);
+    const accountCell = row.insertCell(3);
+  const createdTimeCell = row.insertCell(4); // Tạo ô mới cho thời gian tạo
+   const actionCell = row.insertCell(5);
+    idCell.textContent = startAt + index + 1; // ID bắt đầu từ 1
+    emailCell.textContent = user.email || "";
+    usernameCell.textContent = user.username || "";
+        const createdTime = new Date(user.creationTime); // Chuyển đổi timestamp sang đối tượng Date
+    createdTimeCell.textContent = createdTime.toLocaleString(); // Hiển thị theo định dạng ngày và giờ
+    // Thêm ô trạng thái VIP
+    accountCell.textContent = user.subscriptionType ? "VIP" : "Nghe Nhạc";
+
+    // Thêm nút xóa
+    const deleteButton = document.createElement("button");
+    deleteButton.textContent = "Xóa";
+    deleteButton.classList.add("btn", "btn-danger");
+    deleteButton.addEventListener("click", () => {
+
+         // Lấy khóa của bài hát cần xóa
+           const userKeyToDelete = user.key;
+           console.log(userKeyToDelete);
+      // Xác nhận xóa
+      const confirmDelete = confirm("Bạn có chắc chắn muốn xóa người dùng này?");
+      if (confirmDelete) {
+        // Xử lý xóa người dùng
+        usersRef.child(userKeyToDelete).remove();
+        // Cập nhật lại danh sách người dùng
+        getAllUsers().then(displayUsersOnPage);
+        alert("Xóa Thành Công")
+      }
+    });
+    actionCell.appendChild(deleteButton);
+    // Thêm nút sửa
+    const editButton = document.createElement("button");
+    editButton.textContent = "Sửa";
+    editButton.classList.add("btn", "btn-edit");
+    editButton.addEventListener("click", () => {
+    
+      // Điền hộp thoại với thông tin người dùng để chỉnh sửa
+    document.getElementById("editSongKey").value = user.key;
+    document.getElementById("editTitle").value = user.email || "";
+    document.getElementById("editArtist").value = user.username || "";
+    // ... Điền các trường khác
+
+    // Hiển thị hộp thoại
+    $("#editModal").modal("show");
+    });
+    actionCell.appendChild(editButton);
+
+   // Thêm nút khóa/mở khóa
+const lockUnlockButton = document.createElement("button");
+lockUnlockButton.textContent = user.isLocked ? "Mở Khóa" : "Khóa"; // Hiển thị nút phù hợp với trạng thái khóa
+lockUnlockButton.classList.add("btn", user.isLocked ? "btn-success" : "btn-warning");
+lockUnlockButton.addEventListener("click", () => {
+    // Lấy khóa của bài hát cần xóa
+           const userKeyIsLocked = user.key;
+  // Xử lý sự kiện khi nút khóa/mở khóa được nhấp
+  const confirmAction = confirm(user.isLocked ? "Bạn có muốn mở khóa người dùng này?" : "Bạn có muốn khóa người dùng này?");
+ 
+  if (confirmAction) {
+    // Đảo ngược trạng thái khóa/mở khóa
+    const updatedIsLocked = !user.isLocked;
+   
+    // Cập nhật dữ liệu trên Firebase
+    usersRef.child(userKeyIsLocked).update({
+      isLocked: updatedIsLocked,
+    });
+    // Cập nhật lại danh sách người dùng
+    getAllUsers().then((users) => {
+      user.isLocked = updatedIsLocked;
+      displayUsersOnPage(users);
+    });
+  }
+});
+
+actionCell.appendChild(lockUnlockButton);
+  });
+
+  updatePaginationButtons(users.length);
+}
+
+
+
+
+    // Cập nhật nút phân trang
+  function updatePaginationButtons(totalItems) {
+    pagination.innerHTML = "";
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    if (totalPages === 0) {
+      console.log("Không có trang nào để hiển thị.");
+      return;
+    }
+
+    for (let i = 1; i <= totalPages; i++) {
+      const pageItem = document.createElement("li");
+      pageItem.textContent = i;
+      pageItem.addEventListener("click", () => {
+        currentPage = i;
+        getAllUsers().then(displayUsersOnPage);
+      });
+      pagination.appendChild(pageItem);
+    }
+  }
+ // Sự kiện khi trang web được tải
+  window.onload = function () {
+    // Lấy danh sách người dùng khi trang web được tải
+    getAllUsers().then((users) => {
+      totalUsers = users.length;
+      displayUsersOnPage(users);
+    });
+  };
+
+  </script>
+
 </body>
 </html>
