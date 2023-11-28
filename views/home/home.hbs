@@ -392,18 +392,20 @@ saveButton.addEventListener("click", function () {
     const imageInput = document.getElementById("exampleimg");
     const previewImage = document.getElementById("previewImage");
 
-    // Kiểm tra xem người dùng đã chọn hình ảnh chưa
-    if (!imageInput.files || !imageInput.files[0]) {
-        alert("Vui lòng chọn một hình ảnh.");
-        return;
-    }
+    // Lấy thời gian hiện tại
+    const currentTime = new Date().toISOString();
 
     // Lấy thông tin về file hình ảnh đã chọn
     const imageFile = imageInput.files[0];
 
-    // Lấy thời gian hiện tại
-    const currentTime = new Date().toISOString();
+    // Kiểm tra xem người dùng đã chọn hình ảnh chưa
+    if (!imageFile) {
+        console.error("Vui lòng chọn một hình ảnh.");
+        return;
+    }
 
+    // Tạo số ngẫu nhiên có giá trị từ 1000000000 đến 4294967295 (giới hạn của số nguyên 32-bit)
+    const randomKey = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
     // Tạo đối tượng FileReader để đọc dữ liệu của file hình ảnh
     const reader = new FileReader();
 
@@ -412,8 +414,9 @@ saveButton.addEventListener("click", function () {
         // Lấy đường dẫn của hình ảnh sau khi được đọc
         const img = e.target.result;
 
-        // Tạo đối tượng bài hát mới
+        // Tạo đối tượng bài hát mới với các thông tin đã lấy được từ các trường dữ liệu
         const newSong = {
+            id: randomKey,
             title: title,
             artist: artist,
             author: author,
@@ -426,11 +429,19 @@ saveButton.addEventListener("click", function () {
             timestamp: currentTime,  // Thêm trường timestamp với giá trị là thời gian hiện tại
         };
 
-        // Đẩy thông tin bài hát lên Firebase Realtime Database
-        songsRef.push(newSong)
-            .then(function (snapshot) {
+        // Đẩy thông tin bài hát lên Firebase Realtime Database và sử dụng trường "id" làm key chính
+        songsRef.child(newSong.id)
+            .set(newSong)
+            .then(function () {
                 console.log("Bài hát đã được lưu vào Firebase Realtime Database.");
-                 displayData();
+                // Đặt lại giá trị của các ô input về trống
+                document.getElementById("exampletitle").value = "";
+                document.getElementById("exampleartist").value = "";
+                document.getElementById("exampleauthor").value = "";
+                document.getElementById("exampgenre").value = "";
+                document.getElementById("exampleurl").value = "";
+                document.getElementById("exampleimg").value = "";
+                document.getElementById("previewImage").src = ""; // Nếu bạn muốn xóa hình ảnh xem trước
                 $("#exampleModal").modal("hide");
             })
             .catch(function (error) {
