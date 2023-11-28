@@ -45,24 +45,10 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="./uservip">Người Dùng VIP</a>
+          <a class="nav-link active" aria-current="page" href="./user">Người Dùng VIP</a>
         </li>
           <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="./userstatistics">Thống Kê</a>
-        </li>
-        <li class="nav-item dropdown">
-          <a class="nav-link dropdown-toggle" href="#" role="button" data-bs-toggle="dropdown" aria-expanded="false">
-            Dropdown
-          </a>
-          <ul class="dropdown-menu">
-            <li><a class="dropdown-item" href="#">Action</a></li>
-            <li><a class="dropdown-item" href="#">Another action</a></li>
-            <li><hr class="dropdown-divider"></li>
-            <li><a class="dropdown-item" href="#">Something else here</a></li>
-          </ul>
-        </li>
-        <li class="nav-item">
-          <a class="nav-link disabled" aria-disabled="true">Disabled</a>
         </li>
       </ul>
       <form class="d-flex" role="search">
@@ -170,7 +156,7 @@
       const database = firebase.database();
       const usersRef = database.ref("users");
 
-      let allUsers = []; // Biến toàn cục để lưu danh sách bài hát
+      let allUsers = []; // Biến toàn cục để lưu danh sách người dùng
       const usersTable = document.getElementById("usersTable");
       const pagination = document.getElementById("pagination");
       const itemsPerPage = 5; // Số người dùng hiển thị trên mỗi trang
@@ -193,6 +179,7 @@
         });
       }
       console.log(getAllUsers());
+      
   //Chức Năng Tìm kiếm 
   const searchForm = document.querySelector("form[role='search']");
   searchForm.addEventListener("submit", (event) => {
@@ -321,14 +308,41 @@ actionCell.appendChild(lockUnlockButton);
       pagination.appendChild(pageItem);
     }
   }
- // Sự kiện khi trang web được tải
-  window.onload = function () {
-    // Lấy danh sách người dùng khi trang web được tải
-    getAllUsers().then((users) => {
-      totalUsers = users.length;
-      displayUsersOnPage(users);
-    });
-  };
+
+
+ // Kiểm tra trạng thái đăng nhập trước khi hiển thị dữ liệu
+function checkLoginStatus() {
+    // Lấy reference đến đối tượng admin trong Realtime Database
+    const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
+
+    adminRef.once('value')
+        .then(snapshot => {
+            const adminData = snapshot.val();
+
+            if (adminData && adminData.loggedIn) {
+                   // Người dùng đã đăng nhập, có thể hiển thị dữ liệu
+        // Gọi hàm hiển thị dữ liệu hoặc thực hiện các xử lý khác
+            getAllUsers().then((users) => {
+            totalUsers = users.length;
+            displayUsersOnPage(users);
+          });
+            } else {
+               // Người dùng chưa đăng nhập, chuyển hướng hoặc xử lý theo ý của bạn
+        alert('Vui lòng đăng nhập để xem dữ liệu.');
+        window.location.href = '/'; // Chuyển hướng đến trang đăng nhập
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi kiểm tra trạng thái loggedIn:', error.message);
+            alert('Có lỗi xảy ra khi kiểm tra trạng thái loggedIn.');
+        });
+}
+
+// Sự kiện khi trang web được tải
+window.onload = function () {
+    // Kiểm tra trạng thái đăng nhập khi trang web được tải
+    checkLoginStatus();
+};
 
   </script>
 

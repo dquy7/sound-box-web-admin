@@ -52,6 +52,7 @@
   display: flex;
   justify-content: center;
   padding: 10px;
+ 
 }
 
 #pagination li {
@@ -75,7 +76,7 @@
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="./uservip">Người Dùng VIP</a>
+          <a class="nav-link active" aria-current="page" href="./user">Người Dùng VIP</a>
         </li>
           <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="./userstatistics">Thống Kê</a>
@@ -155,6 +156,7 @@
                     <th>Email</th>
                     <th>Username</th>
                     <th>Loại Đăng Ký</th>
+                    <th>Thời gian đăng ký</th>
                     <th>Chức năng</th>
                 </tr>
             </thead>
@@ -269,8 +271,9 @@ function displayUsersOnPage(users) {
     const emailCell = row.insertCell(1);
     const usernameCell = row.insertCell(2);
     const accountCell = row.insertCell(3);
-    const actionCell = row.insertCell(4);
-  const createdTimeCell = row.insertCell(5); // Tạo ô mới cho thời gian tạo
+     const createdTimeCell = row.insertCell(4); // Tạo ô mới cho thời gian tạo
+    const actionCell = row.insertCell(5);
+ 
     idCell.textContent = startAt + index + 1; // ID bắt đầu từ 1
     emailCell.textContent = user.email || "";
     usernameCell.textContent = user.username || "";
@@ -322,7 +325,7 @@ lockUnlockButton.addEventListener("click", () => {
   // Xử lý sự kiện khi nút khóa/mở khóa được nhấp
   const confirmAction = confirm(user.isLocked ? "Bạn có muốn mở khóa người dùng này?" : "Bạn có muốn khóa người dùng này?");
  
-  if (confirmAction) {
+  if (confirmAction) { 
     // Đảo ngược trạng thái khóa/mở khóa
     const updatedIsLocked = !user.isLocked;
    
@@ -474,6 +477,7 @@ function getTotalUsers() {
     // Your implementation to fetch total users, possibly using Firebase
     return database.ref('users').once('value').then(snapshot => snapshot.numChildren());
 }
+
  // Sự kiện khi trang web được tải
   window.onload = function () {
     // Lấy danh sách người dùng khi trang web được tải

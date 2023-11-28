@@ -62,37 +62,71 @@
   color: #333;
 }
 .nav-menu{
-    width: ;
     display: inline-flex;
    background-color: #f8f9fa;
 }
-   .pagination {
-            display: flex;
-            list-style: none;
-            padding: 0;
-        }
 
-    .pagination li {
-        margin-right: 5px;
-        cursor: pointer;
-    }
-    /* Pagination styles */
-#pagination {   
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  padding: 10px;
+/* Style for pagination */
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+    margin-top: 20px;
 }
 
-#pagination li {
-    width: 20px;
-  margin: 0 5px;
-  cursor: pointer;
-   display: flex;
-  justify-content: center;
-   border: 1px solid black;
+.pagination li {
+    margin-right: 5px;
+    cursor: pointer;
+    color: #fff;
+    border: 1px solid #007bff;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+.pagination a {
+    text-decoration: none;
 }
 
+.pagination li:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
+.navbar {
+    margin: 10px 0;
+}
+.btn-primary{
+    background-color: orange;
+    border: 0px;
+    margin-left: 5px;
+}
+ .btn-primary:hover{
+    border: 0px;
+    margin-left: 5px;
+    background-color: tomato;
+ }
+ .btn-primary1{
+    position: absolute;
+     top: 100px;
+    left: 300px;
+    width: 130px;
+    height: 35px;
+    background-color: green;
+    color: white;
+ }
+ .btn-primary1:hover{
+    position: absolute;
+     top: 100px;
+    left: 300px;
+    width: 130px;
+    height: 35px;
+    background-color: tomato;
+    color: white;
+ }
+.box-filter{
+    position: absolute;
+    top: 100px;
+    right: 20px;
+}
     </style>
    
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
@@ -100,47 +134,51 @@
 </head>
 
 <body>
-    <h1>Quản lý âm nhạc</h1>
-
-    <div class="nav-menu">
-    <button style="margin: 20px !important;" type="button" class="btn btn-primary" data-bs-toggle="modal"
-            data-bs-target="#exampleModal">
-            Thêm Bài Hát
-        </button>
-
-   <nav class="navbar bg-light">
+       <nav class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="./music">Quản Lý bài hát</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./user">Bình Luận</a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./userstatistics">Thống Kê</a>
+        </li>
+      </ul>
+       <nav class="navbar bg-light">
         <div class="container-fluid">
             <form class="d-flex" role="search">
-                <input class="form-control me-2" type="search" id="searchInput" placeholder="Tìm kiếm bài hát"
-                    aria-label="Search">
-                <button id="searchButton" class="btn btn-outline-success" type="submit">Search</button>
+             <input class="form-control me-2" type="search" id="searchInput" placeholder="Tìm kiếm bài hát" aria-label="Search">
+              <button id="searchButton" class="btn btn-outline-success" type="button">Search</button>
             </form>
         </div>
     </nav>
-
-   <div class="btn-group" style="margin-left: 50px;">
-    <button style="width: 180px; height: 40px; margin-top: 10px;" id="sortByTitle" class="btn btn-primary">Sắp xếp theo Tiêu đề</button>
-    <button style="width: 180px;  height: 40px; margin-top: 10px;" id="sortByArtist" class="btn btn-primary">Sắp xếp theo Ca sĩ</button>
-</div>
-
- <div class="form-group">
-        <div class="form-check">
-            <input type="radio" class="form-check-input" id="allMusic" name="radio-stacked"
-                required>
-            <label class="form-check-label" for="allMusic">Tất cả</label>
-        </div>
-        <div class="form-check">
-            <input type="radio" class="form-check-input" id="filterCopyrighted" name="radio-stacked"
-                required>
-            <label class="form-check-label" for="copyrighted">Có Bản Quyền</label>
-        </div>
-        <div class="form-check mb-3">
-            <input type="radio" class="form-check-input" id="noCopyrighted" name="radio-stacked"
-                required>
-            <label class="form-check-label" for="noCopyrighted">Không Bản Quyền</label>
-        </div>
     </div>
+  </div>
+</nav>
+
+    <div class="nav-menu">
+     <div>
+    <button  type="button" class="btn btn-primary1" data-bs-toggle="modal"
+            data-bs-target="#exampleModal">
+            Thêm Bài Hát
+        </button>
+</div>
+<div class="box-filter">
+    <label for="filterCopyright">Lọc:</label>
+    <select id="filterCopyright">
+        <option value="all">Tất cả</option>
+        <option value="copyrighted">Bản quyền</option>
+        <option value="non-copyrighted">Không bản quyền</option>
+    </select>
     
+    <button style="width: 100px; margin-left: 20px;" class="btn btn-primary" onclick="applyFilter()">Áp dụng</button>
+
+</div>
     </div>
 
     <!-- Modal -->
@@ -197,10 +235,11 @@
                             <label for="exampleurl">Link Bài Hát</label>
                             <input type="text" class="form-control" id="exampleurl" placeholder="URL bài hát">
                         </div>
-                        <div class="form-group">
-                            <label for="exampleimg">Link Hình Ảnh</label>
-                            <input type="text" class="form-control" id="exampleimg" placeholder="Link Hình Ảnh">
-                        </div>
+                         <div class="form-group">
+                        <label for="exampleimg">Hình Ảnh</label>
+                        <input type="file" class="form-control" id="exampleimg" accept="image/*">
+                        <img id="previewImage" style="display: none; max-width: 100%; max-height: 200px; margin-top: 10px;">
+                    </div>
                     </form>
                 </div>
                 <div class="modal-footer">
@@ -210,9 +249,6 @@
             </div>
         </div>
     </div>
-
-  
-
     <!-- Modal sửa bài hát -->
     <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
         <div class="modal-dialog">
@@ -268,11 +304,14 @@
                             <label for="editUrl">Link Bài Hát</label>
                             <input type="text" class="form-control" id="editUrl">
                         </div>
-                        <div class="form-group">
-                            <label for="editImage">Avatar</label>
-                            <input type="text" class="form-control" id="editImage">
+                    <label for="editImage">Hình ảnh:</label>
+                    <input type="file" id="editImage" name="editImage" accept="image/*">
+                     <img id="editImagePreview" alt="Song Image" style="max-width: 200px; max-height: 200px; padding: 10px;">
+                      
+                         <div class="form-group">
+                            <label for="password">Nhập Mật Khẩu</label>
+                               <input type="password" id="password" class="form-control" placeholder="Nhập mật khẩu">
                         </div>
-
                     </form>
 
                 </div>
@@ -283,25 +322,25 @@
             </div>
         </div>
     </div>
-
-    <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel"
-        aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa bài hát</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <div class="modal-body">
-                    Bạn có chắc chắn muốn xóa bài hát này?
-                </div>
-                <div class="modal-footer">
-                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
-                    <button type="button" class="btn btn-danger" id="confirmDeleteButton">Xóa</button>
-                </div>
+<!-- Modal xác nhận xóa -->
+<div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-labelledby="confirmDeleteModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="confirmDeleteModalLabel">Xác nhận xóa bài hát</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <p>Nhập mật khẩu để xác nhận xóa:</p>
+                <input type="password" id="passwordInput" class="form-control" placeholder="Nhập mật khẩu">
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Đóng</button>
+                <button type="button" class="btn btn-danger" id="confirmDeleteButton">Xác nhận xóa</button>
             </div>
         </div>
     </div>
+</div>
 
       <!-- Bảng hiển thị danh sách bài hát -->
         <table class="table table-bordered mt-4">
@@ -318,78 +357,62 @@
             <tbody id="songsTable"></tbody>
         </table>
         
-        <ul class="pagination" id="pagination"></ul>
+    <ul class="pagination" id="pagination"></ul>
     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
-
     <!-- Firebase JavaScript SDK -->
     <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
-    <script>
+ <script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
+        authDomain: "soundbox-du-an-md31.firebaseapp.com",
+        databaseURL: "https://soundbox-du-an-md31-default-rtdb.firebaseio.com",
+        projectId: "soundbox-du-an-md31",
+        storageBucket: "soundbox-du-an-md31.appspot.com",
+        messagingSenderId: "265264289877",
+        appId: "1:265264289877:web:0f88e2fa54c638685e9cdc",
+        measurementId: "G-FE9Z9NKJDR"
+    };
+    firebase.initializeApp(firebaseConfig);
 
-        const firebaseConfig = {
-            apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
-            authDomain: "soundbox-du-an-md31.firebaseapp.com",
-            databaseURL: "https://soundbox-du-an-md31-default-rtdb.firebaseio.com",
-            projectId: "soundbox-du-an-md31",
-            storageBucket: "soundbox-du-an-md31.appspot.com",
-            messagingSenderId: "265264289877",
-            appId: "1:265264289877:web:0f88e2fa54c638685e9cdc",
-            measurementId: "G-FE9Z9NKJDR"
-        };
-        firebase.initializeApp(firebaseConfig);
-        // Định nghĩa songsRef ở mức toàn cục hoặc một phạm vi có thể truy cập bởi các sự kiện khác
-        const database = firebase.database();
-        const songsRef = database.ref("songs");
+    const database = firebase.database();
+    const songsRef = database.ref("songs");
+    // Các hằng số
+    const itemsPerPage = 5;
+    let currentPage = 1;
+    const pagination = document.getElementById('pagination');
+const saveButton = document.getElementById("save");
+saveButton.addEventListener("click", function () {
+    const title = document.getElementById("exampletitle").value;
+    const artist = document.getElementById("exampleartist").value;
+    const author = document.getElementById("exampleauthor").value;
+    const genre = document.getElementById("exampgenre").value;
+    const url = document.getElementById("exampleurl").value;
+    const imageInput = document.getElementById("exampleimg");
+    const previewImage = document.getElementById("previewImage");
 
-/////////////////////////////////////////////////////////////////////Bắt Đầu CRUD/////////////////////////////////////////////////////////////////////////////////
-     
-     //Thêm music
-document.addEventListener("DOMContentLoaded", function () {
-
- function updatePaginationButtons() {
-        pagination.innerHTML = "";
-        const totalPages = Math.ceil(totalSongs / itemsPerPage);
-        if (totalPages === 0) {
-            console.log("Không có trang nào để hiển thị.");
-            return;
-        }
-        for (let i = 1; i <= totalPages; i++) {
-            const pageItem = document.createElement("li");
-            pageItem.textContent = i;
-            pageItem.addEventListener("click", () => {
-                currentPage = i;
-                updateSongsTable();
-            });
-            pagination.appendChild(pageItem);
-        }
-    }
-    // Function to scroll to the position of a specific song
-    function scrollToSong(songKey) {
-        const songElement = document.getElementById(songKey);
-        if (songElement) {
-            // Scroll to the position of the edited song
-            songElement.scrollIntoView({ behavior: "smooth", block: "center" });
-
-            // Highlight the edited song temporarily (optional)
-            songElement.classList.add("highlight");
-            setTimeout(() => {
-                songElement.classList.remove("highlight");
-            }, 3000); // Adjust the timeout duration as needed
-        }
+    // Kiểm tra xem người dùng đã chọn hình ảnh chưa
+    if (!imageInput.files || !imageInput.files[0]) {
+        alert("Vui lòng chọn một hình ảnh.");
+        return;
     }
 
-    const saveButton = document.getElementById("save");
-    saveButton.addEventListener("click", function () {
-        const title = document.getElementById("exampletitle").value;
-        const artist = document.getElementById("exampleartist").value;
-        const author = document.getElementById("exampleauthor").value;
-        const genre = document.getElementById("exampgenre").value;
-        const url = document.getElementById("exampleurl").value;
-        const img = document.getElementById("exampleimg").value;
-        const copyrighted = document.getElementById("copyrighted").checked;
-        const database = firebase.database();
-        const songsRef = database.ref("songs");
+    // Lấy thông tin về file hình ảnh đã chọn
+    const imageFile = imageInput.files[0];
+
+    // Lấy thời gian hiện tại
+    const currentTime = new Date().toISOString();
+
+    // Tạo đối tượng FileReader để đọc dữ liệu của file hình ảnh
+    const reader = new FileReader();
+
+    // Xử lý sự kiện khi đọc file thành công
+    reader.onload = function (e) {
+        // Lấy đường dẫn của hình ảnh sau khi được đọc
+        const img = e.target.result;
+
+        // Tạo đối tượng bài hát mới
         const newSong = {
             title: title,
             artist: artist,
@@ -397,883 +420,470 @@ document.addEventListener("DOMContentLoaded", function () {
             genre: genre,
             url: url,
             image: img,
-            copyrighted: copyrighted,
+            copyrighted: document.getElementById("copyrighted").checked,
+            count: 0,
+            latest: true,
+            timestamp: currentTime,  // Thêm trường timestamp với giá trị là thời gian hiện tại
         };
+
+        // Đẩy thông tin bài hát lên Firebase Realtime Database
         songsRef.push(newSong)
             .then(function (snapshot) {
-                console.log(img);
                 console.log("Bài hát đã được lưu vào Firebase Realtime Database.");
-
+                 displayData();
                 $("#exampleModal").modal("hide");
             })
             .catch(function (error) {
                 console.error("Lỗi khi lưu bài hát vào Firebase Realtime Database: " + error.message);
             });
+    };
+
+    // Đọc nội dung của file hình ảnh
+    reader.readAsDataURL(imageFile);
+});
+
+// Hàm hiển thị dữ liệu
+function displayData() {
+    getAllSongs().then((songs) => {
+        updateSongsTable(songs);
+        updatePaginationButtons(songs.length);
     });
+}
 
-    let allSongs = []; // Biến toàn cục để lưu danh sách bài hát
-    const songsTable = document.getElementById("songsTable");
-    const pagination = document.getElementById("pagination");
-    const itemsPerPage = 5;
-    let currentPage = 1;
-    let totalSongs = 0;
+// Hàm cập nhật bảng bài hát với dữ liệu đã lấy được
+function updateSongsTable(songs) {
+    const tableBody = document.getElementById("songsTable");
 
-    const database = firebase.database();
-    const songsRef = database.ref("songs");
+    // Clear nội dung hiện tại của bảng
+    tableBody.innerHTML = "";
 
-    function getAllSongs() {
-        return songsRef.once("value").then((snapshot) => {
-            allSongs = [];
-            snapshot.forEach((childSnapshot) => {
-                const songData = childSnapshot.val();
-                 songData.key = childSnapshot.key; // Thêm khóa vào đối tượng songData
-                allSongs.push(songData);
-            });
-            return allSongs;
-        }).catch((error) => {
-            console.error("Lỗi khi lấy dữ liệu từ Firebase: " + error.message);
-            return [];
-        });
-    }
+    // Sắp xếp bài hát theo thời gian giảm dần
+    songs.sort((a, b) => new Date(b.timestamp) - new Date(a.timestamp));
 
-    function updateSongsTable() {
-    songsTable.innerHTML = "";
+    // Tính toán chỉ số bắt đầu và chỉ số kết thúc của bài hát cần hiển thị
+    const startIndex = (currentPage - 1) * itemsPerPage;
+    const endIndex = startIndex + itemsPerPage;
 
-    // Tính toán vị trí bắt đầu và kết thúc của trang hiện tại
-    const startAt = (currentPage - 1) * itemsPerPage;
+    // Lấy danh sách bài hát của trang hiện tại
+    const songsOnCurrentPage = songs.slice(startIndex, endIndex);
 
-    // Lấy các bài hát trong phạm vi trang hiện tại
-    const songsOnCurrentPage = allSongs.slice(startAt, startAt + itemsPerPage);
+    // Lặp qua danh sách bài hát và thêm chúng vào bảng
+    songsOnCurrentPage.forEach((song) => {
+        const row = tableBody.insertRow();
 
-    if (!songsOnCurrentPage || songsOnCurrentPage.length === 0) {
-        console.log("Không có dữ liệu.");
-        return;
-    }
-
-    songsOnCurrentPage.forEach((songData) => {
-        const row = songsTable.insertRow();
-
-
-
-
+        // Thêm các ô vào hàng
         const titleCell = row.insertCell(0);
-        titleCell.textContent = songData.title || "";
-        titleCell.classList.add("title-cell");
-
         const artistCell = row.insertCell(1);
-        artistCell.textContent = songData.artist || "";
-        artistCell.classList.add("title-cell");
-
         const imageCell = row.insertCell(2);
-        const image = document.createElement("img");
-        image.src = songData.image || "";
-        image.alt = "Song Image";
-        image.style.width = "150px";
-        image.style.height = "100px";
-        imageCell.appendChild(image);
-        imageCell.classList.add("image-cell");
-
         const authorCell = row.insertCell(3);
-        authorCell.textContent = songData.author || "";
-        authorCell.classList.add("genre-cell");
-
         const genreCell = row.insertCell(4);
-        genreCell.textContent = songData.genre || "";
-        genreCell.classList.add("genre-cell");
-
         const actionCell = row.insertCell(5);
 
+        // Điền thông tin của bài hát vào các ô
+        titleCell.textContent = song.title;
+        artistCell.textContent = song.artist;
+        imageCell.innerHTML = `<img src="${song.image}" alt="Song Image" style="max-width: 100px; max-height: 100px;">`;
+        authorCell.textContent = song.author;
+        genreCell.textContent = song.genre;
+
+      
+        // Thêm nút xóa
         const deleteButton = document.createElement("button");
         deleteButton.textContent = "Xóa";
         deleteButton.classList.add("btn", "btn-danger");
         deleteButton.addEventListener("click", () => {
-            // Lấy khóa của bài hát cần xóa
-            const songKeyToDelete = songData.key;
-        
-            $("#confirmDeleteModal").modal("show");
-            document.getElementById("confirmDeleteButton").addEventListener("click", () => {
-                // Xóa bài hát từ Firebase
-                songsRef.child(songKeyToDelete).remove();
-                $("#confirmDeleteModal").modal("hide");
-            });
+            // Gọi hàm xác nhận xóa với key của bài hát
+            confirmDelete(song.key);
         });
         actionCell.appendChild(deleteButton);
-
+        // Thêm nút sửa
         const editButton = document.createElement("button");
-        editButton.textContent = "Sửa";
-        editButton.classList.add("btn", "btn-edit");
+        editButton.textContent = "Chỉnh sửa";
+        editButton.classList.add("btn", "btn-primary");
         editButton.addEventListener("click", () => {
-            // Hiển thị modal sửa
-            $("#editModal").modal("show");
+              $("#editModal").modal("show");
+                document.getElementById("editSongKey").value = song.key;
+                document.getElementById("editTitle").value = song.title || "";
+                document.getElementById("editArtist").value = song.artist || "";
+                document.getElementById("editAuthor").value = song.author || "";
+                document.getElementById("editGenre").value = song.genre || "";
+                document.getElementById("editUrl").value = song.url || "";
+                document.getElementById("editCopyrighted").checked = song.copyrighted || false;
+                    // Thêm đường dẫn hình ảnh vào thẻ <img>
+         // Thêm đường dẫn hình ảnh vào thẻ <img>
+    const editImagePreview = document.getElementById("editImagePreview");
+    editImagePreview.src = song.image || ""; // Cập nhật src của thẻ <img>
 
-            // Đặt giá trị cho các trường trong modal sửa
-            document.getElementById("editSongKey").value = songData.key;
-            document.getElementById("editTitle").value = songData.title || "";
-            document.getElementById("editArtist").value = songData.artist || "";
-            document.getElementById("editAuthor").value = songData.author || "";
-            document.getElementById("editGenre").value = songData.genre || "";
-            document.getElementById("editUrl").value = songData.url || "";
-            document.getElementById("editImage").value = songData.image || "";
-            document.getElementById("editCopyrighted").checked = songData.copyrighted || false;
+    // Kiểm tra xem có hình ảnh trong song hay không
+    if (song.image) {
+        editImagePreview.src = song.image; // Nếu có, hiển thị hình ảnh
+    } else {
+        editImagePreview.src = ""; // Nếu không, đặt src thành rỗng
+    }
+
+    // Lắng nghe sự kiện khi người dùng chọn ảnh mới
+    const editImageInput = document.getElementById("editImage"); // Thêm dòng này
+    editImageInput.addEventListener("change", function () {
+        if (!this.files || !this.files[0]) {
+            alert("Vui lòng chọn một hình ảnh.");
+            return;
+        }
+        const imageFile = this.files[0];
+        const reader = new FileReader();
+
+        // Xử lý sự kiện khi đọc file thành công
+        reader.onload = function (e) {
+            // Hiển thị hình ảnh mới
+            editImagePreview.src = e.target.result;
+        };
+        // Đọc nội dung của file hình ảnh
+        reader.readAsDataURL(imageFile);
+            });   
         });
         actionCell.appendChild(editButton);
-    });
-
-    updatePaginationButtons();
+        });
+    // Hiển thị nút phân trang
+    updatePaginationButtons(songs.length);
 }
 
 const saveEditButton = document.getElementById("saveEdit");
+const editImageInput = document.getElementById("editImage");
+const editImagePreview = document.getElementById("editImagePreview");
+
+// Gọi hàm khi nút Save được nhấn trong modal sửa
 saveEditButton.addEventListener("click", function () {
-    // Lấy giá trị từ các trường trong modal sửa
-    const songKey = document.getElementById("editSongKey").value;
-    const editedTitle = document.getElementById("editTitle").value;
-    const editedArtist = document.getElementById("editArtist").value;
-    const editedAuthor = document.getElementById("editAuthor").value;
-    const editedGenre = document.getElementById("editGenre").value;
-    const editedUrl = document.getElementById("editUrl").value;
-    const editedImage = document.getElementById("editImage").value;
-    const editedCopyrighted = document.getElementById("editCopyrighted").checked;
-
-    // Cập nhật bài hát trong Firebase
-    const editedSongRef = songsRef.child(songKey);
-    editedSongRef.update({
-        title: editedTitle,
-        artist: editedArtist,
-        author: editedAuthor,
-        genre: editedGenre,
-        image: editedImage,
-        url: editedUrl,
-        copyrighted: editedCopyrighted,
-    });
-
-    console.log("Song edited successfully.");
-
-    $("#editModal").modal("hide");
-});
-
-    function updatePaginationButtons() {
-        pagination.innerHTML = "";
-        const totalPages = Math.ceil(allSongs.length / itemsPerPage);
-
-        if (totalPages === 0) {
-            console.log("Không có trang nào để hiển thị.");
-            return;
-        }
-
-        for (let i = 1; i <= totalPages; i++) {
-            const pageItem = document.createElement("li");
-            pageItem.textContent = i;
-            pageItem.addEventListener("click", () => {
-                currentPage = i;
-                updateSongsTable();
-            });
-            pagination.appendChild(pageItem);
-        }
-    }
-
-    // Sự kiện khi nút "Sắp xếp theo Tiêu đề" được nhấp
-    const sortByTitleButton = document.getElementById("sortByTitle");
-    sortByTitleButton.addEventListener('click', function () {
-        const sortedSongs = allSongs.slice().sort((a, b) => a.title.localeCompare(b.title));
-        allSongs = sortedSongs; // Cập nhật danh sách toàn cục
-        updateSongsTable();
-    });
-
-    // Sự kiện khi nút "Sắp xếp theo Ca sĩ" được nhấp
-    const sortByArtistButton = document.getElementById("sortByArtist");
-    sortByArtistButton.addEventListener('click', function () {
-        const sortedSongs = allSongs.slice().sort((a, b) => a.artist.localeCompare(b.artist));
-        allSongs = sortedSongs; // Cập nhật danh sách toàn cục
-        updateSongsTable();
-    });
-
-
-const searchButton = document.getElementById("searchButton");
- const filterCopyrightedCheckbox = document.getElementById("filterCopyrighted");
-const noCopyrightedCheckbox = document.getElementById("noCopyrighted");
-searchButton.addEventListener("click", function (event) {
-    event.preventDefault(); // Ngăn chặn việc gửi form (nếu có)
-    performSearch();
-});
-filterCopyrightedCheckbox.addEventListener("change", performSearch);
-noCopyrightedCheckbox.addEventListener("change", performSearch);
-
-async function performSearch() {
-    const searchInput = document.getElementById("searchInput").value.toLowerCase();
-
-    try {
-        const songs = await getAllSongs();
-        const filterCopyrightedChecked = filterCopyrightedCheckbox.checked;
-        const noCopyrightedChecked = noCopyrightedCheckbox.checked;
-
-        const filteredSongs = songs.filter((song) => {
-            const titleMatches = song.title.toLowerCase().includes(searchInput);
-            const artistMatches = song.artist.toLowerCase().includes(searchInput);
-            const genreMatches = song.genre.toLowerCase().includes(searchInput);
-
-            const matchesSearch = titleMatches || artistMatches || genreMatches;
-
-            if (filterCopyrightedChecked && !noCopyrightedChecked) {
-                return matchesSearch && song.copyrighted;
-            } else if (!filterCopyrightedChecked && noCopyrightedChecked) {
-                return matchesSearch && !song.copyrighted;
-            } else {
-                return matchesSearch;
-            }
-        });
-
-        // Hiển thị kết quả tìm kiếm
-        console.log(filteredSongs)
-        displaySearchResults(filteredSongs);
-    } catch (error) {
-        console.error("Lỗi khi lấy dữ liệu từ Firebase: " + error.message);
-    }
-}
-
-
-    // Lắng nghe sự kiện khi có thay đổi trong danh sách bài hát
-    songsRef.on("value", (snapshot) => {
-        totalSongs = snapshot.numChildren();
-        currentPage = 1;
-        getAllSongs().then(updateSongsTable);
-    });
-
-    // Khởi chạy trang đầu tiên
-    getAllSongs().then(updateSongsTable);
-
-
-
-
-
-   /*    let allSongs = []; // Biến toàn cục để lưu danh sách bài hát
-    // Hàm để lấy danh sách tất cả bài hát
-    function getAllSongs() {
-        const database = firebase.database();
-        const songsRef = database.ref("songs");
-
-        // Sử dụng once để lấy dữ liệu từ Firebase
-        return songsRef.once("value").then((snapshot) => {
-            allSongs = []; // Xóa danh sách cũ
-            snapshot.forEach((childSnapshot) => {
-                const songData = childSnapshot.val();
-                allSongs.push(songData);
-            });
-            return allSongs;
-        }).catch((error) => {
-            console.error("Lỗi khi lấy dữ liệu từ Firebase: " + error.message);
-            return [];
-        });
-    }
-  const songsTable = document.getElementById("songsTable");
-    const pagination = document.getElementById("pagination");
-    const itemsPerPage = 5; // Số bài hát trên mỗi trang
-    let currentPage = 1;
-    let totalSongs = 0; // Số bài hát tổng cộng
-    const database = firebase.database();
-    const songsRef = database.ref("songs");
-     // Lắng nghe sự kiện khi có thay đổi trong danh sách bài hát
-    songsRef.on("value", (snapshot) => {
-        totalSongs = snapshot.numChildren();
-        currentPage = 1; // Reset lại trang khi có thay đổi trong dữ liệu
-        updateSongsTable();
-    });
-
-     function updateSongsTable() {
-        // Xóa tất cả các mục hiện có trong bảng
-         console.log("Gọi hàm updateSongsTable");
-        songsTable.innerHTML = "";
-
-        // Tính toán vị trí bắt đầu và kết thúc của trang hiện tại
-        const startAt = (currentPage - 1) * itemsPerPage;
-
-        // Hiển thị danh sách bài hát cho trang hiện tại
-        songsRef.orderByKey().startAt(startAt.toString()).limitToFirst(itemsPerPage).once("value", (snapshot) => {
-            if (!snapshot.exists()) {
-                // Thông báo hoặc ẩn phân trang nếu không có dữ liệu
-                console.log("Không có dữ liệu.");
-                return;
-            }
-
-            let scrollToSongKey; // Lưu key của bài hát muốn cuộn đến
-
-            snapshot.forEach((childSnapshot) => {
-                const songData = childSnapshot.val();
-                // Hiển thị thông tin bài hát
-                const row = songsTable.insertRow();
-                // Tạo các ô dữ liệu
-                const titleCell = row.insertCell(0);
-                titleCell.textContent = songData.title || "";
-                titleCell.classList.add("title-cell");
-
-                const artistCell = row.insertCell(1);
-                artistCell.textContent = songData.artist || "";
-                artistCell.classList.add("title-cell");
-
-                const imageCell = row.insertCell(2);
-                const image = document.createElement("img");
-                image.src = songData.image || "";
-                image.alt = "Song Image";
-                image.style.width = "150px"; // Đặt chiều rộng của hình ảnh
-                image.style.height = "100px"; // Đặt chiều cao của hình ảnh
-                imageCell.appendChild(image);
-                imageCell.classList.add("image-cell");
-
-                const authorCell = row.insertCell(3);
-                authorCell.textContent = songData.author || "";
-                authorCell.classList.add("genre-cell");
-
-                const genreCell = row.insertCell(4);
-                genreCell.textContent = songData.genre || "";
-                genreCell.classList.add("genre-cell");
-
-                // Tạo ô chức năng (nút xóa và sửa)
-                const actionCell = row.insertCell(5);
-
-                //Xóa music
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "Xóa";
-                deleteButton.classList.add("btn", "btn-danger");
-                deleteButton.addEventListener("click", () => {
-                    // Hiển thị modal xác nhận
-                    $("#confirmDeleteModal").modal("show");
-                    // Sử dụng biến `childSnapshot.key` để lưu key của bài hát cần xóa
-                    let songKeyToDelete = childSnapshot.key;
-                    // Xử lý xóa nếu người dùng xác nhận
-                    document.getElementById("confirmDeleteButton").addEventListener("click", () => {
-                        songsRef.child(songKeyToDelete).remove();
-                        $("#confirmDeleteModal").modal("hide"); // Ẩn modal sau khi xóa xong
-                    });
-                });
-                actionCell.appendChild(deleteButton);
-                //Sữa music
-                const editButton = document.createElement("button");
-                editButton.textContent = "Sửa";
-                editButton.classList.add("btn", "btn-edit");
-                editButton.addEventListener("click", () => {
-                    console.log("Edit button clicked");
-                    $("#editModal").modal("show");
-                    document.getElementById("editSongKey").value = childSnapshot.key;
-                    document.getElementById("editTitle").value = songData.title || "";
-                    document.getElementById("editArtist").value = songData.artist || "";
-                    document.getElementById("editAuthor").value = songData.author || "";
-                    document.getElementById("editGenre").value = songData.genre || "";
-                    document.getElementById("editUrl").value = songData.url || "";
-                    document.getElementById("editImage").value = songData.image || "";
-                    document.getElementById("editCopyrighted").checked = songData.copyrighted || false;
-                });
-                actionCell.appendChild(editButton);
-                // Tìm key của bài hát vừa được thêm hoặc chỉnh sửa
-            });
-        });
-
-        // Cập nhật nút phân trang
-        updatePaginationButtons();
-    }
-
-            
-     function updatePaginationButtons() {
-        pagination.innerHTML = "";
-        const totalPages = Math.ceil(totalSongs / itemsPerPage);
-        if (totalPages === 0) {
-            console.log("Không có trang nào để hiển thị.");
-            return;
-        }
-        for (let i = 1; i <= totalPages; i++) {
-            const pageItem = document.createElement("li");
-            pageItem.textContent = i;
-            pageItem.addEventListener("click", () => {
-                currentPage = i;
-                updateSongsTable();
-            });
-            pagination.appendChild(pageItem);
-        }
-    }
- // Sự kiện khi nút "Sắp xếp theo Tiêu đề" được nhấp
-    const sortByTitleButton = document.getElementById("sortByTitle");
-    sortByTitleButton.addEventListener('click', function () {
-        // Sắp xếp danh sách bài hát theo tiêu đề
-        const sortedSongs = allSongs.slice().sort((a, b) => a.title.localeCompare(b.title));
-        console.log("Dữ liệu bài hát:", allSongs);
-        console.log(sortedSongs);
-        updateSongsTable(sortedSongs);
-    });
-  // Sự kiện khi nút "Sắp xếp theo Ca sĩ" được nhấp
-    const sortByArtistButton = document.getElementById("sortByArtist");
-    sortByArtistButton.addEventListener('click', function () {
-        // Sắp xếp danh sách bài hát theo ca sĩ
-        const sortedSongs = allSongs.slice().sort((a, b) => a.artist.localeCompare(b.artist));
-        updateSongsTable(sortedSongs);
-    });
-
-      // Gọi hàm để lấy danh sách bài hát khi trang được tải
-    getAllSongs().then((songs) => {
-        // Hiển thị danh sách bài hát khi trang được tải
-        updateSongsTable(songs);
-    }); */
-     function displaySearchResults(data) {
-    const songsTable = document.getElementById("songsTable");
-    songsTable.innerHTML = ""; // Xóa bảng để cập nhật với kết quả tìm kiếm mới
-
-    data.forEach(function (song)  {
-        const row = songsTable.insertRow();
-
-         // Tạo các ô dữ liệu
-        const titleCell = row.insertCell(0);
-        titleCell.textContent = song.title || "";
-        titleCell.classList.add("title-cell"); 
-        
-        const artistCell = row.insertCell(1);
-        artistCell.textContent = song.artist || "";
-        artistCell.classList.add("title-cell"); 
-
-        const imageCell = row.insertCell(2);
-        const image = document.createElement("img");
-        image.src = song.image || "";
-        image.alt = "Song Image";
-        image.style.width = "150px"; // Đặt chiều rộng của hình ảnh
-        image.style.height = "100px"; // Đặt chiều cao của hình ảnh
-        imageCell.appendChild(image);
-        imageCell.classList.add("image-cell"); 
-
-        const authorCell = row.insertCell(3);
-        authorCell.textContent = song.author || "";
-        authorCell.classList.add("genre-cell");
-
-        const genreCell = row.insertCell(4);
-        genreCell.textContent = song.genre || "";
-        genreCell.classList.add("genre-cell");
-
-
-        // Tạo ô chức năng (nút xóa và sửa)
-                    const actionCell = row.insertCell(5);
-    
-                // Nút Xóa
-            const deleteButton = document.createElement("button");
-            deleteButton.textContent = "Xóa";
-            deleteButton.classList.add("btn", "btn-danger");
-           deleteButton.addEventListener("click", () => {
-            // Hiển thị modal xác nhận
-            $("#confirmDeleteModal").modal("show");
-            //lưu key của bài hát cần xóa
-            confirmKey=song._id;
-            // Xử lý xóa nếu người dùng xác nhận
-            document.getElementById("confirmDeleteButton").addEventListener("click", () => {
-                songsTable.child(confirmKey).remove(); 
-                $("#confirmDeleteModal").modal("hide"); // Ẩn modal sau khi xóa xong
-            });
-                });
-                actionCell.appendChild(deleteButton);
-
-                    // Nút Sửa
-                    const editButton = document.createElement("button");
-                    editButton.textContent = "Sửa";
-                    editButton.classList.add("btn", "btn-edit");
-                    editButton.addEventListener("click", () => {
-                        console.log("Edit button clicked");
-                        $("#editModal").modal("show");
-                        document.getElementById("editSongKey").value = song.key;
-                        document.getElementById("editTitle").value = song.title || "";
-                        document.getElementById("editArtist").value = song.artist || "";
-                        document.getElementById("editAuthor").value = song.author || "";
-                        document.getElementById("editGenre").value = song.genre || "";
-                        document.getElementById("editUrl").value = song.url || "";
-                        document.getElementById("editImage").value = song.image || "";
-                        document.getElementById("editCopyrighted").checked = song.copyrighted || false;
-                    });
-                    actionCell.appendChild(editButton);
-                });
-            };
-
-            
-
-});
-
-    //Hiển thị music
-   /*  document.addEventListener("DOMContentLoaded", function () {
-            // Định nghĩa songsRef ở mức toàn cục hoặc một phạm vi có thể truy cập bởi các sự kiện khác
-             const songsTable = document.getElementById("songsTable");
-             const pagination = document.getElementById("pagination");
-             const itemsPerPage = 5; // Số bài hát trên mỗi trang
-            let currentPage = 1;
-            let totalSongs = 0; // Số bài hát tổng cộng
-            const database = firebase.database();
-            const songsRef = database.ref("songs");
-        // Lắng nghe sự kiện khi có thay đổi trong danh sách bài hát
-            songsRef.on("value", (snapshot) => {
-                        totalSongs = snapshot.numChildren();
-                        currentPage = 1; // Reset lại trang khi có thay đổi trong dữ liệu
-                        updateSongsTable();
-                    });
-
-            function updateSongsTable() {
-                // Xóa tất cả các mục hiện có trong bảng
-                songsTable.innerHTML = "";
-
-                // Tính toán vị trí bắt đầu và kết thúc của trang hiện tại
-                const startAt = (currentPage - 1) * itemsPerPage;
-                // Hiển thị danh sách bài hát cho trang hiện tại
-                songsRef.orderByKey().startAt(startAt.toString()).limitToFirst(itemsPerPage).once("value", (snapshot) => {
-                      if (!snapshot.exists()) {
-                        // Thông báo hoặc ẩn phân trang nếu không có dữ liệu
-                        console.log("Không có dữ liệu.");
-                        return;
-                        }
-
-                let scrollToSongKey; // Lưu key của bài hát muốn cuộn đến
-
-                    snapshot.forEach((childSnapshot) => {
-                        const songData = childSnapshot.val();
-                // Hiển thị thông tin bài hát
-                const row = songsTable.insertRow();
-                // Tạo các ô dữ liệu
-                const titleCell = row.insertCell(0);
-                titleCell.textContent = songData.title || "";
-                titleCell.classList.add("title-cell");
-
-                const artistCell = row.insertCell(1);
-                artistCell.textContent = songData.artist || "";
-                artistCell.classList.add("title-cell");
-
-                const imageCell = row.insertCell(2);
-                const image = document.createElement("img");
-                image.src = songData.image || "";
-                image.alt = "Song Image";
-                image.style.width = "150px"; // Đặt chiều rộng của hình ảnh
-                image.style.height = "100px"; // Đặt chiều cao của hình ảnh
-                imageCell.appendChild(image);
-                imageCell.classList.add("image-cell");
-
-                const authorCell = row.insertCell(3);
-                authorCell.textContent = songData.author || "";
-                authorCell.classList.add("genre-cell");
-
-                const genreCell = row.insertCell(4);
-                genreCell.textContent = songData.genre || "";
-                genreCell.classList.add("genre-cell");
-
-                // Tạo ô chức năng (nút xóa và sửa)
-                const actionCell = row.insertCell(5);
-
-                //Xóa music
-                const deleteButton = document.createElement("button");
-                deleteButton.textContent = "Xóa";
-                deleteButton.classList.add("btn", "btn-danger");
-                deleteButton.addEventListener("click", () => {
-                    // Hiển thị modal xác nhận
-                    $("#confirmDeleteModal").modal("show");
-                    // Sử dụng biến `childSnapshot.key` để lưu key của bài hát cần xóa
-                    let songKeyToDelete = childSnapshot.key;
-                    // Xử lý xóa nếu người dùng xác nhận
-                    document.getElementById("confirmDeleteButton").addEventListener("click", () => {
-                        songsRef.child(songKeyToDelete).remove();
-                        $("#confirmDeleteModal").modal("hide"); // Ẩn modal sau khi xóa xong
-                    });
-                });
-                actionCell.appendChild(deleteButton);
-                //Sữa music
-                const editButton = document.createElement("button");
-                editButton.textContent = "Sửa";
-                editButton.classList.add("btn", "btn-edit");
-                editButton.addEventListener("click", () => {
-                    console.log("Edit button clicked");
-                    $("#editModal").modal("show");
-                    document.getElementById("editSongKey").value = childSnapshot.key;
-                    document.getElementById("editTitle").value = songData.title || "";
-                    document.getElementById("editArtist").value = songData.artist || "";
-                    document.getElementById("editAuthor").value = songData.author || "";
-                    document.getElementById("editGenre").value = songData.genre || "";
-                    document.getElementById("editUrl").value = songData.url || "";
-                    document.getElementById("editImage").value = songData.image || "";
-                    document.getElementById("editCopyrighted").checked = songData.copyrighted || false;
-                });
-                actionCell.appendChild(editButton);
-                    });
-                });
-
-                // Cập nhật nút phân trang
-                updatePaginationButtons();
-            }
-            
-            function updatePaginationButtons() {
-                pagination.innerHTML = "";
-                const totalPages = Math.ceil(totalSongs / itemsPerPage);
-                 if (totalPages === 0) {
-                    console.log("Không có trang nào để hiển thị.");
-                    return;
-                }
-               for (let i = 1; i <= totalPages; i++) {
-                const pageItem = document.createElement("li");
-                pageItem.textContent = i;
-                pageItem.addEventListener("click", () => {
-                    currentPage = i;
-                    updateSongsTable();
-                });
-                pagination.appendChild(pageItem);
-            }
-            }
-            // Khởi chạy trang đầu tiên
-            updateSongsTable();
-        });     */
-
-    
-/////////////////////////////////////////////////////////////////////Bắt đầu chức năng Saerch/////////////////////////////////////////////////////////////////////////////////
-
-/* document.addEventListener("DOMContentLoaded", function () {
-    const searchButton = document.getElementById("searchButton");
-    const filterCopyrightedCheckbox = document.getElementById("filterCopyrighted");
-    const noCopyrightedCheckbox = document.getElementById("noCopyrighted");
-
-    searchButton.addEventListener("click", function (event) {
-        event.preventDefault(); // Ngăn chặn việc gửi form (nếu có)
-        performSearch();
-    });
-
-    filterCopyrightedCheckbox.addEventListener("change", performSearch);
-    noCopyrightedCheckbox.addEventListener("change", performSearch);
-
-    function performSearch() {
-        const searchInput = document.getElementById("searchInput").value.toLowerCase();
-
-        getAllSongs().then((songs) => {
-            // Lấy trạng thái của các checkbox
-            const filterCopyrightedChecked = filterCopyrightedCheckbox.checked;
-            const noCopyrightedChecked = noCopyrightedCheckbox.checked;
-
-            // Thực hiện tìm kiếm dựa trên giá trị nhập và trạng thái của các checkbox
-            const filteredSongs = songs.filter(song => {
-                const matchesSearch = (
-                    song.title.toLowerCase().includes(searchInput) ||
-                    song.artist.toLowerCase().includes(searchInput) ||
-                    song.genre.toLowerCase().includes(searchInput)
-                );
-
-                if (filterCopyrightedChecked && !noCopyrightedChecked) {
-                    return matchesSearch && song.copyrighted;
-                } else if (!filterCopyrightedChecked && noCopyrightedChecked) {
-                    return matchesSearch && !song.copyrighted;
-                } else {
-                    return matchesSearch;
-                }
-            });
-            // Hiển thị kết quả tìm kiếm
-            displaySearchResults(filteredSongs);
-        });
-    }
-}); */
-
-
-  /* function getAllSongs() {
-        const database = firebase.database();
-        const songsRef = database.ref("songs");
-
-        // Sử dụng once để lấy dữ liệu từ Firebase
-        return songsRef.once("value").then((snapshot) => {
-            const songs = [];
-            snapshot.forEach((childSnapshot) => {
-                const songData = childSnapshot.val();
-                songs.push(songData);
-            });
-            return songs;
-        }).catch((error) => {
-            console.error("Lỗi khi lấy dữ liệu từ Firebase: " + error.message);
-            return [];
-        });
-    }  */
-
- /*   function displaySearchResults(data) {
-    const songsTable = document.getElementById("songsTable");
-    songsTable.innerHTML = ""; // Xóa bảng để cập nhật với kết quả tìm kiếm mới
-
-    data.forEach(function (song)  {
-        const row = songsTable.insertRow();
-
-         // Tạo các ô dữ liệu
-        const titleCell = row.insertCell(0);
-        titleCell.textContent = song.title || "";
-        titleCell.classList.add("title-cell"); 
-        
-        const artistCell = row.insertCell(1);
-        artistCell.textContent = song.artist || "";
-        artistCell.classList.add("title-cell"); 
-
-        const imageCell = row.insertCell(2);
-        const image = document.createElement("img");
-        image.src = song.image || "";
-        image.alt = "Song Image";
-        image.style.width = "150px"; // Đặt chiều rộng của hình ảnh
-        image.style.height = "100px"; // Đặt chiều cao của hình ảnh
-        imageCell.appendChild(image);
-        imageCell.classList.add("image-cell"); 
-
-        const authorCell = row.insertCell(3);
-        authorCell.textContent = song.author || "";
-        authorCell.classList.add("genre-cell");
-
-        const genreCell = row.insertCell(4);
-        genreCell.textContent = song.genre || "";
-        genreCell.classList.add("genre-cell");
-
-
-        // Tạo ô chức năng (nút xóa và sửa)
-                    const actionCell = row.insertCell(5);
-    
-                // Nút Xóa
-            const deleteButton = document.createElement("button");
-            deleteButton.textContent = "Xóa";
-            deleteButton.classList.add("btn", "btn-danger");
-           deleteButton.addEventListener("click", () => {
-            // Hiển thị modal xác nhận
-            $("#confirmDeleteModal").modal("show");
-            //lưu key của bài hát cần xóa
-            confirmKey=song._id;
-            // Xử lý xóa nếu người dùng xác nhận
-            document.getElementById("confirmDeleteButton").addEventListener("click", () => {
-                songsTable.child(confirmKey).remove(); 
-                $("#confirmDeleteModal").modal("hide"); // Ẩn modal sau khi xóa xong
-            });
-                });
-                actionCell.appendChild(deleteButton);
-
-                    // Nút Sửa
-                    const editButton = document.createElement("button");
-                    editButton.textContent = "Sửa";
-                    editButton.classList.add("btn", "btn-edit");
-                    editButton.addEventListener("click", () => {
-                        console.log("Edit button clicked");
-                        $("#editModal").modal("show");
-                        document.getElementById("editSongKey").value = song.key;
-                        document.getElementById("editTitle").value = song.title || "";
-                        document.getElementById("editArtist").value = song.artist || "";
-                        document.getElementById("editAuthor").value = song.author || "";
-                        document.getElementById("editGenre").value = song.genre || "";
-                        document.getElementById("editUrl").value = song.url || "";
-                        document.getElementById("editImage").value = song.image || "";
-                        document.getElementById("editCopyrighted").checked = song.copyrighted || false;
-                    });
-                    actionCell.appendChild(editButton);
-                });
-            }; */
-
-/*       document.addEventListener("DOMContentLoaded", function () {
-            const saveEditButton = document.getElementById("saveEdit");
-            saveEditButton.addEventListener("click", () => {
+    // Thêm mã kiểm tra mật khẩu vào đây
+    const password = document.getElementById("password").value;
+
+    checkPassword(password)
+        .then((passwordCorrect) => {
+            if (passwordCorrect) {
+                // Nếu mật khẩu đúng, tiếp tục xử lý
                 const songKey = document.getElementById("editSongKey").value;
                 const editedTitle = document.getElementById("editTitle").value;
                 const editedArtist = document.getElementById("editArtist").value;
                 const editedAuthor = document.getElementById("editAuthor").value;
                 const editedGenre = document.getElementById("editGenre").value;
                 const editedUrl = document.getElementById("editUrl").value;
-                const editImage = document.getElementById("editImage").value;
                 const editedCopyrighted = document.getElementById("editCopyrighted").checked;
 
-                console.log("Title:", editedTitle);
-                console.log("Artist:", editedArtist);
-                console.log("Author:", editedAuthor);
-                console.log("Genre:", editedGenre);
-                console.log("URL:", editedUrl);
-                console.log("Image:", editImage);
-                console.log("Copyrighted:", editedCopyrighted);
-
                 const editedSongRef = songsRef.child(songKey);
-                editedSongRef.update({
-                    title: editedTitle,
-                    artist: editedArtist,
-                    author: editedAuthor,
-                    genre: editedGenre,
-                    image: editImage,
-                    url: editedUrl,
-                    copyrighted: editedCopyrighted
-                });
-                console.log("Song edited successfully.");
-                $("#editModal").modal("hide");
-                  // Hiển thị kết quả tìm kiếm
-               displaySearchResults(filteredSongs);
-            });
-        }); */
 
-/////////////////////////////////////////////////////////////////////Kết Thúc chức năng Saerch/////////////////////////////////////////////////////////////////////////////////
+                // Lấy thông tin hình ảnh từ trường nhập file
+                const imageFile = editImageInput.files[0];
 
-/////////////////////////////////////////////////////////////////////Bắt Đầu Sắp Xếp /////////////////////////////////////////////////////////////////////////////////
-/* document.addEventListener("DOMContentLoaded", function () {
-  const sortByTitleButton = document.getElementById("sortByTitle");
-    sortByTitleButton.addEventListener("click", sortByTitle);
+                // Lấy thời gian hiện tại
+                const currentTime = new Date().toISOString();
+
+                // Nếu người dùng đã chọn một hình ảnh mới
+                if (imageFile) {
+                    // Tạo đối tượng FileReader để đọc nội dung của file hình ảnh
+                    const reader = new FileReader();
+
+                    // Xử lý sự kiện khi đọc file thành công
+                    reader.onload = function (e) {
+                        // Cập nhật đường dẫn hình ảnh trong modal sửa
+                        editImagePreview.src = e.target.result;
+
+                        // Cập nhật thông tin bài hát trong Firebase
+                        editedSongRef.update({
+                            title: editedTitle,
+                            artist: editedArtist,
+                            author: editedAuthor,
+                            genre: editedGenre,
+                            url: editedUrl,
+                            copyrighted: editedCopyrighted,
+                            image: e.target.result, // Lưu đường dẫn hình ảnh
+                            timestamp: currentTime, // Cập nhật thời gian sửa thành thời điểm hiện tại
+                        });
+
+                        console.log("Song edited successfully.");
+                        $("#editModal").modal("hide");
+                    };
+
+                    // Đọc nội dung của file hình ảnh
+                    reader.readAsDataURL(imageFile);
+                } else {
+                    // Nếu không có hình ảnh mới được chọn, chỉ cập nhật thông tin bài hát không cần đường dẫn hình ảnh
+                    editedSongRef.update({
+                        title: editedTitle,
+                        artist: editedArtist,
+                        author: editedAuthor,
+                        genre: editedGenre,
+                        url: editedUrl,
+                        copyrighted: editedCopyrighted,
+                        timestamp: currentTime, // Cập nhật thời gian sửa thành thời điểm hiện tại
+                    });
+
+                    console.log("Song edited successfully.");
+                    $("#editModal").modal("hide");
+
+                    // Hiển thị lại dữ liệu sau khi chỉnh sửa
+                    displayData();
+                }
+            } else {
+                // Nếu mật khẩu không đúng, hiển thị thông báo lỗi
+                alert("Mật khẩu không đúng. Vui lòng thử lại.");
+            }
+        })
+        .catch((error) => {
+            console.error("Lỗi khi kiểm tra mật khẩu: " + error.message);
+        });
 });
-// Hàm sắp xếp theo tiêu đề
-function sortByTitle() {
-    // Lấy danh sách bài hát từ Firebase
-    getAllSongs().then((songs) => {
 
-        // Sắp xếp danh sách theo tiêu đề
-        const sortedSongs = songs.sort((a, b) => a.title.localeCompare(b.title));
 
-        // Hiển thị lại danh sách sau khi sắp xếp
-        displaySearchResults(sortedSongs);
+// Function to confirm deletion and call deleteSong function
+function confirmDelete(songKey) {
+    const confirmDeleteModal = new bootstrap.Modal(document.getElementById('confirmDeleteModal'));
+    const confirmDeleteButton = document.getElementById('confirmDeleteButton');
+    const passwordInput = document.getElementById('passwordInput');
+
+    // Set up a click event listener for the delete button in the modal
+    confirmDeleteButton.onclick = function () {
+        // Kiểm tra mật khẩu
+        const enteredPassword = passwordInput.value;
+
+        // Kiểm tra mật khẩu trước khi xác nhận xóa bài hát
+        checkPassword(enteredPassword)
+            .then((passwordCorrect) => {
+                if (passwordCorrect) {
+                    deleteSong(songKey);
+                    confirmDeleteModal.hide();
+                } else {
+                    // Hiển thị thông báo lỗi nếu mật khẩu không đúng
+                    alert("Mật khẩu không đúng. Vui lòng thử lại.");
+                }
+            })
+            .catch((error) => {
+                console.error("Lỗi khi kiểm tra mật khẩu: " + error.message);
+            });
+    };
+
+    // Show the confirmation modal
+    confirmDeleteModal.show();
+}
+
+
+// Function to check the entered password
+function checkPassword(enteredPassword) {
+    return new Promise((resolve, reject) => {
+        const userId = "0Syobn6farX70IvRip7uOM1ttt03"; // ID của người dùng
+        const usersRef = firebase.database().ref("users");
+
+        // Truy vấn cơ sở dữ liệu để lấy thông tin người dùng
+        usersRef.child(userId).once("value", function (snapshot) {
+            const userData = snapshot.val();
+
+            if (userData) {
+                const storedPassword = userData.password;
+
+                // So sánh mật khẩu nhập vào với mật khẩu lấy từ cơ sở dữ liệu
+                if (enteredPassword === storedPassword) {
+                    // Mật khẩu đúng
+                    console.log("Mật khẩu đúng.");
+                    resolve(true);
+                } else {
+                    // Mật khẩu sai
+                    console.log("Mật khẩu sai.");
+                    resolve(false);
+                }
+            } else {
+                // Người dùng không tồn tại trong cơ sở dữ liệu
+                console.log("Người dùng không tồn tại trong cơ sở dữ liệu.");
+                reject(new Error("Người dùng không tồn tại trong cơ sở dữ liệu."));
+            }
+        });
     });
 }
 
-document.addEventListener("DOMContentLoaded", function () {
-    const sortByArtistButton = document.getElementById("sortByArtist");
-    sortByArtistButton.addEventListener("click", sortByArtist);
-});
-
-// Hàm sắp xếp theo ca sĩ
-function sortByArtist() {
-    // Lấy danh sách bài hát từ Firebase
-    getAllSongs().then((songs) => {
-        // Sắp xếp danh sách theo ca sĩ
-        const sortedSongs = songs.sort((a, b) => a.artist.localeCompare(b.artist));
-
-        // Hiển thị lại danh sách sau khi sắp xếp
-        displaySearchResults(sortedSongs);
-    });
-}  */
-/////////////////////////////////////////////////////////////////////Kết Thúc Sắp Xếp /////////////////////////////////////////////////////////////////////////////////
-
-/////////////////////////////////////////////////////////////////////Bắt đầu lọc /////////////////////////////////////////////////////////////////////////////////
-
-/* document.addEventListener("DOMContentLoaded", function () {
-    const allMusicCheckbox = document.getElementById("allMusic");
-    const filterCopyrightedCheckbox = document.getElementById("filterCopyrighted");
-    const noCopyrightedCheckbox = document.getElementById("noCopyrighted");
-
-    // Lắng nghe sự kiện thay đổi của checkbox và thực hiện lọc
-    allMusicCheckbox.addEventListener("change", performFilter);
-    filterCopyrightedCheckbox.addEventListener("change", performFilter);
-    noCopyrightedCheckbox.addEventListener("change", performFilter);
-
-    function performFilter() {
-        // Lấy trạng thái của các checkbox
-        const allMusicChecked = allMusicCheckbox.checked;
-        const filterCopyrightedChecked = filterCopyrightedCheckbox.checked;
-        const noCopyrightedChecked = noCopyrightedCheckbox.checked;
-
-        // Lấy danh sách bài hát từ Firebase
-        getAllSongs().then((songs) => {
-            // Thực hiện lọc dựa trên trạng thái của các checkbox
-            let filteredSongs = songs;
-
-            if (!allMusicChecked) {
-                // Lọc theo bản quyền
-                if (filterCopyrightedChecked && !noCopyrightedChecked) {
-                    filteredSongs = songs.filter(song => song.copyrighted);
-                }
-                // Lọc theo không bản quyền
-                else if (!filterCopyrightedChecked && noCopyrightedChecked) {
-                    filteredSongs = songs.filter(song => !song.copyrighted);
-                }
-            }
-        
-
-
-            // Hiển thị lại danh sách sau khi lọc
-            displaySearchResults(filteredSongs);
+// Function to delete a song from Firebase
+function deleteSong(songKey) {
+    songsRef.child(songKey).remove()
+        .then(function () {
+            console.log("Bài hát đã được xóa thành công.");
+            displayData(); // Refresh the table after deletion
+        })
+        .catch(function (error) {
+            console.error("Lỗi khi xóa bài hát: " + error.message);
         });
+}
+
+
+
+// Function to handle pagination button click
+function handlePaginationClick(page) {
+    currentPage = page;
+    // Gọi hàm updateSongsTable với chỉ số trang mới
+    getAllSongs().then((songs) => updateSongsTable(songs));
+}
+
+// Function to update pagination buttons
+function updatePaginationButtons(totalItems) {
+    pagination.innerHTML = "";
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    if (totalPages === 0) {
+        console.log("Không có trang nào để hiển thị.");
+        return;
     }
 
-}); */
+    const previousButton = document.createElement("li");
+    previousButton.innerHTML = '<a href="#" aria-label="Previous">&laquo;</a>';
+    previousButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            handlePaginationClick(currentPage);
+        }
+    });
+    pagination.appendChild(previousButton);
 
-/////////////////////////////////////////////////////////////////////Kết Thúc Lọc //////////////////////////////////////////////////////////////////////////////
-    </script>
+    for (let i = 1; i <= totalPages; i++) {
+        const pageItem = document.createElement("li");
+        pageItem.innerHTML = `<a href="#">${i}</a>`;
+        pageItem.addEventListener("click", () => {
+            currentPage = i;
+            handlePaginationClick(currentPage);
+        });
+        pagination.appendChild(pageItem);
+    }
+
+    const nextButton = document.createElement("li");
+    nextButton.innerHTML = '<a href="#" aria-label="Next">&raquo;</a>';
+    nextButton.addEventListener("click", () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            handlePaginationClick(currentPage);
+        }
+    });
+    pagination.appendChild(nextButton);
+}
+
+// Function to create pagination button
+function createPaginationButton(label, onClick, isCurrent) {
+    const pageItem = document.createElement("li");
+    const pageLink = document.createElement("a");
+    pageLink.href = "#";
+    pageLink.textContent = label;
+    pageLink.addEventListener("click", (event) => {
+        event.preventDefault();
+        onClick();
+    });
+
+    if (isCurrent) {
+        pageItem.classList.add("active");
+    }
+
+    pageItem.appendChild(pageLink);
+    return pageItem;
+}
+// Function to get all songs from Firebase
+function getAllSongs() {
+    return songsRef.once("value").then((snapshot) => {
+        const allSongs = [];
+
+        snapshot.forEach((childSnapshot) => {
+            const songData = childSnapshot.val();
+            songData.key = childSnapshot.key;
+            allSongs.push(songData);
+        });
+
+        return allSongs;
+    }).catch((error) => {
+        console.error("Error getting data from Firebase: " + error.message);
+        return [];
+    });
+}
+// Function to search songs and update the table
+function searchSongs() {
+    const searchInput = document.getElementById("searchInput").value.toLowerCase();
+
+    getAllSongs().then((allSongs) => {
+        const filteredSongs = allSongs.filter((song) => {
+            return (
+                song.title.toLowerCase().includes(searchInput) ||
+                song.artist.toLowerCase().includes(searchInput) ||
+                song.author.toLowerCase().includes(searchInput) ||
+                song.genre.toLowerCase().includes(searchInput)
+            );
+        });
+
+        currentPage = 1; // Reset current page to 1 when performing a new search
+        updatePaginationButtons(filteredSongs.length);
+        getPaginatedSongs(0, filteredSongs); // Display paginated and filtered songs
+    });
+}
+// Function to get paginated and filtered songs from Firebase
+function getPaginatedSongs(startIndex, songs) {
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedSongs = songs.slice(startIndex, endIndex);
+
+    updateSongsTable(paginatedSongs);
+    updatePaginationButtons(songs.length);
+}
+// Sự kiện khi nút tìm kiếm được click
+searchButton.addEventListener("click", function (event) {
+    event.preventDefault(); // Ngăn chặn form từ việc submit (tránh reload trang)
+
+    // Gọi hàm searchSongs
+    searchSongs();
+});
+
+// Lấy reference đến phần tử HTML chứa danh sách bài hát
+const songListContainer = document.getElementById("songListContainer");
+// Hàm xử lý sự kiện lọc
+function applyFilter() {
+    // Lấy giá trị bản quyền được chọn
+    const filterOption = document.getElementById("filterCopyright").value;
+    getAllSongs().then((allSongs) => {
+        let filteredSongs = [];
+        if (filterOption === 'all') {
+            filteredSongs = allSongs;
+        } else if (filterOption === 'copyrighted') {
+            filteredSongs = allSongs.filter((song) => song.copyrighted);
+        } else if (filterOption === 'non-copyrighted') {
+            filteredSongs = allSongs.filter((song) => !song.copyrighted);
+        }
+
+        updateSongsTable(filteredSongs);
+    });
+}
+
+ // Kiểm tra trạng thái đăng nhập trước khi hiển thị dữ liệu
+function checkLoginStatus() {
+     // Lấy reference đến đối tượng admin trong Realtime Database
+    const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
+
+    adminRef.once('value')
+        .then(snapshot => {
+            const adminData = snapshot.val();
+
+            if (adminData && adminData.loggedIn) {
+                // Trạng thái loggedIn là true, hiển thị dữ liệu
+                displayData();
+            } else {
+                // Trạng thái loggedIn là false hoặc không tìm thấy thông tin admin
+                alert('Vui lòng đăng nhập để xem dữ liệu.');
+                window.location.href = '/'; // Chuyển hướng đến trang đăng nhập
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi kiểm tra trạng thái loggedIn:', error.message);
+            alert('Có lỗi xảy ra khi kiểm tra trạng thái loggedIn.');
+        });
+}
+
+// Sự kiện khi trang web được tải
+window.onload = function () {
+    // Kiểm tra trạng thái đăng nhập khi trang web được tải
+    checkLoginStatus();
+    
+};
+
+function displayData() {
+     getAllSongs().then(updateSongsTable);
+}
+</script>
+
 
 </body>
 

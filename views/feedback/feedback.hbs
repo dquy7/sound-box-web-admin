@@ -1,0 +1,538 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Feedback Page</title>
+    <!-- Add your CSS links here -->
+    <style>
+        /* Style for the table */
+        body {
+    font-family: 'Arial', sans-serif;
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+}
+.table {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+
+.table th, .table td {
+    border: 1px solid #dddddd;
+    text-align: left;
+    padding: 8px;
+}
+
+.table th {
+    background-color: #f2f2f2;
+}
+
+/* Style for pagination */
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination li {
+    margin-right: 5px;
+    cursor: pointer;
+    color: #fff;
+    border: 1px solid #007bff;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+.pagination a {
+    text-decoration: none;
+}
+
+.pagination li:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
+.modal-content {
+    max-width: 500px;
+    margin: auto;
+    padding: 20px;
+    background-color: #fff;
+    border: 1px solid #ccc;
+    border-radius: 5px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+}
+#feedbackChart {
+    width: 100%; /* Chiếm toàn bộ chiều rộng của phần tử chứa nó */
+    max-width: 400px; /* Giới hạn chiều rộng tối đa */
+    height: auto; /* Tự động điều chỉnh chiều cao theo tỷ lệ */
+    margin: 20px 0; /* Tạo khoảng cách với các phần tử khác */
+    border: 1px solid #ddd; /* Thêm đường viền */
+    border-radius: 8px; /* Bo tròn góc */
+    display: block; /* Hiển thị là một khối */
+    margin-left: auto; /* Canh lề trái tự động */
+    margin-right: auto; /* Canh lề phải tự động */
+}
+
+.form-group {
+    margin-bottom: 15px;
+}
+/* Tùy chỉnh màu sắc cho trạng thái "Đã trả lời" */
+.text-success {
+    color: green;
+}
+
+/* Tùy chỉnh màu sắc cho trạng thái "Chưa trả lời" */
+.text-warning {
+    color: orange;
+}
+
+
+
+    </style>
+</head>
+<body>
+     <nav style="background-color: rgb(199, 199, 199);" class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a class="navbar-brand" href="./feedback">Góp Ý Từ Người Dùng</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="/feedbackstatistical">Thống Kê Phản Hồi Từ Người Dùng</a>
+        </li>
+      </ul>
+     <form style="margin-right: 50px;" class="d-flex" role="search" id="searchForm">
+    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search" id="searchInput">
+    <button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+
+<div style="display: flex; width: 150px;">
+    
+    <select class="form-select" id="filterStatus">
+        <option value="all">Tất cả</option>
+        <option value="replied">Đã trả lời</option>
+        <option value="unreplied">Chưa trả lời</option>
+    </select>
+</div>
+<button style="width: 100px; margin-left: 20px;" class="btn btn-primary" onclick="applyFilters()">Áp dụng</button>
+
+    </div>
+  </div>
+</nav>
+
+    <!-- Display feedback from Firebase here -->
+        <table class="table table-bordered mt-4">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Email</th>
+                    <th>Tên người dùng</th>
+                    <th>Số điện thoại</th>
+                    <th>Nội dung phản hồi</th>
+                    <th>Trạng Thái</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+            <tbody id="feedbackTable"></tbody>
+        </table>
+        
+        <ul class="pagination" id="pagination"></ul>
+
+        
+
+<!-- Thêm modal vào body -->
+<div class="modal fade" id="replyModal" tabindex="-1" role="dialog" aria-labelledby="replyModalLabel" aria-hidden="true">
+   <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="replyModalLabel">Trả Lời Feedback</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <!-- Form Trả lời -->
+                <form id="replyForm">
+
+                       <div class="form-group">
+                        <label for="sendername">Người Gửi:</label>
+                        <input type="text" class="form-control" id="sendername" required>
+                        </div>
+
+                        <div class="form-group">
+                        <label for="to">Email Nhận:</label>
+                        <input type="text" class="form-control" id="to" required>
+                        </div>
+                        <div class="form-group">
+                        <label for="replyto">Email Gửi:</label>
+                        <input type="text" class="form-control" id="replyto" required>
+                        </div>
+
+                        <div class="form-group">
+                        <label for="subject">Chủ Đề:</label>
+                        <input type="text" class="form-control" id="subject" required>
+                        </div>
+
+                        <div class="form-group">
+                        <label for="greeting">Bắt Đầu:</label>
+                        <input type="text" class="form-control" id="greeting" required>
+                        </div>
+
+                        <div class="form-group">
+                        <label for="message">Nội dung trả lời:</label>
+                        <textarea class="form-control" id="message" required></textarea>
+                        </div>
+
+                        <div class="form-group">
+                        <label for="thankyou">Kết Thúc:</label>
+                        <input type="text" class="form-control" id="thankyou" value="" required>
+                        </div>
+
+                    <button type="submit" class="btn btn-primary">Gửi</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+    <!-- Add your JavaScript links here -->
+     <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+<!-- Firebase JavaScript SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
+   <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+ 
+
+<script>
+   const firebaseConfig = {
+    apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
+    authDomain: "soundbox-du-an-md31.firebaseapp.com",
+    databaseURL: "https://soundbox-du-an-md31-default-rtdb.firebaseio.com",
+    projectId: "soundbox-du-an-md31",
+    storageBucket: "soundbox-du-an-md31.appspot.com",
+    messagingSenderId: "265264289877",
+    appId: "1:265264289877:web:0f88e2fa54c638685e9cdc",
+    measurementId: "G-FE9Z9NKJDR"
+};
+
+firebase.initializeApp(firebaseConfig);
+
+const database = firebase.database();
+const feedbackRef = database.ref("feedback");
+
+let allFeedbacks = [];
+const feedbackTable = document.getElementById('feedbackTable');
+const pagination = document.getElementById('pagination');
+const itemsPerPage = 5;
+let currentPage = 1;
+
+const replyModal = new bootstrap.Modal(document.getElementById('replyModal'));
+const replyForm = document.getElementById('replyForm');
+
+function getAllFeedback() {
+    return feedbackRef.once("value")
+        .then((snapshot) => {
+            const feedbackData = snapshot.val() || {};
+            const feedbackArray = Object.keys(feedbackData).map(key => ({
+                key: key,
+                ...feedbackData[key]
+            }));
+            return feedbackArray;
+        })
+        .catch((error) => {
+            throw new Error("Lỗi khi lấy dữ liệu từ Firebase: " + error.message);
+        });
+}
+
+function displayFeedback(feedbackData) {
+    feedbackData.sort((a, b) => b.timestamp - a.timestamp);
+    console.log("Feedback Data:", feedbackData);
+    feedbackTable.innerHTML = "";
+    const startAt = (currentPage - 1) * itemsPerPage;
+    const feedbackOnCurrentPage = feedbackData.slice(startAt, startAt + itemsPerPage);
+
+    feedbackOnCurrentPage.forEach((feedback, index) => {
+        const row = feedbackTable.insertRow();
+        const idCell = row.insertCell(0);
+        const emailCell = row.insertCell(1);
+        const usernameCell = row.insertCell(2);
+        const phoneCell = row.insertCell(3);
+        const commentCell = row.insertCell(4);
+        const replyStatusCell = row.insertCell(5);
+        const actionCell = row.insertCell(6);
+
+        idCell.textContent = startAt + index + 1;
+        emailCell.textContent = feedback.email || "";
+        usernameCell.textContent = feedback.name || "";
+        phoneCell.textContent = feedback.phone || "";
+        commentCell.textContent = feedback.comment || "";
+
+        if (feedback.reply) {
+            replyStatusCell.textContent = "Đã trả lời";
+            replyStatusCell.classList.add("text-success");
+        } else {
+            replyStatusCell.textContent = "Chưa trả lời";
+            replyStatusCell.classList.add("text-warning");
+        }
+
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Xóa";
+        deleteButton.classList.add("btn", "btn-danger");
+        deleteButton.addEventListener("click", () => {
+            const feedbackKeyToDelete = feedback.key;
+            const confirmDelete = confirm("Bạn có chắc chắn muốn xóa phản hồi này?");
+            if (confirmDelete) {
+                feedbackRef.child(feedbackKeyToDelete).remove()
+                    .then(() => {
+                        getAllFeedback().then(displayFeedback);
+                        alert("Xóa Thành Công");
+                    })
+                    .catch((error) => {
+                        console.error("Lỗi khi xóa phản hồi: " + error.message);
+                    });
+            }
+        });
+        actionCell.appendChild(deleteButton);
+
+        const replyButton = document.createElement("button");
+        if (feedback.reply) {
+            replyButton.textContent = "Trả lời Lại";
+            replyButton.classList.add("btn", "btn-warning");
+            replyButton.addEventListener("click", () => {
+                showReplyDialog(feedback);
+            });
+        } else {
+            replyButton.textContent = "Trả lời";
+            replyButton.classList.add("btn", "btn-primary");
+            replyButton.addEventListener("click", () => {
+                showReplyDialog(feedback);
+            });
+        }
+        actionCell.appendChild(replyButton);
+    });
+
+    updatePaginationButtons(feedbackData.length);
+}
+
+function updatePaginationButtons(totalItems) {
+    pagination.innerHTML = "";
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    if (totalPages === 0) {
+        console.log("Không có trang nào để hiển thị.");
+        return;
+    }
+
+    const previousButton = document.createElement("li");
+    previousButton.innerHTML = '<a href="#" aria-label="Previous">&laquo;</a>';
+    previousButton.addEventListener("click", () => {
+        if (currentPage > 1) {
+            currentPage--;
+            searchFeedback();
+        }
+    });
+    pagination.appendChild(previousButton);
+
+    const firstPageButton = document.createElement("li");
+    firstPageButton.innerHTML = '<a href="#">1</a>';
+    firstPageButton.addEventListener("click", () => {
+        currentPage = 1;
+        searchFeedback();
+    });
+    pagination.appendChild(firstPageButton);
+
+    for (let i = Math.max(2, currentPage - 2); i <= Math.min(totalPages - 1, currentPage + 2); i++) {
+        const pageItem = document.createElement("li");
+        pageItem.innerHTML = `<a href="#">${i}</a>`;
+        pageItem.addEventListener("click", () => {
+            currentPage = i;
+            searchFeedback();
+        });
+        pagination.appendChild(pageItem);
+    }
+
+    const lastPageButton = document.createElement("li");
+    lastPageButton.innerHTML = `<a href="#">${totalPages}</a>`;
+    lastPageButton.addEventListener("click", () => {
+        currentPage = totalPages;
+        searchFeedback();
+    });
+    pagination.appendChild(lastPageButton);
+
+    const nextButton = document.createElement("li");
+    nextButton.innerHTML = '<a href="#" aria-label="Next">&raquo;</a>';
+    nextButton.addEventListener("click", () => {
+        if (currentPage < totalPages) {
+            currentPage++;
+            searchFeedback();
+        }
+    });
+    pagination.appendChild(nextButton);
+}
+
+function searchFeedback() {
+    const searchKeyword = document.getElementById('searchInput').value.toLowerCase();
+
+    getAllFeedback().then((feedbackData) => {
+        const filteredFeedbacks = feedbackData.filter((feedback) => {
+            return (
+                feedback.email.toLowerCase().includes(searchKeyword) ||
+                feedback.name.toLowerCase().includes(searchKeyword)
+            );
+        });
+        displayFeedback(filteredFeedbacks);
+    });
+}
+
+const searchForm = document.getElementById('searchForm');
+searchForm.addEventListener('submit', (event) => {
+    event.preventDefault();
+    currentPage = 1;
+    searchFeedback();
+});
+
+function applyFilters() {
+    const statusFilter = document.getElementById('filterStatus').value;
+
+    getAllFeedback().then((feedbackData) => {
+        let filteredFeedbacks = [];
+        if (statusFilter === 'all') {
+            filteredFeedbacks = feedbackData;
+        } else if (statusFilter === 'replied') {
+            filteredFeedbacks = feedbackData.filter((feedback) => feedback.reply);
+        } else if (statusFilter === 'unreplied') {
+            filteredFeedbacks = feedbackData.filter((feedback) => !feedback.reply);
+        }
+
+        displayFeedback(filteredFeedbacks);
+    });
+}
+
+function showReplyDialog(feedback) {
+    replyModal.show();
+
+    const closeButton = document.querySelector("#replyModal .close");
+    closeButton.addEventListener("click", () => {
+        replyModal.hide();
+    });
+
+    const sendernameInput = document.getElementById('sendername');
+    sendernameInput.value = `App Music Soundbox`;
+
+    const tonameInput = document.getElementById('to');
+    tonameInput.value = `${feedback.email}`;
+
+    const replytoInput = document.getElementById('replyto');
+    replytoInput.value = `lupanpvd273@gmail.com`;
+
+    const subjectInput = document.getElementById('subject');
+    subjectInput.value = `Phản Hồi Feedback App Music Soundbox`;
+
+    const greetingInput = document.getElementById('greeting');
+    greetingInput.value = `Xin chào: ${feedback.name}, chúng tôi là nhà phát triển ứng dụng nghe nhạc Music Soundbox. Cảm ơn bạn đã đóng góp ý kiến về ứng dụng của chúng tôi.`;
+
+    const thanksInput = document.getElementById('thankyou');
+    thanksInput.value = 'Một lần nữa chúng tôi cảm ơn bạn đã góp ý kiến về ứng dụng của chúng tôi.';
+
+    replyForm.addEventListener('submit', (event) => {
+        event.preventDefault();
+
+        const greeting = greetingInput.value;
+        const replyContent = document.getElementById('message').value;
+        const thankYou = thanksInput.value;
+        const sendername = sendernameInput.value;
+        const toname = tonameInput.value;
+        const subject = subjectInput.value;
+        const replytoemail = replytoInput.value;
+
+        feedbackRef.child(feedback.key).update({
+            reply: true,
+            greeting: greeting,
+            replyContent: replyContent,
+            thankYou: thankYou,
+            sendername: sendername,
+            toname: toname,
+            subject: subject
+        }).then(() => {
+            alert("Trả lời thành công!");
+            sendEmail();
+            getAllFeedback().then(displayFeedback);
+            replyModal.hide();
+        }).catch((error) => {
+            console.error("Lỗi khi trả lời: " + error.message);
+        });
+    });
+}
+
+function sendEmail() {
+    (function () {
+        emailjs.init("F6FpioINBzzIF7lJC");
+    })();
+
+    const params = {
+        sendername: document.querySelector("#sendername").value,
+        to: document.querySelector("#to").value,
+        subject: document.querySelector("#subject").value,
+        replyto: document.querySelector("#replyto").value,
+        message: document.querySelector("#message").value,
+        greeting: document.querySelector("#greeting").value,
+        thankyou: document.querySelector("#thankyou").value,
+    };
+
+    const serviceID = "service_jeg21qt";
+    const templateID = "template_xrg5997";
+
+    emailjs.send(serviceID, templateID, params)
+        .then((res) => {
+            alert("Email sent successfully!!");
+        })
+        .catch((error) => {
+            console.error("Error sending email:", error);
+        });
+}
+
+ // Kiểm tra trạng thái đăng nhập trước khi hiển thị dữ liệu
+function checkLoginStatus() {
+    // Lấy reference đến đối tượng admin trong Realtime Database
+      // Lấy reference đến đối tượng admin trong Realtime Database
+    const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
+    adminRef.once('value')
+        .then(snapshot => {
+            const adminData = snapshot.val();
+
+            if (adminData && adminData.loggedIn) {
+                // Trạng thái loggedIn là true, hiển thị dữ liệu
+                  getAllFeedback()
+                .then((feedbackData) => {
+                    displayFeedback(feedbackData);
+                    updateStatistics(feedbackData);
+                });
+            } else {
+                    alert('Vui lòng đăng nhập để xem dữ liệu.');
+                    window.location.href = '/'; // Chuyển hướng đến trang đăng nhập
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi kiểm tra trạng thái loggedIn:', error.message);
+            alert('Có lỗi xảy ra khi kiểm tra trạng thái loggedIn.');
+        });
+} 
+
+// Sự kiện khi trang web được tải
+window.onload = function () {
+    // Kiểm tra trạng thái đăng nhập khi trang web được tải
+    checkLoginStatus();
+};
+
+
+
+</script>
+</body>
+</html>
