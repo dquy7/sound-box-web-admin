@@ -1,0 +1,664 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Trang Bình Luận</title>
+    <!-- Thêm các liên kết CSS của bạn ở đây -->
+    <style>
+        /* Định dạng cho bảng */
+    body {
+        font-family: 'Arial', sans-serif;
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .nav-item:hover{
+        border-radius: 20px;
+        background-color: #27ae60;
+    }
+    .table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+    .table th, .table td {
+        border: 1px solid #dddddd;
+        text-align: left;
+        padding: 8px;
+    }
+
+    .table th {
+        background-color: #f2f2f2;
+    }
+
+    .pagination {
+        display: flex;
+        list-style: none;
+        padding: 0;
+        justify-content: center;
+        margin-top: 20px;
+    }
+
+    .pagination li {
+        margin-right: 5px;
+        cursor: pointer;
+        color: #fff;
+        border: 1px solid #007bff;
+        padding: 5px 10px;
+        border-radius: 3px;
+        transition: background-color 0.3s;
+    }
+    .pagination a {
+        text-decoration: none;
+    }
+
+    .pagination li:hover {
+        background-color: #0056b3;
+        color: #fff;
+    }
+
+    .modal-content {
+        max-width: 500px;
+        margin: auto;
+        padding: 20px;
+        background-color: #fff;
+        border: 1px solid #ccc;
+        border-radius: 5px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+
+    #feedbackChart {
+        width: 100%;
+        max-width: 400px;
+        height: auto;
+        margin: 20px 0;
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        display: block;
+        margin-left: auto;
+        margin-right: auto;
+    }
+
+    .form-group {
+        margin-bottom: 15px;
+    }
+
+    .text-success {
+        color: green;
+    }
+
+    .text-warning {
+        color: orange;
+    }
+
+    /* Thêm CSS cho bảng bình luận */
+    #commentTable {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+    }
+
+    #commentTable th, #commentTable td {
+        padding: 12px;
+    }
+
+    #commentTable th {
+        background-color: #007bff;
+        color: #fff;
+    }
+
+    #commentTable tbody tr:hover {
+        background-color: #f5f5f5;
+    }
+
+        .comment-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-top: 20px;
+}
+
+.comment-table th, .comment-table td {
+  border: 1px solid #dddddd;
+  text-align: left;
+  padding: 8px;
+}
+
+.comment-table th {
+  background-color: #f2f2f2;
+}
+
+.pagination-container {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin-top: 20px;
+}
+.td-user{
+   font-size: 15px;
+   text-align: center;
+   width: 200px;
+}
+.td-box{
+   margin-left: 200px;
+}
+.pagination-button {
+    background-color: #007bff;
+    color: #fff;
+    border: 1px solid #007bff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    margin: 0 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination-button:hover {
+    background-color: #0056b3;
+}
+/* Thêm CSS cho nút "Xem Bình Luận" */
+.comment-button {
+    background-color: #219653;
+    color: #fff;
+    border: 1px solid #007bff;
+    padding: 8px 12px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.comment-button:hover {
+    background-color: #0056b3;
+}
+.reply-table {
+  display: none;
+}
+
+/* CSS cho modal */
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    overflow: auto;
+    background-color: rgb(0,0,0);
+    background-color: rgba(0,0,0,0.4);
+    padding-top: 60px;
+}
+
+.modal-content {
+    background-color: #fefefe;
+    margin: 5% auto;
+    padding: 20px;
+    border: 1px solid #888;
+    width: 80%;
+}
+
+.close {
+    color: #aaa;
+    float: right;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.close:hover,
+.close:focus {
+    color: black;
+    text-decoration: none;
+    cursor: pointer;
+}
+/* CSS cho nút Xóa */
+.button-delete {
+    padding: 8px 16px;
+    background-color: #27ae60; /* Màu xanh lá cây */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-delete:hover {
+    background-color: #219653; /* Màu xanh lá cây khi di chuột qua */
+}
+
+/* CSS cho nút Xem Trả Lời */
+.button-replies {
+    padding: 8px 16px;
+    background-color: #f39c12; /* Màu cam */
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s;
+}
+
+.button-replies:hover {
+    background-color: #d35400; /* Màu cam khi di chuột qua */
+}
+
+    </style>
+</head>
+<body>
+    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a style="font-weight: bold; " class="navbar-brand" href="./comment">Quản Lý Bình Luận</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                      <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="./music">Bài Hát</a>
+                    </li>
+            
+                    <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="./userstatistics">Thống Kê</a>
+                    </li>
+                </ul>
+                <nav class="navbar bg-light">
+                    <div class="container-fluid">
+                        <form class="d-flex" role="search">
+                            <input class="form-control me-2" type="search" id="searchInput" placeholder="Tìm kiếm bài hát" aria-label="Search">
+                            <button id="searchButton" class="btn btn-outline-success" type="button">Search</button>
+                        </form>
+                    </div>
+                </nav>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Hiển thị phản hồi từ Firebase ở đây -->
+<table class="table table-bordered mt-4">
+    <thead>
+        <tr>
+            <th>ID</th>
+            <th>Bài Hát</th>
+            <th>Chức Năng</th>
+        </tr>
+    </thead>
+    <tbody id="commentTable"></tbody>
+</table>
+
+   <ul class="pagination" id="pagination"></ul>
+<!-- Thêm một div để hiển thị bình luận -->
+<div id="commentsContainer" class="mt-4"></div>
+<div id="repliesContainer"></div>
+
+
+<!-- Modal sửa reply -->
+<div id="editReplyModal" class="modal">
+    <div class="modal-content">
+        <span class="close" onclick="closeEditReplyModal()">&times;</span>
+        <h2>Sửa Reply</h2>
+        <textarea id="editedReplyText" placeholder="Nhập nội dung reply..."></textarea>
+        <button id="saveReplyButton">Lưu</button>
+    </div>
+</div>
+
+<!-- Thêm các liên kết JavaScript của bạn ở đây -->
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+<!-- Firebase JavaScript SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+
+<script>
+    const firebaseConfig = {
+        apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
+        authDomain: "soundbox-du-an-md31.firebaseapp.com",
+        databaseURL: "https://soundbox-du-an-md31-default-rtdb.firebaseio.com",
+        projectId: "soundbox-du-an-md31",
+        storageBucket: "soundbox-du-an-md31.appspot.com",
+        messagingSenderId: "265264289877",
+        appId: "1:265264289877:web:0f88e2fa54c638685e9cdc",
+        measurementId: "G-FE9Z9NKJDR"
+    };
+
+firebase.initializeApp(firebaseConfig);
+  const commentTable = document.getElementById("commentTable");
+  const commentsContainer = document.getElementById("commentsContainer");
+  const paginationContainer = document.getElementById("pagination");
+
+const commentsPerPage = 5;
+let currentPage = 1;
+let totalComments = 0;
+
+function fetchDataAndDisplay() {
+  firebase
+    .database()
+    .ref("comments")
+    .once("value")
+    .then(snapshot => {
+      let index = 0;
+      const comments = [];
+
+      snapshot.forEach(comment => {
+        const songId = comment.key;
+        comments.push({ songId });
+      });
+
+      totalComments = comments.length;
+      const startIndex = (currentPage - 1) * commentsPerPage;
+      const endIndex = Math.min(startIndex + commentsPerPage, totalComments);
+
+      commentTable.innerHTML = ""; // Xóa bảng cũ trước khi hiển thị dữ liệu mới
+
+      for (let i = startIndex; i < endIndex; i++) {
+        const row = commentTable.insertRow();
+        row.insertCell(0).innerText = i + 1;
+        row.insertCell(1).innerText = comments[i].songId;
+
+        const buttonCell = row.insertCell(2);
+        const button = document.createElement("button");
+        button.innerText = "Xem Bình Luận";
+        button.classList.add("comment-button"); // Thêm lớp CSS
+            button.addEventListener("click", () => {
+               showCommentsForId(comments[i].songId);
+        });
+buttonCell.appendChild(button);
+
+        index++;
+      }
+
+      displayPagination();
+    });
+}
+// Trong hàm displayPagination
+function displayPagination() {
+    const totalPages = Math.ceil(totalComments / commentsPerPage);
+
+    paginationContainer.innerHTML = ""; // Xóa nút phân trang cũ trước khi tạo mới
+
+    for (let i = 1; i <= totalPages; i++) {
+        const pageButton = document.createElement("button");
+        pageButton.innerText = i;
+        pageButton.classList.add("pagination-button"); // Thêm lớp CSS
+        pageButton.addEventListener("click", () => {
+            currentPage = i;
+            fetchDataAndDisplay();
+        });
+
+        paginationContainer.appendChild(pageButton);
+    }
+}
+function createDeleteButton(commentId, songId) {
+    const deleteButton = document.createElement("button");
+    deleteButton.innerText = "Xóa";
+    deleteButton.addEventListener("click", () => {
+        deleteComment(commentId, songId);
+    });
+    return deleteButton;
+}
+function clearCommentsContainer() {
+    const commentsContainer = document.getElementById("commentsContainer");
+    commentsContainer.innerHTML = "";
+}
+
+function deleteComment(commentId, songId) {
+    const confirmDelete = confirm("Bạn có chắc muốn xóa bình luận này?");
+    if (confirmDelete) {
+        firebase
+            .database()
+            .ref(`comments/${songId}/${commentId}`)
+            .remove()
+            .then(() => {
+                // Xóa thành công, cập nhật giao diện nếu cần
+                console.log("Bình luận đã được xóa");
+                clearCommentsContainer(); // Xóa toàn bộ nội dung
+                showCommentsForId(songId); // Hiển thị lại dữ liệu
+            })
+            .catch(error => {
+                console.error("Lỗi khi xóa bình luận:", error);
+            });
+    }
+}
+// Hàm để hiển thị bình luận cho một ID bài hát
+function showCommentsForId(songId) {
+  const commentsContainer = document.getElementById("commentsContainer");
+  commentsContainer.innerHTML = "";
+  // Lấy bình luận từ bảng comments
+  const commentsRef = firebase.database().ref(`comments/${songId}`);
+  commentsRef.once("value").then(commentsSnapshot => {
+    const comments = commentsSnapshot.val() || {};
+    const table = document.createElement("table");
+    table.classList.add("comment-table");
+    // Header của bảng
+    const headerRow = table.insertRow();
+    headerRow.innerHTML = `
+      <th>STT</th>
+      <th>Bài Hát Bình Luận</th>
+      <th>Tên Người Dùng</th>
+      <th>Nội Dung Bình Luận</th>
+      <th>Timestamp</th>
+      <th>Chức Năng</th>
+   
+    `;
+    let index = 1;
+    for (const commentId in comments) {
+      const comment = comments[commentId];
+      const row = table.insertRow();
+      const timestamp = new Date(comment.timestamp);
+      const formattedTimestamp = timestamp.toLocaleString();
+      row.innerHTML = `
+        <td>${index}</td>
+        <td>${comment.songId}</td>
+        <td>${comment.userName}</td>
+        <td>${comment.commentText}</td>
+        <td>${formattedTimestamp}</td>
+      <td>
+    <button class="button-delete" onclick="deleteComment('${commentId}', '${songId}')">Xóa</button>
+        <button class="button-replies" onclick="toggleReplies('${commentId}', '${songId}', 'replyTable_${index}')">Xem Trả Lời</button>
+    </td>
+      `;
+      const replyRow = table.insertRow();
+      const replyCell = replyRow.insertCell(0);
+      replyCell.colSpan = 7;
+      const replyTable = document.createElement("table");
+      replyTable.classList.add("reply-table");
+      replyTable.id = `replyTable_${index}`;
+      replyCell.appendChild(replyTable);
+      index++;
+      // Hiển thị trả lời
+      toggleReplies(commentId, songId, `replyTable_${index}`);
+    }
+
+    commentsContainer.appendChild(table);
+  });
+}
+
+// Hàm để hiển thị hoặc ẩn bảng trả lời
+function toggleReplies(commentId, songId, tableId) {
+  const replyTable = document.getElementById(tableId);
+  if (replyTable) {
+    // Hiển thị hoặc ẩn bảng trả lời
+    replyTable.style.display = replyTable.style.display === "none" ? "table" : "none";
+    // Nếu bảng trả lời đang hiển thị, gọi hàm để hiển thị trả lời
+    if (replyTable.style.display !== "none") {
+      // Xóa các dòng hiện tại trong bảng trả lời
+      clearReplies(replyTable);
+      // Gọi hàm showReplies và truyền vào commentId, songId và replyTable
+      showReplies(commentId, songId, replyTable);
+    }
+  }
+}
+
+// Hàm để xóa các dòng hiện tại trong bảng trả lời
+function clearReplies(replyTable) {
+  while (replyTable.rows.length > 0) {
+    replyTable.deleteRow(0);
+  }
+}
+
+// Hàm để hiển thị trả lời
+function showReplies(commentId, songId, replyTable) {
+    if (replyTable) {
+        // Lấy trả lời từ bảng commentreply
+        const commentReplyRef = firebase.database().ref(`commentreply/${songId}`);
+        commentReplyRef.once("value").then(replySnapshot => {
+            const replies = replySnapshot.val() || {};
+            let replyIndex = 1;
+
+            // Thêm dòng tiêu đề cho bảng trả lời
+            const headerRowReply = replyTable.insertRow();
+            headerRowReply.innerHTML = `
+               <div class="td-box">
+
+              <th>STT</th>
+              <th>Tên Người Dùng</th>
+              <th>Nội Dung Trả Lời</th>
+              <th>Thời Gian</th>
+              <th>Chức Năng</th>
+                </div> 
+            `;
+            for (const replyId in replies) {
+                const reply = replies[replyId];
+
+                // Kiểm tra xem reply có cùng commentId không
+                if (reply.commentId === commentId) {
+                    const replyTableRow = replyTable.insertRow();
+                    const replyTimestamp = new Date(reply.timestamp);
+                    const formattedReplyTimestamp = replyTimestamp.toLocaleString();
+
+                    replyTableRow.innerHTML = `
+                    <div class="td-box">
+                      <td>${replyIndex}</td>
+                      <td class="td-user">${reply.userName}</td>
+                      <td class="td-user">${reply.replyText}</td>
+                      <td class="td-user">${formattedReplyTimestamp}</td>
+                        <td>
+                    <button class="button-delete" onclick="deleteReplyHandler('${replyId}', '${songId}', '${commentId}')">Xóa</button>
+                    <button class="button-replies" onclick="editReplyHandler('${replyId}', '${songId}', '${commentId}')">Sửa</button>
+                  </td>
+                    </div> 
+       
+                    `;
+                    replyIndex++;
+                }
+            }
+        }).catch(error => {
+            console.error("Lỗi khi lấy dữ liệu trả lời:", error);
+        });
+    } else {
+        console.error("Bảng trả lời không tồn tại!");
+    }
+}
+
+// Hàm xử lý xóa trả lời
+function deleteReplyHandler(replyId, songId, commentId) {
+    // Thêm xác nhận trước khi xóa
+    const confirmDelete = confirm("Bạn có chắc muốn xóa trả lời này không?");
+    if (confirmDelete) {
+        deleteReply(replyId, songId, commentId);
+        
+    }
+}
+// Hàm xử lý xóa trả lời
+function loadwebHandler() {
+    // Thêm xác nhận trước khi xóa
+    const loadWeb = confirm("Bạn có muốn load lại trang");
+    if (loadWeb) {
+         window.location.reload();
+    }
+}
+
+// Hàm để xóa trả lời
+function deleteReply(replyId, songId, commentId) {
+    const replyTable = document.getElementById(`replyTable_${commentId}`);
+    const replyRef = firebase.database().ref(`commentreply/${songId}/${replyId}`);
+    console.log(replyRef);
+    replyRef.remove().then(() => {
+        alert("Bình luận đã được xóa trong dữ liệu!");
+        //load lại trang web
+        loadwebHandler()
+      {/*  window.location.reload();*/}
+         
+    }).catch(error => {
+        console.error("Lỗi khi xóa trả lời:", error);
+    });
+}
+
+// Hàm xử lý sửa reply
+function editReplyHandler(replyId, songId, commentId) {
+    // Lấy thông tin reply cần sửa từ cơ sở dữ liệu
+    const replyRef = firebase.database().ref(`commentreply/${songId}/${replyId}`);
+    
+    replyRef.once("value").then(snapshot => {
+        const reply = snapshot.val();
+        
+        // Hiển thị modal để sửa reply
+        showEditReplyModal();
+
+        // Điền dữ liệu của reply vào modal
+        document.getElementById("editedReplyText").value = reply.replyText;
+
+        // Lắng nghe sự kiện khi người dùng ấn "Lưu" trong modal
+        const saveButton = document.getElementById("saveReplyButton");
+        saveButton.onclick = function () {
+            // Thực hiện các bước để lưu sửa đổi
+            const editedReplyText = document.getElementById("editedReplyText").value;
+
+            // Lưu dữ liệu đã sửa vào cơ sở dữ liệu
+            replyRef.update({ replyText: editedReplyText }).then(() => {
+                alert("Sửa reply thành công!");
+                
+                // Sau khi sửa reply, đóng modal và làm mới hiển thị trả lời
+                closeEditReplyModal();
+                showReplies(commentId, songId, document.getElementById(`replyTable_${commentId}`));
+            }).catch(error => {
+                console.error("Lỗi khi lưu sửa đổi:", error);
+            });
+        };
+    }).catch(error => {
+        console.error("Lỗi khi lấy dữ liệu reply:", error);
+    });
+}
+// Hàm để hiển thị modal sửa reply
+function showEditReplyModal() {
+    const modal = document.getElementById("editReplyModal");
+    modal.style.display = "block";
+}
+
+// Hàm để đóng modal sửa reply
+function closeEditReplyModal() {
+    const modal = document.getElementById("editReplyModal");
+    modal.style.display = "none";
+}
+/* // Hàm xử lý sửa trả lời
+function editReplyHandler(replyId, songId, commentId) {
+  const replyTable = document.getElementById(`replyTable_${commentId}`);
+  const replyRef = firebase.database().ref(`commentreply/${songId}/${replyId}`);
+  replyRef.once("value").then(replySnapshot => {
+    const reply = replySnapshot.val();
+    if (reply) {
+      // TODO: Thực hiện các bước để sửa trả lời, có thể sử dụng modal hoặc form
+
+      // Cập nhật trực tiếp nội dung của dòng trong bảng trả lời
+      const replyRow = replyTable.querySelector(`[data-reply-id="${replyId}"]`);
+      if (replyRow) {
+        const indexCell = replyRow.cells[0];
+        const userNameCell = replyRow.cells[1];
+        const replyTextCell = replyRow.cells[2];
+        const timestampCell = replyRow.cells[3];
+
+        // Cập nhật các ô dữ liệu
+        userNameCell.innerText = reply.userName;
+        replyTextCell.innerText = reply.replyText;
+
+        // Sau khi sửa, có thể cần cập nhật thêm các trường khác nếu có thay đổi
+      }
+    }
+  });
+}*/
+
+
+    // Gọi hàm để hiển thị dữ liệu ban đầu
+   fetchDataAndDisplay();
+</script>
+</body>
+</html>

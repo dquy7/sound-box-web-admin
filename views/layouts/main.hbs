@@ -57,7 +57,6 @@
     }
 }
     .user-info {
-    margin-top: 200px;
     border-radius: 0px;
     display: flex;
     align-items: center;
@@ -99,8 +98,26 @@
 <body>
     <div class="main-container d-flex">
         <div class="sidebar" id="side_nav">
-      
 
+            <div class="user-info px-3 py-2">
+                <img src="" alt="" class="avatar img-fluid rounded-circle">
+                <div class="info">
+                    <p class="username"></p>
+                    <p class="email"></p>
+                </div>
+                <!-- Default dropend button -->
+            <div class="btn-group dropend">
+            <button style=" width: 100%;  background-color:#66CCFF !important; border: 0px;" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            </button>
+            <ul style="background-color:  #66CCFF;" class="dropdown-menu">
+                <!-- Dropdown menu links -->
+                <li><button class="dropdown-item" type="button">Thay Đổi Thông Tin</button></li>
+                 <li><button class="dropdown-item change-password-button" type="button">Đổi Mật Khẩu</button></li>
+                   <hr />
+                  <li><button class="dropdown-item logout-button" type="button">Đăng Xuất</button></li>
+            </ul>
+            </div>
+        </div>
 
    <div class="header-box px-2 pt-3 pb-4 d-flex justify-content-between">
                 <h1 class="fs-4">
@@ -133,25 +150,7 @@
                               <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i
                             class="fas fa-bell mx-2"></i></i>Đăng Xuất</a></li>
             </ul>
-              <div class="user-info px-3 py-2">
-                <img src="" alt="" class="avatar img-fluid rounded-circle">
-                <div class="info">
-                    <p class="username"></p>
-                    <p class="email"></p>
-                </div>
-                <!-- Default dropend button -->
-            <div class="btn-group dropend">
-            <button style="border: 0px; width: 100%;  background-color:#66CCFF !important;" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
-            </button>
-            <ul style="background-color:  #66CCFF; border: 0px; border-radius: 0px;" class="dropdown-menu">
-                <!-- Dropdown menu links -->
-                <li><button class="dropdown-item" type="button">Thay Đổi Thông Tin</button></li>
-                 <li><button class="dropdown-item change-password-button" type="button">Đổi Mật Khẩu</button></li>
-                   <hr />
-                  <li><button class="dropdown-item logout-button" type="button">Đăng Xuất</button></li>
-            </ul>
-            </div>
-        </div>
+     
         </div>
 
         <div class="content">
@@ -263,7 +262,6 @@
                 } else {
                     // Người dùng không đăng nhập hoặc thông tin không tồn tại
                     console.error('Người dùng không đăng nhập hoặc không tìm thấy thông tin trong Realtime Database.');
-
                     // Ẩn phần dropdown khi chưa đăng nhập
                     document.querySelector('.btn-group.dropend').style.display = 'none';
                     document.querySelector('.user-options-nav').style.display = 'none';

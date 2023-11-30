@@ -15,6 +15,7 @@ const RevenueController = require("./controllers/RevenueController");
 const FeedbackStatistical = require("./controllers/FeedbackStatisticalController");
 const forgotPassword = require("./controllers/forgotPassword");
 const resetpassword = require("./controllers/resetpassword");
+const comment = require("./controllers/CommentController");
 const { Link } = require("react-router-dom");
 
 app.engine(".hbs", engine({ extname: ".hbs" }));
@@ -27,6 +28,7 @@ app.use("/home", HomeController);
 app.use("/", LoginController);
 app.use("/forgotPassword", forgotPassword);
 app.use("/music", MusicController);
+app.use("/comment", comment);
 app.use("/signup", SingupController);
 app.use("/user", UserController);
 app.use("/user", UserController);
