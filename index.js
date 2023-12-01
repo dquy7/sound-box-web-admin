@@ -16,6 +16,7 @@ const FeedbackStatistical = require("./controllers/FeedbackStatisticalController
 const forgotPassword = require("./controllers/forgotPassword");
 const resetpassword = require("./controllers/resetpassword");
 const comment = require("./controllers/CommentController");
+const playmusic = require("./controllers/PlayMusicController");
 const { Link } = require("react-router-dom");
 
 app.engine(".hbs", engine({ extname: ".hbs" }));
@@ -25,6 +26,7 @@ app.use(express.json());
 app.use(cookieParser());
 
 app.use("/home", HomeController);
+app.use("/play-music", playmusic);
 app.use("/", LoginController);
 app.use("/forgotPassword", forgotPassword);
 app.use("/music", MusicController);
