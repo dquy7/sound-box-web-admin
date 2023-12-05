@@ -214,7 +214,7 @@
 
 
 
-    function calculateStatistics(users) {
+  function calculateStatistics(users) {
   const totalUsers = users.length;
   const lockedUsers = users.filter(user => user.isLocked).length;
     const vipUsers = users.filter(user => user.subscriptionType).length;

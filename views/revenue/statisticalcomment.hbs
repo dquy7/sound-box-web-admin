@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Thống Kê Bình Luận</title>
+       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+     <style>
+   #chartContainer {
+            width: 500px;
+            height: 300px;
+            margin-left: 40%;
+        }
+     </style>
+</head>
+<body>
+     <nav style="background-color: aquamarine; height: 82px;" class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a style="font-size: 30px; font-weight: bold;" class="navbar-brand" href="./statisticalcomment">Thống Kê Bình Luận</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./statisticalmusic">Thống Kê Bài Hát</a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./feedbackstatistical">Thống Kê Feedback</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./revenue">Thống Kê Người Dùng</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+<div id="chartContainer">
+  <canvas id="commentChart"></canvas>
+  <p style="margin-top: 10px; font-weight: bold; font-size: 16px;">Thống Kê Số Lượt Bình Luận Và Trả Lời Bình Luận</p>
+</div>
+
+<div class="box-Chart">
+  <div class="box-tkdk">
+    <canvas id="Commentchartbyday" width="400" height="200"></canvas>
+    <p style="text-align: center;">2.1. Biểu đồ bình luận theo ngày</p>
+  </div>
+  <div class="box-tkdn">
+    <canvas id="Commentresponsechartbyday"></canvas>
+    <p style="text-align: center;">2.2. Biểu đồ phản hồi bình luận theo ngày</p>
+  </div>
+</div>
+<!-- Thư viện Chart.js -->
+
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+<!-- Nếu bạn sử dụng adapter date-fns -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+<!-- Firebase JavaScript SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
+
+<script>
+// Cấu hình Firebase
+const firebaseConfig = {
+    apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
+    authDomain: "soundbox-du-an-md31.firebaseapp.com",
+    databaseURL: "https://soundbox-du-an-md31-default-rtdb.firebaseio.com",
+    projectId: "soundbox-du-an-md31",
+    storageBucket: "soundbox-du-an-md31.appspot.com",
+    messagingSenderId: "265264289877",
+    appId: "1:265264289877:web:0f88e2fa54c638685e9cdc",
+    measurementId: "G-FE9Z9NKJDR"
+};
+
+// Khởi tạo Firebase
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+
+// Lấy tham chiếu đến bảng comments và comment replies
+const commentsRef = database.ref('comments');
+const commentRepliesRef = database.ref('commentreply');
+
+// Khai báo biến commentCount ở cấp độ ngoài cùng
+let commentCount;
+
+// Lấy dữ liệu từ Firebase và vẽ biểu đồ
+Promise.all([
+    commentsRef.once('value'),
+    commentRepliesRef.once('value')
+])
+    .then((snapshots) => {
+        const commentsSnapshot = snapshots[0];
+        const commentRepliesSnapshot = snapshots[1];
+
+        const comments = commentsSnapshot.val() || {};
+        const commentReplies = commentRepliesSnapshot.val() || {};
+
+        // Tính toán số lượt bình luận
+        commentCount = Object.keys(comments).length;
+
+        // Tính toán số lượng trả lời bình luận
+        const replyCount = Object.keys(commentReplies).length;
+
+        // Hiển thị biểu đồ hình tròn
+        displayPieChart(commentCount, replyCount);
+
+        // Gọi hàm để vẽ biểu đồ theo ngày
+        drawCommentChartByDay();
+    })
+    .catch((error) => {
+        console.error('Lỗi khi lấy dữ liệu từ Firebase: ' + error.message);
+    });
+
+// Hàm hiển thị biểu đồ hình tròn
+function displayPieChart(commentCount, replyCount) {
+    const ctx = document.getElementById('commentChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'pie',
+        data: {
+            labels: ['Số lượt bình luận', 'Số lượng trả lời bình luận'],
+            datasets: [{
+                data: [commentCount, replyCount],
+                backgroundColor: ['#36a2eb', '#ff6384'],
+            }],
+        },
+    });
+}
+
+// Hàm để lấy dữ liệu bình luận từ Firebase
+function getCommentData() {
+    // Lấy tham chiếu đến bảng bình luận (thay 'comments' bằng tên thực của bảng trong cơ sở dữ liệu của bạn)
+    const commentsRef = database.ref('comments');
+
+    // Lắng nghe sự kiện khi dữ liệu thay đổi
+    commentsRef.on('value', (snapshot) => {
+        const commentsData = snapshot.val();
+
+        // Xử lý dữ liệu bình luận ở đây
+        console.log('Dữ liệu bình luận:', commentsData);
+
+        // Gọi hàm để xử lý và hiển thị dữ liệu bình luận (ví dụ: displayCommentData(commentsData))
+        displayCommentData(commentsData);
+    });
+}
+
+// Hàm để vẽ biểu đồ bình luận theo ngày
+function drawCommentChartByDay(commentsData) {
+     console.log('Xử lý và hiển thị dữ liệu bình luận:', commentsData);
+    // Lấy tham chiếu đến bảng comments
+      const commentsRef = firebase.database().ref(`comments/${songId}`);
+
+    // Khởi tạo mảng để lưu trữ dữ liệu bình luận theo ngày
+    const commentDataByDay = [];
+
+    // Lắng nghe sự kiện khi dữ liệu thay đổi
+    commentsRef.on('value', (snapshot) => {
+        const comments = snapshot.val();
+
+        // Tạo một đối tượng để lưu trữ số lượng bình luận theo ngày
+        const commentCountByDay = {};
+
+        // Lặp qua các bình luận để đếm theo ngày
+        for (const commentId in comments) {
+            const comment = comments[commentId];
+
+            // Kiểm tra xem trường timestamp có tồn tại và là số không
+            if (comment.timestamp !== undefined && !isNaN(comment.timestamp)) {
+                const date = new Date(comment.timestamp);
+
+                // Kiểm tra xem giá trị thời gian có hợp lệ không
+                if (date instanceof Date && !isNaN(date.getTime())) {
+                    // Format ngày thành chuỗi YYYY-MM-DD
+                    const formattedDate = date.toISOString().split('T')[0];
+
+                    // Tăng số lượng bình luận cho ngày tương ứng
+                    commentCountByDay[formattedDate] = (commentCountByDay[formattedDate] || 0) + 1;
+                } else {
+                    console.error('Giá trị thời gian không hợp lệ:', date);
+                }
+            } else {
+                console.error('Timestamp không phải là một số:', comment.timestamp);
+            }
+        }
+
+        // Chuyển dữ liệu thành mảng để sử dụng trong biểu đồ
+        commentDataByDay.length = 0;
+        for (const date in commentCountByDay) {
+            commentDataByDay.push({ date, count: commentCountByDay[date] });
+        }
+
+        // Vẽ biểu đồ
+        displayCommentChartByDay();
+    });
+
+    // Hàm để vẽ biểu đồ bình luận theo ngày
+    function displayCommentChartByDay() {
+        const ctx = document.getElementById('Commentchartbyday').getContext('2d');
+        const labels = commentDataByDay.map(entry => entry.date);
+        const data = commentDataByDay.map(entry => entry.count);
+
+        new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: labels,
+                datasets: [{
+                    label: 'Số lượng bình luận',
+                    data: data,
+                    backgroundColor: 'rgba(54, 162, 235, 0.2)',
+                    borderColor: 'rgba(54, 162, 235, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    x: {
+                        type: 'time',
+                        time: {
+                            unit: 'day'
+                        }
+                    },
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+}
+</script>
+</body>
+</html>

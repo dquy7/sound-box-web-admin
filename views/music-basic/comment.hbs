@@ -240,26 +240,31 @@
 .button-replies:hover {
     background-color: #d35400; /* Màu cam khi di chuột qua */
 }
+/* CSS cho nút "Xóa" */
+.delete-button {
+    margin-left: 10px;
+    background-color: #d9534f; /* Màu đỏ */
+    color: #fff; /* Màu chữ trắng */
+    border: none;
+    padding: 8px 16px;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+}
 
+.delete-button:hover {
+    background-color: #c9302c; /* Màu đỏ tối khi di chuột qua */
+}
     </style>
 </head>
 <body>
-    <nav class="navbar navbar-expand-lg bg-body-tertiary">
+    <nav style="background-color:#007bff ; height: 83px;" class="navbar navbar-expand-lg bg-body-tertiary">
         <div class="container-fluid">
             <a style="font-weight: bold; " class="navbar-brand" href="./comment">Quản Lý Bình Luận</a>
             <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="collapse navbar-collapse" id="navbarSupportedContent">
-                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
-                      <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="./music">Bài Hát</a>
-                    </li>
-            
-                    <li class="nav-item">
-                        <a class="nav-link active" aria-current="page" href="./userstatistics">Thống Kê</a>
-                    </li>
-                </ul>
                 <nav class="navbar bg-light">
                     <div class="container-fluid">
                         <form class="d-flex" role="search">
@@ -283,6 +288,9 @@
     </thead>
     <tbody id="commentTable"></tbody>
 </table>
+
+
+
 
    <ul class="pagination" id="pagination"></ul>
 <!-- Thêm một div để hiển thị bình luận -->
@@ -353,22 +361,78 @@ function fetchDataAndDisplay() {
         const row = commentTable.insertRow();
         row.insertCell(0).innerText = i + 1;
         row.insertCell(1).innerText = comments[i].songId;
-
         const buttonCell = row.insertCell(2);
         const button = document.createElement("button");
         button.innerText = "Xem Bình Luận";
         button.classList.add("comment-button"); // Thêm lớp CSS
-            button.addEventListener("click", () => {
-               showCommentsForId(comments[i].songId);
+        button.addEventListener("click", () => {
+            showCommentsForId(comments[i].songId);
         });
-buttonCell.appendChild(button);
-
+        buttonCell.appendChild(button);
+        const deleteButton = document.createElement("button");
+        deleteButton.innerText = "Xóa";
+        deleteButton.classList.add("delete-button");
+        deleteButton.addEventListener("click", () => {
+           confirmDeleteComment(comments[i].songId);
+        });
+        buttonCell.appendChild(deleteButton);
         index++;
       }
 
       displayPagination();
     });
 }
+
+function confirmDeleteComment(songId) {
+    const confirmDelete = confirm("Bạn có chắc muốn xóa bình luận này?");
+    if (confirmDelete) {
+        deleteComment1(songId);
+    }
+}
+function deleteComment1(songId) {
+  // Thực hiện xóa bình luận từ cơ sở dữ liệu Firebase
+  const commentRef = firebase.database().ref(`comments/${songId}`);
+  
+  commentRef
+    .once("value")
+    .then(snapshot => {
+      const commentData = snapshot.val();
+
+      // Kiểm tra xem có bình luận nào tồn tại không
+      if (commentData) {
+        // Lấy danh sách các commentreply của bình luận
+        const commentReplyRef = firebase.database().ref(`commentreply/${songId}`);
+        
+        commentReplyRef
+          .once("value")
+          .then(replySnapshot => {
+            const replyData = replySnapshot.val();
+            
+            // Kiểm tra xem có reply nào tồn tại không
+            if (replyData) {
+              // Xóa tất cả các commentreply
+              commentReplyRef.remove();
+            }
+          })
+          .catch(error => {
+            console.error("Lỗi khi lấy dữ liệu commentreply:", error);
+          });
+      }
+      
+      // Xóa bình luận
+      return commentRef.remove();
+    })
+    .then(() => {
+      console.log(`Bình luận với songId ${songId} và các commentreply đã được xóa thành công.`);
+      fetchDataAndDisplay(); // Cập nhật lại bảng sau khi xóa
+     // Làm mới trang web sau khi xóa
+      window.location.reload();
+    })
+    .catch(error => {
+      console.error(`Lỗi khi xóa bình luận với songId ${songId}:`, error);
+    });
+}
+
 // Trong hàm displayPagination
 function displayPagination() {
     const totalPages = Math.ceil(totalComments / commentsPerPage);
@@ -629,34 +693,6 @@ function closeEditReplyModal() {
     const modal = document.getElementById("editReplyModal");
     modal.style.display = "none";
 }
-/* // Hàm xử lý sửa trả lời
-function editReplyHandler(replyId, songId, commentId) {
-  const replyTable = document.getElementById(`replyTable_${commentId}`);
-  const replyRef = firebase.database().ref(`commentreply/${songId}/${replyId}`);
-  replyRef.once("value").then(replySnapshot => {
-    const reply = replySnapshot.val();
-    if (reply) {
-      // TODO: Thực hiện các bước để sửa trả lời, có thể sử dụng modal hoặc form
-
-      // Cập nhật trực tiếp nội dung của dòng trong bảng trả lời
-      const replyRow = replyTable.querySelector(`[data-reply-id="${replyId}"]`);
-      if (replyRow) {
-        const indexCell = replyRow.cells[0];
-        const userNameCell = replyRow.cells[1];
-        const replyTextCell = replyRow.cells[2];
-        const timestampCell = replyRow.cells[3];
-
-        // Cập nhật các ô dữ liệu
-        userNameCell.innerText = reply.userName;
-        replyTextCell.innerText = reply.replyText;
-
-        // Sau khi sửa, có thể cần cập nhật thêm các trường khác nếu có thay đổi
-      }
-    }
-  });
-}*/
-
-
     // Gọi hàm để hiển thị dữ liệu ban đầu
    fetchDataAndDisplay();
 </script>

@@ -17,6 +17,10 @@ const forgotPassword = require("./controllers/forgotPassword");
 const resetpassword = require("./controllers/resetpassword");
 const comment = require("./controllers/CommentController");
 const playmusic = require("./controllers/PlayMusicController");
+const statisticalmusic = require("./controllers/StatisticalMusicController");
+const Musiccopyright = require("./controllers/Musiccopyright.controller");
+const ManageMusic = require("./controllers/ManageBannerMusic");
+const StatisticalComment = require("./controllers/StatisticalComment");
 const { Link } = require("react-router-dom");
 
 app.engine(".hbs", engine({ extname: ".hbs" }));
@@ -27,9 +31,13 @@ app.use(cookieParser());
 
 app.use("/home", HomeController);
 app.use("/play-music", playmusic);
+app.use("/musiccopyright", Musiccopyright);
+app.use("/managemusic", ManageMusic);
 app.use("/", LoginController);
 app.use("/forgotPassword", forgotPassword);
 app.use("/music", MusicController);
+app.use("/statisticalmusic", statisticalmusic);
+app.use("/statisticalcomment", StatisticalComment);
 app.use("/comment", comment);
 app.use("/signup", SingupController);
 app.use("/user", UserController);

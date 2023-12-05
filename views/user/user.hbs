@@ -6,50 +6,46 @@
      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
 </head>
 <link rel="stylesheet" href="path/to/styles.css">
-<style>
-     .pagination {
-            display: flex;
-            list-style: none;
-            padding: 0;
-        }
-
-    .pagination li {
-        margin-right: 5px;
-        cursor: pointer;
-    }
-    /* Pagination styles */
-#pagination {   
-  list-style: none;
-  display: flex;
-  justify-content: center;
-  padding: 10px;
+<style>/* Style for pagination */
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+    margin-top: 20px;
+    
 }
 
-#pagination li {
-    width: 20px;
-  margin: 0 5px;
-  cursor: pointer;
-   display: flex;
-  justify-content: center;
-   border: 1px solid black;
+.pagination li {
+    margin-right: 5px;
+    cursor: pointer;
+    color: #0056b3;
+    border: 1px solid #007bff;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+.pagination a {
+    text-decoration: none;
 }
 
+.pagination li:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
 </style>
 <body>
-     <nav class="navbar navbar-expand-lg bg-body-tertiary">
+     <nav style="background-color:#007bff ; height: 83px;"  class="navbar navbar-expand-lg bg-body-tertiary">
   <div class="container-fluid">
-    <a class="navbar-brand" href="./user">Quản Lý Người Dùng</a>
+    <a style="font-size: 30px; font-weight: bold;" class="navbar-brand" href="./user">Quản Lý Người Dùng</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
       <ul class="navbar-nav me-auto mb-2 mb-lg-0">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="./user">Người Dùng VIP</a>
+          <a class="nav-link active" aria-current="page" href="">Người Dùng VIP</a>
         </li>
-          <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="./userstatistics">Thống Kê</a>
-        </li>
+         
       </ul>
       <form class="d-flex" role="search">
         <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
@@ -214,7 +210,7 @@ function displayUsersOnPage(users) {
         const createdTime = new Date(user.creationTime); // Chuyển đổi timestamp sang đối tượng Date
     createdTimeCell.textContent = createdTime.toLocaleString(); // Hiển thị theo định dạng ngày và giờ
     // Thêm ô trạng thái VIP
-    accountCell.textContent = user.subscriptionType ? "VIP" : "Nghe Nhạc";
+    accountCell.textContent = user.isVIP ? "VIP" : "Nghe Nhạc";
 
     // Thêm nút xóa
     const deleteButton = document.createElement("button");

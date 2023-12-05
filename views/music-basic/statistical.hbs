@@ -1,0 +1,666 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Thống Kê Người Dùng</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+    <style>
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+
+         .container {
+        margin-top: 50px;
+    }
+
+    h3 {
+        margin-bottom: 20px;
+    }
+
+    table {
+        width: 100%;
+        margin-bottom: 20px;
+        border-collapse: collapse;
+    }
+
+    th, td {
+        padding: 12px;
+        text-align: left;
+        border: 1px solid #ddd;
+    }
+
+    th {
+        background-color: #f2f2f2;
+    }
+
+#dailyTableBody, #monthlyTableBody, #yearlyTableBody {
+    font-size: 16px;
+}
+    .combined-chart-container {
+    max-width: 600px;
+    margin: 20px auto;
+}
+
+body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 0;
+}
+
+.container {
+    max-width: 1200px;
+    margin: 20px auto;
+}
+
+.box-chart {
+    display: flex;
+    justify-content: space-around;
+    align-items: flex-start;
+}
+
+.box-tkdk {
+    text-align: center;
+    margin: 20px;
+}
+
+.chart-title {
+    font-size: 16px;
+    margin-top: 10px;
+}
+
+canvas {
+    border: 1px solid #ddd;
+}
+  #pieChart {
+            width: 100%;
+            height: 100%;
+        }
+          #chartContainer {
+            width: 500px;
+            height: 300px;
+            margin-left: 40%;
+        }
+
+    </style>
+</head>
+
+<body>
+     <nav style="background-color: aquamarine; height: 82px;" class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a style="font-size: 30px; font-weight: bold;" class="navbar-brand" href="./statisticalmusic">Thống Kê Bài Hát</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./revenue">Thống Kê Người Dùng</a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./feedbackstatistical">Thống Kê Feedback</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./statisticalcomment">Thống Kê Bình Luận</a>
+        </li>
+      </ul>
+      <form class="d-flex" role="search">
+        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+        <button class="btn btn-outline-success" type="submit">Search</button>
+      </form>
+    </div>
+  </div>
+</nav>
+
+    <div class="container mt-5">
+        <div class="row">
+            <div class="col-md-4">
+                <h3>Chi Tiết Lượt Nghe</h3>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>Ngày</th>
+                            <th>Lượt Nghe</th>
+                        </tr>
+                    </thead>
+                    <tbody id="dailyTableBody">
+                        <!-- This is where your daily details will be inserted -->
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th>Tháng</th>
+                            <th>Lượt Nghe</th>
+                        </tr>
+                    </thead>
+                    <tbody id="monthlyTableBody">
+                        <!-- This is where your monthly details will be inserted -->
+                    </tbody>
+                    <thead>
+                        <tr>
+                            <th>Năm</th>
+                            <th>Lượt Nghe</th>
+                        </tr>
+                    </thead>
+                    <tbody id="yearlyTableBody">
+                        <!-- This is where your yearly details will be inserted -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+        <div id="chartContainer">
+        <canvas id="pieChart"></canvas>
+        <p style="margin-left: 70px">1. Thống Kê Bài Hát</p>
+        </div>
+
+ <div class="container">
+        <div class="box-chart">
+            <div class="box-tkdk">
+                <canvas id="dailyChart" width="300" height="300"></canvas>
+                <p class="chart-title">2.1. Lượt Nghe Hàng Ngày</p>
+            </div>
+            <div class="box-tkdk">
+                <canvas id="monthlyChart" width="300" height="300"></canvas>
+                <p class="chart-title">2.2. Lượt Nghe Hàng Tháng</p>
+            </div>
+            <div class="box-tkdk">
+                <canvas id="yearlyChart" width="300" height="300"></canvas>
+                <p class="chart-title">2.3. Lượt Nghe Hàng Năm</p>
+            </div>
+        </div>
+    </div>
+
+     <div class="container">
+        <div class="box-chart">
+            <div class="box-tkdk">
+                <canvas id="MusicdailyChart" width="300" height="300"></canvas>
+                <p class="chart-title">3.1. Bài Hát Được Thêm Hàng Ngày</p>
+            </div>
+            <div class="box-tkdk">
+                <canvas id="MusicmonthlyChart" width="300" height="300"></canvas>
+                <p class="chart-title">3.2. Bài Hát Được Thêm Hàng Tháng</p>
+            </div>
+            <div class="box-tkdk">
+                <canvas id="MusicyearlyChart" width="300" height="300"></canvas>
+                <p class="chart-title">3.3. Bài Hát Được Thêm Hàng Năm</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Thư viện Chart.js -->
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+    <!-- Nếu bạn sử dụng adapter date-fns -->
+    <script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns"></script>
+    <!-- Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
+<script>
+const firebaseConfig = {
+    apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
+    authDomain: "soundbox-du-an-md31.firebaseapp.com",
+    databaseURL: "https://soundbox-du-an-md31-default-rtdb.firebaseio.com",
+    projectId: "soundbox-du-an-md31",
+    storageBucket: "soundbox-du-an-md31.appspot.com",
+    messagingSenderId: "265264289877",
+    appId: "1:265264289877:web:0f88e2fa54c638685e9cdc",
+    measurementId: "G-FE9Z9NKJDR"
+};
+
+firebase.initializeApp(firebaseConfig);
+const database = firebase.database();
+const songsRef = database.ref("songs");
+
+songsRef.once("value", function (snapshot) {
+    const songsData = snapshot.val();
+    const listenStats = calculateListenStats(songsData);
+    const musicStats = calculateMusicStats(songsData);
+    drawDailyChart(listenStats.daily);
+    drawMonthlyChart(listenStats.monthly);
+    drawYearlyChart(listenStats.yearly);
+
+    drawMusicDailyChart(musicStats.daily);
+    drawMusicMonthlyChart(musicStats.monthly);
+    drawMusicYearlyChart(musicStats.yearly);
+
+    updateDetailTable(listenStats);
+
+
+
+});
+
+
+// Hàm lấy dữ liệu từ bảng "songs" trong Firebase Realtime Database
+function getSongsData() {
+  return new Promise((resolve, reject) => {
+    // Sử dụng phương thức "once" để lấy dữ liệu từ bảng "songs"
+    database.ref('songs').once('value')
+      .then(snapshot => {
+        const songs = snapshot.val();
+        resolve(songs);
+      })
+      .catch(error => {
+        console.error('Error getting songs data:', error);
+        reject(error);
+      });
+  });
+}
+
+// Hàm tính toán thống kê và hiển thị biểu đồ
+async function calculateAndDisplayStatistics() {
+  try {
+    // Lấy dữ liệu từ Firebase Realtime Database
+    const songsData = await getSongsData();
+
+    // Kiểm tra xem songsData có phải là đối tượng không
+    if (typeof songsData !== 'object' || songsData === null) {
+      console.error('Invalid songs data:', songsData);
+      return; // hoặc xử lý theo yêu cầu của bạn
+    }
+
+    // Chuyển đối tượng thành mảng các giá trị
+    const songsArray = Object.values(songsData);
+
+
+    // Sử dụng `filter` để lọc các bài hát không có bản quyền (copyrighted: false)
+    const noVipSongs = songsArray.filter(song => !song.hasOwnProperty('copyrighted') || song['copyrighted'] === false).length;
+
+    // Sử dụng `filter` để lọc các bài hát có bản quyền (copyrighted: true)
+    const vipSongs = songsArray.filter(song => song.hasOwnProperty('copyrighted') && song['copyrighted'] === true).length;
+
+    
+
+    const statistics = {  noVipSongs, vipSongs };
+
+    // Hiển thị biểu đồ
+    displayPieChart(statistics);
+  } catch (error) {
+    console.error('Error calculating statistics:', error);
+    // Xử lý lỗi theo yêu cầu của bạn
+  }
+}
+
+// Hàm hiển thị biểu đồ
+function displayPieChart(statistics) {
+  const ctx = document.getElementById('pieChart').getContext('2d');
+
+  const pieChart = new Chart(ctx, {
+    type: 'pie',
+    data: {
+      labels: ['Bài Hát VIP', 'Bài Hát Không Bản Quyền'],
+      datasets: [{
+        data: [statistics.vipSongs, statistics.noVipSongs],
+        backgroundColor: ['#FF0000', '#00FF00'],
+      }],
+    },
+  });
+}
+
+
+ // Gọi hàm tính toán và hiển thị thống kê
+    calculateAndDisplayStatistics();
+
+
+
+function calculateListenStats(songsData) {
+    const listenStats = {
+        daily: {},
+        monthly: {},
+        yearly: {}
+    };
+
+    Object.values(songsData).forEach(function (song) {
+        if (song.listenTimestamp && !isNaN(song.listenTimestamp)) {
+            const timestamp = new Date(parseInt(song.listenTimestamp));
+            const dateKeyDay = timestamp.getFullYear() + '-' + (timestamp.getMonth() + 1).toString().padStart(2, '0') + '-' + timestamp.getDate().toString().padStart(2, '0');
+            const dateKeyMonth = timestamp.getFullYear() + '-' + (timestamp.getMonth() + 1).toString().padStart(2, '0');
+            const dateKeyYear = timestamp.getFullYear().toString();
+
+            listenStats.daily[dateKeyDay] = (listenStats.daily[dateKeyDay] || 0) + 1;
+            listenStats.monthly[dateKeyMonth] = (listenStats.monthly[dateKeyMonth] || 0) + 1;
+            listenStats.yearly[dateKeyYear] = (listenStats.yearly[dateKeyYear] || 0) + 1;
+        }
+    });
+
+    return listenStats;
+}
+
+function drawDailyChart(dailyListenStats) {
+    const labels = Object.keys(dailyListenStats);
+    const data = Object.values(dailyListenStats);
+
+    const ctx = document.getElementById('dailyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Lượt nghe (Ngày)',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.4)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                },
+            ],
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                    },
+                },
+                y: {
+                    beginAtZero: true,
+                },
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            return 'Lượt nghe: ' + tooltipItem.yLabel;
+                        },
+                    },
+                },
+            },
+        },
+    });
+}
+
+function drawMonthlyChart(monthlyListenStats) {
+    const labels = Object.keys(monthlyListenStats);
+    const data = Object.values(monthlyListenStats);
+
+    const ctx = document.getElementById('monthlyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Lượt nghe (Tháng)',
+                    data: data,
+                    backgroundColor: 'rgba(255, 255, 0, 0.4)',
+                    borderColor: 'rgba(255, 255, 0, 1)',
+                    borderWidth: 2,
+                },
+            ],
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'month',
+                    },
+                },
+                y: {
+                    beginAtZero: true,
+                },
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            return 'Lượt nghe: ' + tooltipItem.yLabel;
+                        },
+                    },
+                },
+            },
+        },
+    });
+}
+
+function drawYearlyChart(yearlyListenStats) {
+    const labels = Object.keys(yearlyListenStats);
+    const data = Object.values(yearlyListenStats);
+
+    const ctx = document.getElementById('yearlyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Lượt nghe (Năm)',
+                    data: data,
+                    backgroundColor: 'rgba(255, 0, 0, 0.4)',
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    borderWidth: 2,
+                },
+            ],
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'year',
+                    },
+                },
+                y: {
+                    beginAtZero: true,
+                },
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            return 'Lượt nghe: ' + tooltipItem.yLabel;
+                        },
+                    },
+                },
+            },
+        },
+    });
+}
+
+
+function convertTimestampToReadable(timestamp) {
+    const date = new Date(timestamp);
+    const formattedDate = date.getFullYear() + '-' + (date.getMonth() + 1).toString().padStart(2, '0') + '-' + date.getDate().toString().padStart(2, '0');
+    return formattedDate;
+}
+
+// Sử dụng hàm convertTimestampToReadable để chuyển đổi timestamp trong hàm calculateMusicStats
+function calculateMusicStats(songsData) {
+    const musicStats = {
+        daily: {},
+        monthly: {},
+        yearly: {}
+    };
+
+    Object.values(songsData).forEach((song) => {
+        if (song.timestamp) {
+            const timestamp = new Date(song.timestamp);
+            const dateKeyDay = timestamp.toISOString().slice(0, 10);
+            const dateKeyMonth = timestamp.toISOString().slice(0, 7);
+            const dateKeyYear = timestamp.toISOString().slice(0, 4);
+            musicStats.daily[dateKeyDay] = (musicStats.daily[dateKeyDay] || 0) + 1;
+            musicStats.monthly[dateKeyMonth] = (musicStats.monthly[dateKeyMonth] || 0) + 1;
+            musicStats.yearly[dateKeyYear] = (musicStats.yearly[dateKeyYear] || 0) + 1;
+        }
+    });
+    return musicStats;
+}
+function drawMusicDailyChart(dailyMusicStats) {
+    const labels = Object.keys(dailyMusicStats);
+    const data = Object.values(dailyMusicStats);
+   console.log("Dữ liệu ngày:", dailyMusicStats);
+    console.log("Ngày:", labels);
+    console.log("Dữ liệu lượt nghe:", data);
+    const ctx = document.getElementById('MusicdailyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Lượt nghe (Ngày)',
+                    data: data,
+                    backgroundColor: 'rgba(75, 192, 192, 0.4)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 2,
+                },
+            ],
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'day',
+                    },
+                },
+                y: {
+                    beginAtZero: true,
+                },
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            return 'Lượt nghe: ' + tooltipItem.yLabel;
+                        },
+                    },
+                },
+            },
+        },
+    });
+}
+
+function drawMusicMonthlyChart(monthlyMusicStats) {
+    const labels = Object.keys(monthlyMusicStats);
+    const data = Object.values(monthlyMusicStats);
+
+    const ctx = document.getElementById('MusicmonthlyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Lượt nghe (Tháng)',
+                    data: data,
+                    backgroundColor: 'rgba(255, 255, 0, 0.4)',
+                    borderColor: 'rgba(255, 255, 0, 1)',
+                    borderWidth: 2,
+                },
+            ],
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'month',
+                    },
+                },
+                y: {
+                    beginAtZero: true,
+                },
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            return 'Lượt nghe: ' + tooltipItem.yLabel;
+                        },
+                    },
+                },
+            },
+        },
+    });
+}
+
+function drawMusicYearlyChart(yearlyMusicStats) {
+    const labels = Object.keys(yearlyMusicStats);
+    const data = Object.values(yearlyMusicStats);
+
+    const ctx = document.getElementById('MusicyearlyChart').getContext('2d');
+    new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: labels,
+            datasets: [
+                {
+                    label: 'Lượt nghe (Năm)',
+                    data: data,
+                    backgroundColor: 'rgba(255, 0, 0, 0.4)',
+                    borderColor: 'rgba(255, 0, 0, 1)',
+                    borderWidth: 2,
+                },
+            ],
+        },
+        options: {
+            scales: {
+                x: {
+                    type: 'time',
+                    time: {
+                        unit: 'year',
+                    },
+                },
+                y: {
+                    beginAtZero: true,
+                },
+            },
+            plugins: {
+                legend: {
+                    display: false,
+                },
+                tooltips: {
+                    callbacks: {
+                        label: function (tooltipItem) {
+                            return 'Lượt nghe: ' + tooltipItem.yLabel;
+                        },
+                    },
+                },
+            },
+        },
+    });
+}
+
+function updateDetailTable(listenStats) {
+    updateTable('dailyTableBody', listenStats.daily);
+    updateTable('monthlyTableBody', listenStats.monthly);
+    updateTable('yearlyTableBody', listenStats.yearly);
+}
+
+function updateTable(tableId, data) {
+    const tableBody = document.getElementById(tableId);
+    tableBody.innerHTML = "";
+    Object.entries(data).forEach(function ([date, count]) {
+        const row = document.createElement("tr");
+        row.innerHTML = '<td>' + date + '</td><td>' + count + '</td>';
+        tableBody.appendChild(row);
+    });
+}
+</script>
+</body>
+
+</html>

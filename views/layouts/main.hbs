@@ -91,8 +91,64 @@
     border-radius: 20px !important;
     background-color: red !important;
 }
+/* Reset CSS */
+body, ul, li, a {
+    margin: 0;
+    padding: 0;
+    list-style: none;
+    text-decoration: none;
+}
+
+/* Global Styles */
+ul {
+    padding: 0;
+    margin: 0;
+}
+
+/* Navigation Styles */
+ul.list-unstyled {
+    padding: 10px;
+}
+
+ul.list-unstyled li {
+    margin-bottom: 10px;
+}
+
+ul.list-unstyled a {
+    display: block;
+    padding: 10px;
+    color: white;
+    border-radius: 5px;
+    transition: background-color 0.3s ease;
+}
+
+ul.list-unstyled a:hover {
+    background-color: #eee;
+}
+
+ul.list-unstyled i {
+    margin-right: 10px;
+}
+
+/* Horizontal Line */
+hr.h-color {
+    margin: 10px 0;
+}
+
+/* Additional Styles for Notification and Logout */
+ul.list-unstyled:last-child {
+    margin-top: 20px;
+}
+
+
+/* Áp dụng cho cả hai biểu tượng trong thẻ a */
+ul.list-unstyled a i.material-symbols-outlined {
+    vertical-align: middle;
+    /* Điều chỉnh khoảng cách giữa biểu tượng và văn bản */
+}
     </style>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
 </head>
 
 <body>
@@ -130,25 +186,26 @@
          
             <ul class="list-unstyled px-2">
                 <li class=""><a href="/home" class="text-decoration-none px-3 py-2 d-block" role="link">
-                        <i class="fas fa-home mx-2"></i>Trang chủ</a></li>
+                      <i class="material-symbols-outlined">home</i>Trang chủ</a></li>
                 <li class=""><a href="/music" class="text-decoration-none px-3 py-2 d-block" role="link">
-                        <i class="fas fa-music mx-2"></i>Quản lý bài nhạc</a></li>
+                      <i class="material-symbols-outlined">library_music</i>Quản lý bài nhạc</a></li>
+                <li class=""><a href="/comment" class="text-decoration-none px-3 py-2 d-block" role="link">
+                      <i class="material-symbols-outlined">chat</i>Quản lý bình luận</a></li>
                 <li class=""><a href="/user" class="text-decoration-none px-3 py-2 d-block">
-                        <i class="fas fa-users mx-2"></i>Quản lý tài khoản</a></li>
+                      <i class="material-symbols-outlined">account_circle</i>Quản lý tài khoản</a></li>
                 <li class=""><a href="/feedback" class="text-decoration-none px-3 py-2 d-block">
-                    <i class="fas fa-users mx-2"></i>  Phản Hồi Người Dùng</a></li>
+                   <i class="material-symbols-outlined">communication</i>Quản Lý Feedback</a></li>
                 <li class=""><a href="/revenue" class="text-decoration-none px-3 py-2 d-block">
-                        <i class="fas fa-chart-line mx-2"></i>Doanh thu</a></li>
+                    <i class="material-symbols-outlined">bar_chart_4_bars</i>Thống Kê</a></li>
             </ul>
             <hr class="h-color mx-2" style="background: #eee;">
-
             <ul class="list-unstyled px-2">
-                <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i
-                            class="fas fa-cog mx-2"></i>Setting</a></li>
-                <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i
-                            class="fas fa-bell mx-2"></i></i>Notification</a></li>
-                              <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block"><i
-                            class="fas fa-bell mx-2"></i></i>Đăng Xuất</a></li>
+                <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block">
+                  <i class="material-symbols-outlined">settings</i>Setting</a></li>
+                <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block">
+                   <i class="material-symbols-outlined">notifications</i>Notification</a></li>
+                <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block">
+                <i class="material-symbols-outlined">logout</i>Đăng Xuất</a></li>
             </ul>
      
         </div>
@@ -268,7 +325,7 @@
                 }
             })
             .catch(error => {
-                console.error('Lỗi khi lấy thông tin người dùng:', error.message);
+              
             });
     });
 
