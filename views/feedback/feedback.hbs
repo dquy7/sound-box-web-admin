@@ -93,7 +93,31 @@
     background-color: green;
     color: #ccc;
 }
+label {
+    margin-top: 10px;
+}
 
+/* Style for the date inputs */
+input[type="date"] {
+    padding: 5px;
+    margin-top: 5px;
+}
+
+/* Style for the button */
+button {
+    margin-left: 10px;
+    padding: 8px 12px;
+    background-color: #4caf50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+/* Change button color on hover */
+button:hover {
+    background-color: #45a049;
+}
     </style>
 </head>
 <body>
@@ -124,7 +148,13 @@
     </div>
   </div>
 </nav>
+<label style="margin-left: 250px; margin-top: 30px;" for="startDate">Ngày bắt đầu:</label>
+<input type="date" id="startDate">
 
+<label style="margin-top: 30px; margin-left: 10px;" for="endDate">Ngày kết thúc:</label>
+<input   type="date" id="endDate">
+
+<button style="margin-left: 10px;" onclick="filterByDate()">Lọc</button>
     <!-- Display feedback from Firebase here -->
         <table class="table table-bordered mt-4">
             <thead>
@@ -208,8 +238,6 @@
   <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
   <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
    <script src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
- 
-
 <script>
    const firebaseConfig = {
     apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
@@ -235,7 +263,6 @@ let currentPage = 1;
 
 const replyModal = new bootstrap.Modal(document.getElementById('replyModal'));
 const replyForm = document.getElementById('replyForm');
-
 function getAllFeedback() {
     return feedbackRef.once("value")
         .then((snapshot) => {
@@ -247,10 +274,34 @@ function getAllFeedback() {
             return feedbackArray;
         })
         .catch((error) => {
-            throw new Error("Lỗi khi lấy dữ liệu từ Firebase: " + error.message);
+            console.error("Error fetching feedback data:", error.message);
+            return [];  // Return an empty array in case of an error
         });
 }
+function filterByDate() {
+    const startDate = new Date(document.getElementById('startDate').value);
+    const endDate = new Date(document.getElementById('endDate').value);
 
+    console.log("Start Date:", startDate);
+    console.log("End Date:", endDate);
+
+    getAllFeedback().then((feedbackData) => {
+        if (feedbackData.length === 0) {
+            console.log("No feedback data available.");
+            return;
+        }
+
+        console.log("All Feedback Data:", feedbackData);
+
+        const filteredFeedbacks = feedbackData.filter((feedback) => {
+            const feedbackDate = new Date(feedback.timestamp);
+            return feedbackDate >= startDate && feedbackDate <= endDate;
+        });
+
+        console.log("Filtered Feedbacks:", filteredFeedbacks);
+        displayFeedback(filteredFeedbacks);
+    });
+}
 function displayFeedback(feedbackData) {
     feedbackData.sort((a, b) => b.timestamp - a.timestamp);
     console.log("Feedback Data:", feedbackData);
@@ -512,7 +563,7 @@ function checkLoginStatus() {
                   getAllFeedback()
                 .then((feedbackData) => {
                     displayFeedback(feedbackData);
-                    updateStatistics(feedbackData);
+                 
                 });
             } else {
                     alert('Vui lòng đăng nhập để xem dữ liệu.');

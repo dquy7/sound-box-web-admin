@@ -13,9 +13,7 @@
   padding: 0;
   box-sizing: border-box;
 }
-body{
-background-color: #333;
-}
+
 .img-music{
 border-radius: 30px;
 width: 100px;
@@ -91,21 +89,21 @@ height: 100px;
   margin: 10px;
   border-radius: 20px;
   background-color: black;
-    padding: 20px;
+  padding: 20px;
   height: 300px;
   width: 250px;
 }
 
   .txt-title{
-     color: white;
-     font-size: 20px;
+    color: white;
+    font-size: 20px;
     font-weight: bold;
   }
   .txt-artist{
     color: white;
     font-size: 15px;
   }
-        .pagination {
+  .pagination {
   display: flex;
   justify-content: center;
   align-items: center;
@@ -139,8 +137,8 @@ height: 100px;
 
 .box-filter {
   margin-left: 20px;
-    display: flex;
-    align-items: center;
+  display: flex;
+  align-items: center;
 }
 
 label {
@@ -193,6 +191,23 @@ button:hover {
   height: 40px;
   display: flex;
 }
+#slider {
+     width: 1200px;
+     height: 500px;
+     overflow: hidden;
+     margin-left: 20px;
+  }
+
+  #image-container {
+    margin: 30px;
+    display: flex;
+    transition: transform 1s ease-in-out;
+  }
+
+  .slider-image {
+      width: 1200px;
+      height: auto;
+  }
     </style>
 </head>
 
@@ -236,6 +251,16 @@ button:hover {
     </div>
 </nav>
 
+  <div id="slider">
+        <div id="image-container">
+            <img style="height: 400px;" class="slider-image" src="https://static.vecteezy.com/system/resources/previews/001/270/440/original/dark-paper-art-music-notes-banner-vector.jpg">
+            <img style="height: 400px;" class="slider-image" src="https://i.pinimg.com/originals/1f/e3/e0/1fe3e0a2a1800012755b6278195d2db8.jpg">
+            <img style="height: 400px;" class="slider-image" src="https://www.freewebheaders.com/wp-content/gallery/music/wonderful-colorful-music-notes-website-header.jpg">
+            <img style="height: 400px;" class="slider-image" src="https://getrealonguitar.com/wp-content/uploads/2016/09/musicBanner2.jpg">
+            <img style="height: 400px;" class="slider-image" src="https://cleanpublicdomain.com/wp-content/uploads/edd/2018/11/banner-873106-1560x490.jpg">
+        </div>
+    </div>
+
     <!-- Giao diện hiển thị danh sách bài hát đang phát -->
     <div id="nowPlaying">
         <h2><span id="currentSongTitle"></span></h2>
@@ -256,6 +281,25 @@ button:hover {
     <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
     <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
  <script>
+  const imageContainer = document.getElementById('image-container');
+
+    function slideImages() {
+        console.log('slideImages function executed');
+        setInterval(() => {
+            imageContainer.style.transition = 'transform 1s ease-in-out';
+            imageContainer.style.transform = 'translateX(-100%)';
+            setTimeout(() => {
+                const firstImage = imageContainer.children[0];
+                imageContainer.style.transition = 'none';
+                imageContainer.style.transform = 'translateX(0)';
+                imageContainer.appendChild(firstImage);
+            }, 1000);
+        }, 5000); // 5000 milliseconds (5 seconds)
+    }
+
+    slideImages();
+
+
   const firebaseConfig = {
     apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
     authDomain: "soundbox-du-an-md31.firebaseapp.com",

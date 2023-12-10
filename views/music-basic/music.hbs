@@ -129,6 +129,61 @@
         border-radius: 20px;
         background-color: yellow;
     }
+    .box-filter {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+label {
+    margin-right: 10px;
+}
+
+#filterCopyright {
+    padding: 5px;
+    margin-right: 10px;
+}
+
+.btn {
+    padding: 8px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+label {
+    margin-top: 10px;
+}
+
+#startDate,
+#endDate {
+    padding: 8px;
+    margin: 10px;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    margin-top: 20px;
+    height: 40px;
+    margin-left: 10px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
     </style>
    
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
@@ -152,20 +207,29 @@
         </li>
       </ul>
             <form class="d-flex" role="search">
-             <input class="form-control me-2" type="search" id="searchInput" placeholder="Tìm kiếm bài hát" aria-label="Search">
-              <button id="searchButton" class="btn btn-outline-success" type="button">Search</button>
+             <input style="height: 40px; margin-top: 10px;" class="form-control me-2" type="search" id="searchInput" placeholder="Tìm kiếm bài hát" aria-label="Search">
+              <button style="margin-top: 10px;" id="searchButton" class="btn btn-outline-success" type="button">Search</button>
             </form>
     </div>
   </div>
 </nav>
 
-    <div class="nav-menu">
+<div class="nav-menu">
      <div>
     <button  type="button" class="btn btn-primary1" data-bs-toggle="modal"
     data-bs-target="#exampleModal">
     Thêm Bài Hát
 </button>
 </div>
+
+<label style="margin-left: 250px; margin-top: 30px;" for="startDate">Ngày bắt đầu:</label>
+<input type="date" id="startDate">
+
+<label style="margin-top: 30px; margin-left: 10px;" for="endDate">Ngày kết thúc:</label>
+<input   type="date" id="endDate">
+
+<button style="margin-left: 10px;" onclick="filterByDate()">Lọc</button>
+
 <div class="box-filter">
     <label for="filterCopyright">Lọc:</label>
     <select id="filterCopyright">
@@ -454,6 +518,27 @@ function displayData() {
     });
 }
 
+   document.addEventListener("DOMContentLoaded", function () {
+            // Kiểm tra trạng thái đăng nhập khi trang web được tải
+            checkLoginStatus();
+        });
+           function filterByDate() {
+            const startDate = document.getElementById("startDate").value;
+            const endDate = document.getElementById("endDate").value;
+
+            getAllSongs().then((allSongs) => {
+                // Lọc bài hát theo khoảng ngày
+                const filteredSongs = allSongs.filter((song) => {
+                    const songDate = new Date(song.timestamp);
+                    return songDate >= new Date(startDate) && songDate <= new Date(endDate);
+                });
+
+                // Reset trang hiện tại về 1 khi thực hiện bộ lọc mới
+                currentPage = 1;
+                updatePaginationButtons(filteredSongs.length);
+                getPaginatedSongs(0, filteredSongs); // Hiển thị bài hát được phân trang và được lọc
+            });
+        }
 // Hàm cập nhật bảng bài hát với dữ liệu đã lấy được
 function updateSongsTable(songs) {
     const tableBody = document.getElementById("songsTable");
@@ -809,25 +894,7 @@ function getAllSongs() {
         return [];
     });
 }
-// Function to search songs and update the table
-function searchSongs() {
-    const searchInput = document.getElementById("searchInput").value.toLowerCase();
 
-    getAllSongs().then((allSongs) => {
-        const filteredSongs = allSongs.filter((song) => {
-            return (
-                song.title.toLowerCase().includes(searchInput) ||
-                song.artist.toLowerCase().includes(searchInput) ||
-                song.author.toLowerCase().includes(searchInput) ||
-                song.genre.toLowerCase().includes(searchInput)
-            );
-        });
-
-        currentPage = 1; // Reset current page to 1 when performing a new search
-        updatePaginationButtons(filteredSongs.length);
-        getPaginatedSongs(0, filteredSongs); // Display paginated and filtered songs
-    });
-}
 // Function to get paginated and filtered songs from Firebase
 function getPaginatedSongs(startIndex, songs) {
     const endIndex = startIndex + itemsPerPage;
@@ -836,13 +903,7 @@ function getPaginatedSongs(startIndex, songs) {
     updateSongsTable(paginatedSongs);
     updatePaginationButtons(songs.length);
 }
-// Sự kiện khi nút tìm kiếm được click
-searchButton.addEventListener("click", function (event) {
-    event.preventDefault(); // Ngăn chặn form từ việc submit (tránh reload trang)
 
-    // Gọi hàm searchSongs
-    searchSongs();
-});
 
 // Lấy reference đến phần tử HTML chứa danh sách bài hát
 const songListContainer = document.getElementById("songListContainer");
@@ -861,6 +922,29 @@ function applyFilter() {
         }
 
         updateSongsTable(filteredSongs);
+    });
+}
+  document.getElementById("searchButton").addEventListener("click", function () {
+        searchSongs();
+    });
+// Function to search songs and update the table
+function searchSongs() {
+    const searchInput = document.getElementById("searchInput").value.toLowerCase();
+
+    getAllSongs().then((allSongs) => {
+        const filteredSongs = allSongs.filter((song) => {
+            // Add checks to handle cases where properties might be undefined
+            return (
+                (song.title && song.title.toLowerCase().includes(searchInput)) ||
+                (song.artist && song.artist.toLowerCase().includes(searchInput)) ||
+                (song.author && song.author.toLowerCase().includes(searchInput)) ||
+                (song.genre && song.genre.toLowerCase().includes(searchInput))
+            );
+        });
+
+        currentPage = 1; // Reset current page to 1 when performing a new search
+        updatePaginationButtons(filteredSongs.length);
+        getPaginatedSongs(0, filteredSongs); // Display paginated and filtered songs
     });
 }
 
