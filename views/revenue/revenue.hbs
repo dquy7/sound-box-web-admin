@@ -6,34 +6,47 @@
      <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
      <style>
      #chartContainer {
-            width: 500px;
-            height: 300px;
+            width: 300px;
+            height: 400px;
             margin-left: 40%;
+            margin-top: 20px;
+            border: 1px solid #ccc;
+            padding: 20px;
+            border-radius: 8px;
+            background-color: #fff;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+          
         }
 
         #registrationTimelineChart,
         #loginStatisticsChart {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            margin: 20px auto;
-            display: block;
+              margin-top: 20px;
+              border: 1px solid #ccc;
+              padding: 20px;
+              border-radius: 8px;
+              background-color: #fff;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              text-align: center;
         }
         #monthlySubscriptionChart,
         #monthlyLoginChart {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            margin: 20px auto;
-            display: block;
+            margin-top: 20px;
+              border: 1px solid #ccc;
+              padding: 20px;
+              border-radius: 8px;
+              background-color: #fff;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              text-align: center;
         }
           #YearlySubscriptionChart,
         #YearlyLoginChart {
-            width: 100%;
-            max-width: 500px;
-            height: auto;
-            margin: 20px auto;
-            display: block;
+            margin-top: 20px;
+              border: 1px solid #ccc;
+              padding: 20px;
+              border-radius: 8px;
+              background-color: #fff;
+              box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+              text-align: center;
         }
 
         #userDistributionChart {
@@ -79,14 +92,12 @@
           <li class="nav-item">
           <a class="nav-link active" aria-current="page" href="./feedbackstatistical">Thống Kê Feedback</a>
         </li>
-         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" href="./statisticalcomment">Thống Kê Bình Luận</a>
+           </li>
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./tkrevenue">Thống Kê Doanh Thu</a>
         </li>
       </ul>
-      <form class="d-flex" role="search">
-        <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
-        <button class="btn btn-outline-success" type="submit">Search</button>
-      </form>
+   
     </div>
   </div>
 </nav>
@@ -97,7 +108,7 @@
 <div style="margin: 30px;" id="totalUsers">Tổng Số Người Dùng: Loading...</div>
 <div style="margin-bottom: 100px;" id="chartContainer">
   <canvas id="pieChart"></canvas>
-   <p style="margin-left: 70px">1. Thống Kê Loại Tài Khoản</p>
+   <p style="margin-left: 70px">1. Thống Kê Tài Khoản</p>
 </div>
 <div class="box-Chart">
     <div class="box-tkdk">

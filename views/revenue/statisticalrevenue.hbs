@@ -1,0 +1,575 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Doanh Thu</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+    <style>
+    /* CSS cho bảng */
+    table {
+        width: 100%;
+        border-collapse: collapse;
+        margin-top: 20px;
+    }
+
+ th, td {
+        border: 1px solid #ddd;
+        padding: 8px;
+        text-align: center;
+        vertical-align: middle;
+    }
+
+    th {
+        background-color: #007bff;
+        color: black;
+    }
+
+    /* CSS cho container chứa bảng */
+    .container {
+        margin-top: 40px;
+    }
+
+    h2 {
+        color: #007bff;
+    }
+/* Định dạng phần label và input */
+label {
+    display: inline-block;
+    margin-bottom: 8px;
+    font-weight: bold;
+}
+
+input[type="date"] {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Định dạng button */
+button {
+    padding: 10px 15px;
+    background-color: #4caf50; /* Màu xanh lá cây */
+    color: #fff; /* Màu chữ trắng */
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049; /* Màu xanh lá cây nhạt khi di chuột qua */
+}
+
+/* Định dạng layout của phần tử */
+#filterContainer {
+    margin-left: 250px; /* Khoảng cách từ bên trái của container đến lề trang */
+}
+.box-filter {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+label {
+    margin-right: 10px;
+}
+
+select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+/* Tuỳ chỉnh màu sắc của option khi được hover hoặc chọn */
+select:hover,
+select:focus {
+    border-color: #4caf50; /* Màu xanh lá cây khi di chuột vào */
+}
+
+/* Định dạng màu nền và màu chữ của option khi được hover */
+select option:hover {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+/* Định dạng màu nền và màu chữ của option khi được chọn */
+select option:checked {
+    background-color: #4caf50;
+    color: #fff;
+}
+
+/* Định dạng button */
+button {
+    padding: 10px 15px;
+    background-color: #4caf50;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+/* Kiểu cho bảng chứa danh sách bài hát */
+#songsTable {
+    width: 100%;
+    border-collapse: collapse;
+    margin-top: 20px;
+}
+.filterLatest{
+  margin-left: 100px;
+}
+#paginationContainer {
+  text-align: center; /* Căn giữa theo chiều ngang */
+  margin-top: 20px;    /* Khoảng cách từ phía trên */
+}
+
+button {
+  margin: 0 5px;       /* Khoảng cách giữa các nút */
+  padding: 5px 10px;   /* Độ lớn của nút */
+  background-color: #3498db; /* Màu nền của nút */
+  color: #ffffff;      /* Màu chữ của nút */
+  border: none;        /* Loại bỏ đường viền của nút */
+  cursor: pointer;     /* Biểu tượng con trỏ khi di chuột qua nút */
+}
+
+button:hover {
+  background-color: #2980b9; /* Màu nền khi di chuột qua nút */
+}
+.dow-excel{
+  background-color: #4caf50;
+  width: 40px;
+  height: 40px;
+  margin-left: 30px;
+  text-align: center;
+  border-top-left-radius: 20px;
+}
+.totalAmount{
+  font-weight: bold;
+
+}
+.formattedTotalAmount{
+  color: red;
+  font-weight: bold;
+}
+.totalAmountByAccount{
+  font-weight: bold;
+}
+</style>
+</head>
+<body>
+    <nav style="background-color:aquamarine; height: 83px;" class="navbar navbar-expand-lg bg-body-tertiary">
+        <div class="container-fluid">
+            <a style="font-size: 30px; font-weight: bold;" class="navbar-brand" href="./statisticalcomment">Quản Lý Doanh Thu</a>
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                    {{!-- <li class="nav-item">
+                        <a class="nav-link active" aria-current="page" href="">Người Dùng VIP</a>
+                    </li> --}}
+                </ul>
+                <form class="d-flex" role="search">
+                    <input class="form-control me-2" type="search" placeholder="Search" aria-label="Search">
+                    <button class="btn btn-outline-success" type="submit">Search</button>
+                </form>
+            </div>
+        </div>
+    </nav>
+      
+    <div class="container mt-4">
+      
+
+<div class="box-filter">
+<label style="margin-left: 250px; margin-top: 10px;" for="startDate">Ngày bắt đầu:</label>
+<input type="date" id="startDate">
+<label style="margin-top: 10px; margin-left: 10px;" for="endDate">Ngày kết thúc:</label>
+<input   type="date" id="endDate">
+
+<button style="margin-left: 10px;" onclick="filterByDate()">Lọc</button>
+ <div class="filterLatest">
+        <label for="filterLatest">Lọc:</label>
+        <select id="filterLatest" onchange="applyFilter()">
+            <option value="">-- Lọc Theo --</option>
+            <option value="Filter-a-z">Ký Tự A-Z</option>
+            <option value="Filter-z-a">Ký Tự Z-A</option>
+            <option value="money-up">Tiền ↑</option>
+            <option value="money-down">Tiền ↓</option>
+        </select>
+    </div>
+
+    <button class="dow-excel" onclick="exportToExcel()">Ex</button>
+</div>
+
+        <table class="table table-bordered">
+            <thead>
+                <tr>
+                    <th>ID</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Loại Đăng Ký</th>
+                    <th>Thời gian đăng ký</th>
+                    <th>Doanh Thu</th>
+                    <th>Thời gian bắt đầu VIP</th>
+                    <th>Thời gian kết thúc VIP</th>
+                </tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+        </table>
+        <span class="totalAmount" >Tổng Tiền Trang Hiện Tại: </span> <span id="totalAmount">...</span>
+
+      <div id="totalAmountByAccountType"></div>
+    </div>
+<div id="paginationContainer"></div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+    <!-- Thư viện xlsx -->
+   <script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+    <!-- Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
+   
+
+<script>
+const firebaseConfig = {
+  apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
+  authDomain: "soundbox-du-an-md31.firebaseapp.com",
+  databaseURL: "https://soundbox-du-an-md31-default-rtdb.firebaseio.com",
+  projectId: "soundbox-du-an-md31",
+  storageBucket: "soundbox-du-an-md31.appspot.com",
+  messagingSenderId: "265264289877",
+  appId: "1:265264289877:web:0f88e2fa54c638685e9cdc",
+  measurementId: "G-FE9Z9NKJDR"
+};
+firebase.initializeApp(firebaseConfig);
+
+const database = firebase.database();
+const usersRef = database.ref("users");
+
+let currentPage = 1;
+const usersPerPage = 5;
+let filteredUsers = []; // Initialize filteredUsers
+
+// Function to parse date string to Date object
+function parseDate(dateString) {
+  const parts = dateString.split('/');
+  return new Date(parts[2], parts[1] - 1, parts[0]);
+}
+
+// Function to filter users by date
+function filterByDate() {
+  const startDateInput = document.getElementById("startDate");
+  const endDateInput = document.getElementById("endDate");
+  const startDate = new Date(startDateInput.value);
+  const endDate = new Date(endDateInput.value);
+  if (isNaN(startDate.getTime()) || isNaN(endDate.getTime())) {
+    alert("Vui lòng nhập ngày bắt đầu và ngày kết thúc.");
+    return;
+  }
+  getVIPUsers().then(vipUsers => {
+    filteredUsers = vipUsers.filter(user => {
+      let startTime, endTime;
+
+      if (user.startTime) {
+        startTime = parseDate(user.startTime);
+      }
+
+      if (user.endTime) {
+        endTime = parseDate(user.endTime);
+      }
+
+      return startTime && endTime &&
+        (startTime >= startDate && startTime <= endDate) &&
+        (endTime >= startDate && endTime <= endDate);
+    });
+
+    displayVIPUsers(filteredUsers);
+  });
+}
+
+// Function to apply sorting filter
+function applyFilter() {
+  const filterSelect = document.getElementById("filterLatest");
+  const selectedFilter = filterSelect.value;
+
+  getVIPUsers().then(vipUsers => {
+    switch (selectedFilter) {
+      case "Filter-a-z":
+        vipUsers.sort((a, b) => (a.username || "").localeCompare(b.username || ""));
+        break;
+      case "Filter-z-a":
+        vipUsers.sort((a, b) => (b.username || "").localeCompare(a.username || ""));
+        break;
+      case "money-up":
+        vipUsers.sort((a, b) => (a.amount || 0) - (b.amount || 0));
+        break;
+      case "money-down":
+        vipUsers.sort((a, b) => (b.amount || 0) - (a.amount || 0));
+        break;
+      // Add other sorting cases if needed
+      default:
+        // Do nothing if the selection is invalid
+        break;
+    }
+
+    displayVIPUsers(vipUsers);
+  });
+}
+
+// Function to update the page content based on the current page
+function updatePage() {
+  const startIdx = (currentPage - 1) * usersPerPage;
+  const endIdx = startIdx + usersPerPage;
+  const usersToDisplay = filteredUsers.slice(startIdx, endIdx);
+  updatePagination();
+  displayVIPUsers(usersToDisplay);
+}
+
+// Function to update the pagination buttons
+function updatePagination() {
+  const maxPage = Math.ceil(filteredUsers.length / usersPerPage);
+  const paginationContainer = document.getElementById("paginationContainer");
+  paginationContainer.innerHTML = "";
+
+  appendPaginationButton("<", prevPage);
+  for (let i = 1; i <= maxPage; i++) {
+    appendPaginationButton(i, () => goToPage(i));
+  }
+  appendPaginationButton(">", nextPage);
+}
+
+// Function to create and append a pagination button
+function appendPaginationButton(label, clickHandler) {
+  const button = createPaginationButton(label, clickHandler);
+  const paginationContainer = document.getElementById("paginationContainer");
+  paginationContainer.appendChild(button);
+}
+
+// Function to create a pagination button
+function createPaginationButton(label, clickHandler) {
+  const button = document.createElement("button");
+  button.textContent = label;
+  button.addEventListener("click", clickHandler);
+  return button;
+}
+
+// Function to go to the previous page
+function prevPage() {
+  if (currentPage > 1) {
+    currentPage--;
+    updatePage();
+  }
+}
+
+// Function to go to the next page
+function nextPage() {
+  const maxPage = Math.ceil(filteredUsers.length / usersPerPage);
+  if (currentPage < maxPage) {
+    currentPage++;
+    updatePage();
+  }
+}
+
+// Function to go to a specific page
+function goToPage(page) {
+  if (page >= 1 && page <= Math.ceil(filteredUsers.length / usersPerPage)) {
+    currentPage = page;
+    updatePage();
+  }
+}
+let totalAmountOnCurrentPage = 0;
+// Function to display VIP users
+function displayVIPUsers(users) {
+  const usersTable = document.getElementById("usersTable");
+  usersTable.innerHTML = "";
+ totalAmountOnCurrentPage = 0;
+  let stt = (currentPage - 1) * usersPerPage + 1;
+
+  users.forEach(user => {
+    const row = usersTable.insertRow();
+    const idCell = row.insertCell(0);
+    const emailCell = row.insertCell(1);
+    const usernameCell = row.insertCell(2);
+    const accountCell = row.insertCell(3);
+    const createdTimeCell = row.insertCell(4);
+    const amountCell = row.insertCell(5);
+    const startTimeCell = row.insertCell(6);
+    const endTimeCell = row.insertCell(7);
+
+    idCell.textContent = stt++;
+    emailCell.textContent = user.email || "";
+    usernameCell.textContent = user.username || "";
+
+    let subscriptionType = "";
+    if (user.amount === 10000) {
+      subscriptionType = "VIP 1 Tháng";
+    } else if (user.amount === 50000) {
+      subscriptionType = "VIP 6 Tháng";
+    } else if (user.amount === 100000) {
+      subscriptionType = "VIP 1 Năm";
+    }
+
+    accountCell.textContent = user.isVIP ? subscriptionType : "Nghe Nhạc";
+
+    const createdTime = new Date(user.creationTime);
+    const day = createdTime.getDate();
+    const month = createdTime.getMonth() + 1;
+    const year = createdTime.getFullYear();
+    createdTimeCell.textContent = `${day}/${month}/${year}`;
+
+    if (user.isVIP) {
+      amountCell.textContent = user.amount || "";
+        totalAmountOnCurrentPage += user.amount || 0; 
+      startTimeCell.textContent = user.startTime || "";
+      endTimeCell.textContent = user.endTime || "";
+    }
+  });
+  calculateTotalAmount(users);
+}
+
+function getVIPUsers() {
+  return usersRef.orderByChild("isVIP").equalTo(true).once("value")
+    .then(snapshot => {
+      const vipUsers = [];
+      snapshot.forEach(childSnapshot => {
+        const userData = childSnapshot.val();
+        userData.key = childSnapshot.key;
+        vipUsers.push(userData);
+      });
+      return vipUsers;
+    })
+    .catch(error => {
+      console.error("Error getting VIP users:", error.message);
+      return [];
+    });
+}
+
+// Function to check login status before displaying data
+function checkLoginStatus() {
+  const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
+
+  adminRef.once('value')
+    .then(snapshot => {
+      const adminData = snapshot.val();
+
+      if (adminData && adminData.loggedIn) {
+        getVIPUsers().then(users => {
+          filteredUsers = users; // Initialize filteredUsers
+          updatePage();
+          calculateTotalAmount(filteredUsers); // Calculate total amount
+          calculateTotalAmountByAccountType(filteredUsers);
+        });
+      } else {
+        alert('Vui lòng đăng nhập để xem dữ liệu.');
+        window.location.href = '/'; // Redirect to login page
+      }
+    })
+    .catch(error => {
+      console.error('Error checking loggedIn status:', error.message);
+      alert('Có lỗi xảy ra khi kiểm tra trạng thái loggedIn.');
+    });
+}
+
+// Function to export data to Excel
+function exportToExcel() {
+  // Get data from the table or your data array
+  const data = filteredUsers.map(user => [
+    user.email || "",
+    user.username || "",
+    user.isVIP ? "VIP" : "Nghe Nhạc",
+    user.creationTime || "",
+    user.amount || "",
+    user.startTime || "",
+    user.endTime || "",
+  ]);
+
+  // Create a new Workbook
+  const wb = XLSX.utils.book_new();
+
+  // Create a new Worksheet from the data
+  const ws = XLSX.utils.aoa_to_sheet([["Email", "Username", "Account", "Created Time", "Amount", "Start Time", "End Time"], ...data]);
+
+  // Add the Worksheet to the Workbook
+  XLSX.utils.book_append_sheet(wb, ws, "DanhSachNguoiDung");
+
+  // Export the Excel file
+  XLSX.writeFile(wb, "DanhSachNguoiDung.xlsx");
+}
+
+// Function to calculate and display the total amount
+function calculateTotalAmount(users) {
+  const totalAmountOnCurrentPage = users.reduce((sum, user) => sum + (user.amount || 0), 0);
+  const totalAmountElement = document.getElementById("totalAmount");
+  totalAmountElement.textContent = `${formatCurrency(totalAmountOnCurrentPage)}`;
+  //thêm class
+  totalAmountElement.classList.add("totalAmountByAccount");
+}
+
+
+// Function to format currency
+function formatCurrency(amount) {
+  const formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
+  return formattedAmount;
+}
+
+// Function to calculate and display the total amount by account type
+function calculateTotalAmountByAccountType(users) {
+  const totalAmountByAccountType = {};
+
+  users.forEach(user => {
+    const accountType = user.isVIP ? getSubscriptionType(user.amount) : "Nghe Nhạc";
+    totalAmountByAccountType[accountType] = (totalAmountByAccountType[accountType] || 0) + (user.amount || 0);
+  });
+
+  displayTotalAmountByAccountType(totalAmountByAccountType);
+}
+
+// Function to get subscription type based on the amount
+function getSubscriptionType(amount) {
+  switch (amount) {
+    case 10000:
+      return "VIP 1 Tháng";
+    case 50000:
+      return "VIP 6 Tháng";
+    case 100000:
+      return "VIP 1 Năm";
+    default:
+      return "Unknown";
+  }
+}
+
+// Function to display total amount by account type
+function displayTotalAmountByAccountType(totalAmountByAccountType) {
+  const totalAmountByAccountTypeElement = document.getElementById("totalAmountByAccountType");
+  totalAmountByAccountTypeElement.innerHTML = "";
+
+  for (const accountType in totalAmountByAccountType) {
+    const formattedAmount = formatCurrency(totalAmountByAccountType[accountType]);
+
+    // Tạo một phần tử p
+    const p = document.createElement("p");
+
+    // Thêm class vào phần tử p
+    p.classList.add("totalAmountByAccount"); // Thay "your-custom-class" bằng tên class bạn muốn thêm
+
+    // Đặt nội dung của phần tử p
+    p.textContent = `${accountType}: ${formattedAmount}`;
+
+    // Thêm phần tử p vào totalAmountByAccountTypeElement
+    totalAmountByAccountTypeElement.appendChild(p);
+  }
+}
+// Event when the web page is loaded
+window.onload = function () {
+  checkLoginStatus();
+};
+
+</script>
+
+</body>
+</html>

@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản Lý Doanh Thu</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+<style>
+        .container {
+        max-width: 800px;
+        margin: auto;
+    }
+
+    #revenueChartContainer {
+        margin-top: 20px;
+        border: 1px solid #ccc;
+        padding: 20px;
+        border-radius: 8px;
+        background-color: #fff;
+        box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+    }
+
+    #revenueChart {
+        width: 100%;
+        height: 500px;
+    }
+      /* Định dạng phần chứa biểu đồ */
+    #vipAccountChartContainer {
+        margin-top: 20px; /* Khoảng cách giữa container và biểu đồ */
+    }
+
+    /* Định dạng canvas của biểu đồ */
+    #vipAccountChart {
+        max-width: 100%; /* Biểu đồ chiếm toàn bộ chiều rộng của container */
+        height: auto; /* Đảm bảo tỷ lệ khung hình chính xác */
+    }
+  .box-VipChart{
+    display: flex;
+  }
+  #totalRevenue{
+    font-size: 30px;
+    margin: 20px;
+  }
+</style>
+</head>
+<body>
+    <nav style="background-color: aquamarine; height: 82px;" class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a style="font-size: 30px; font-weight: bold;" class="navbar-brand" href="./tkrevenue">Thống Kê Doanh Thu</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./statisticalmusic">Thống Kê Bài Hát</a>
+        </li>
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./feedbackstatistical">Thống Kê Feedback</a>
+        </li>
+         <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./revenue">Thống Kê Người Dùng</a>
+        </li>
+      </ul>
+   
+    </div>
+  </div>
+</nav>
+
+ <div id="totalRevenue"></div>
+<!-- Trong trang HTML của bạn -->
+<div class="container mt-4">
+    <div id="revenueChartContainer">
+        <canvas id="vipAccountChart"></canvas>
+    </div>
+</div>
+
+<div class="box-VipChart">
+<!-- Trong trang HTML của bạn -->
+<div class="container mt-4">
+    <!-- Nội dung trang khác -->
+    <div id="revenueChartContainer">
+        <canvas id="revenueChart"></canvas>
+    </div>
+</div>
+
+  <div class="container mt-4">
+    <div id="revenueChartContainer">
+    <canvas id="annualRevenuechart"></canvas>
+      </div>
+</div>
+</div>
+
+   <!-- Place the containers for your charts -->
+   <div class="container mt-4">
+    <div id="revenueChartContainer">
+    <canvas id="monthlyRevenuechart"></canvas>
+      </div>
+</div>
+<div class="box-VipChart">
+    <div class="container mt-4">
+    <div id="revenueChartContainer">
+        <canvas id="dailyVipChart"></canvas>
+    </div>
+</div>
+<!-- Trong trang HTML của bạn -->
+<div class="container mt-4">
+    <div id="revenueChartContainer">
+        <canvas id="monthVipChart"></canvas>
+    </div>
+</div>
+<div class="container mt-4">
+    <div id="revenueChartContainer">
+        <canvas id="yearVipChart"></canvas>
+    </div>
+</div>
+
+</div>
+
+ 
+
+<!-- Thư viện Chart.js -->
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+<!-- Thư viện xlsx -->
+<script src="https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns/dist/chartjs-adapter-date-fns.bundle.min.js"></script>
+<script type="text/javascript" src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.17.0/xlsx.full.min.js"></script>
+<!-- Firebase JavaScript SDK -->
+<script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+<script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
+
+<script>
+  const firebaseConfig = {
+    apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
+    authDomain: "soundbox-du-an-md31.firebaseapp.com",
+    databaseURL: "https://soundbox-du-an-md31-default-rtdb.firebaseio.com",
+    projectId: "soundbox-du-an-md31",
+    storageBucket: "soundbox-du-an-md31.appspot.com",
+    messagingSenderId: "265264289877",
+    appId: "1:265264289877:web:0f88e2fa54c638685e9cdc",
+    measurementId: "G-FE9Z9NKJDR"
+  };
+  firebase.initializeApp(firebaseConfig);
+  const database = firebase.database();
+  const usersRef = database.ref("users");
+
+  function getRevenueData() {
+    usersRef.once("value")
+      .then(snapshot => {
+        const users = snapshot.val();
+        processData(users);
+           displayTotalRevenue(); // Gọi hàm hiển thị tổng doanh thu
+      })
+      .catch(error => {
+        console.error("Error getting data:", error.message);
+      });
+  }
+
+// Hàm để lấy dữ liệu từ Firebase
+function getVipAccountData() {
+    usersRef.once("value")
+        .then(snapshot => {
+            const users = snapshot.val();
+            processDataForVipAccountChart(users);
+        })
+        .catch(error => {
+            console.error("Error getting data:", error.message);
+        });
+}
+
+function displayTotalRevenue(totalRevenue) {
+    const totalRevenueElement = document.getElementById('totalRevenue');
+    if (totalRevenueElement) {
+        const formattedTotalRevenue = totalRevenue.toLocaleString('en-US');
+        totalRevenueElement.innerText = `Tổng tiền doanh thu là: ${formattedTotalRevenue} VND`;
+    }
+}
+  // Hàm xử lý dữ liệu để vẽ biểu đồ
+function processDataForVipAccountChart(users) {
+    const vipAccountData = {
+        vip1Month: 0,
+        vip6Months: 0,
+        vip1Year: 0,
+    };
+     // Lặp qua danh sách người dùng
+    for (const userId in users) {
+        const user = users[userId];
+
+        // Kiểm tra nếu người dùng là VIP và có thông tin amount
+        if (user.isVIP && user.amount) {
+            switch (user.amount) {
+                case 10000:
+                    vipAccountData.vip1Month++;
+                    break;
+                case 50000:
+                    vipAccountData.vip6Months++;
+                    break;
+                case 100000:
+                    vipAccountData.vip1Year++;
+                    break;
+                default:
+                    // Handle other cases if needed
+                    break;
+            }
+        }
+    }
+
+    // Gọi hàm để vẽ biểu đồ với dữ liệu đã xử lý
+    createVipAccountChart(vipAccountData);
+}
+// Hàm để vẽ biểu đồ cột
+function createVipAccountChart(data) {
+    const ctx = document.getElementById('vipAccountChart').getContext('2d');
+    const vipAccountChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: ['VIP 1 Tháng', 'VIP 6 Tháng', 'VIP 1 Năm'],
+            datasets: [{
+                label: 'Số lượng tài khoản',
+                data: [data.vip1Month, data.vip6Months, data.vip1Year],
+                backgroundColor: [
+                    'rgba(255, 99, 132, 0.2)',
+                    'rgba(54, 162, 235, 0.2)',
+                    'rgba(255, 206, 86, 0.2)',
+                ],
+                borderColor: [
+                    'rgba(255, 99, 132, 1)',
+                    'rgba(54, 162, 235, 1)',
+                    'rgba(255, 206, 86, 1)',
+                ],
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+
+function processData(users) {
+    const chartData = {
+        labels: [],
+        revenue: []
+    };
+    let totalRevenue = 0; // Biến để lưu trữ tổng doanh thu
+
+    for (const userId in users) {
+        const user = users[userId];
+
+        if (user.isVIP && user.amount && user.startTime && user.endTime) {
+            const startTime = new Date(user.startTime);
+            const endTime = new Date(user.endTime);
+
+            chartData.labels.push(formatLabel(startTime));
+            chartData.revenue.push(user.amount);
+
+            // Cộng dồn tổng doanh thu
+            totalRevenue += parseFloat(user.amount); // Convert to float to ensure proper addition
+        }
+    }
+
+    // Hiển thị tổng doanh thu trên trang (bạn có thể tùy chỉnh nơi hiển thị)
+    displayTotalRevenue(totalRevenue);
+
+    createRevenueChart(chartData);
+}
+
+  function formatLabel(date) {
+    return `${date.getMonth() + 1}/${date.getFullYear()}`;
+  }
+
+  function createRevenueChart(data) {
+    const ctx = document.getElementById('revenueChart').getContext('2d');
+    const revenueChart = new Chart(ctx, {
+      type: 'bar',
+      data: {
+        labels: data.labels,
+        datasets: [{
+          label: 'Doanh Thu',
+          data: data.revenue,
+          backgroundColor: 'rgba(75, 192, 192, 0.2)',
+          borderColor: 'rgba(75, 192, 192, 1)',
+          borderWidth: 1
+        }]
+      },
+      options: {
+        scales: {
+          y: {
+            beginAtZero: true
+          }
+        }
+      }
+    });
+  }
+
+ function getDailyVipData() {
+        usersRef.once("value")
+            .then(snapshot => {
+                const users = snapshot.val();
+                processDataForDailyVipChart(users);
+            })
+            .catch(error => {
+                console.error("Error getting data:", error.message);
+            });
+    }
+
+        // Hàm xử lý dữ liệu để vẽ biểu đồ dailyVipChart
+    function processDataForDailyVipChart(users) {
+        const dailyVipData = {};
+
+        // Lặp qua danh sách người dùng
+        for (const userId in users) {
+            const user = users[userId];
+
+          if (user.isVIP && user.startTime) {
+                    const startDate = parseDate(user.startTime);
+                    const formattedDate = formatDate(startDate);
+                // Kiểm tra xem ngày đã được thêm vào dữ liệu chưa, nếu chưa thì thêm vào
+                    if (!dailyVipData[formattedDate]) {
+                        dailyVipData[formattedDate] = 1;
+                    } else {
+                        dailyVipData[formattedDate]++;
+                    }
+            }
+        }
+        // Gọi hàm để vẽ biểu đồ với dữ liệu đã xử lý
+        createDailyVipChart(dailyVipData);
+    }
+
+
+function parseDate(dateString) {
+        const parts = dateString.split("/");
+        return new Date(parts[2], parts[1] - 1, parts[0]); // Mảng parts là ngày, tháng, năm
+    }
+
+    function formatDate(date) {
+        return `${date.getMonth() + 1}/${date.getDate()}/${date.getFullYear()}`;
+    }
+
+    function createDailyVipChart(data) {
+        const ctx = document.getElementById('dailyVipChart').getContext('2d');
+        const dailyVipChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: Object.keys(data),
+                datasets: [{
+                    label: 'Số lượng tài khoản VIP đăng ký',
+                    data: Object.values(data),
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    }
+function getMonthVipData() {
+    usersRef.once("value")
+        .then(snapshot => {
+            const users = snapshot.val();
+            processDataForMonthlyVipChart(users);
+        })
+        .catch(error => {
+            console.error("Error getting data:", error.message);
+        });
+}
+// Add this function for processing monthly VIP data
+function processDataForMonthlyVipChart(users) {
+    const monthlyVipData = {};
+
+    // Loop through the list of users
+    for (const userId in users) {
+        const user = users[userId];
+
+        if (user.isVIP && user.startTime) {
+            const startDate = parseDate(user.startTime);
+            const monthYearKey = `${startDate.getMonth() + 1}/${startDate.getFullYear()}`;
+
+            // Check if the month and year have been added to the data, if not, add them
+            if (!monthlyVipData[monthYearKey]) {
+                monthlyVipData[monthYearKey] = 1;
+            } else {
+                monthlyVipData[monthYearKey]++;
+            }
+        }
+    }
+
+    // Call the function to create a chart with the processed data
+    createMonthlyVipChart(monthlyVipData);
+}
+
+// Add this function for creating monthly VIP chart
+function createMonthlyVipChart(data) {
+    const ctx = document.getElementById('monthVipChart').getContext('2d');
+    const monthlyVipChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                label: 'Số lượng tài khoản VIP đăng ký hàng tháng',
+                data: Object.values(data),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+function getYearVipData() {
+    usersRef.once("value")
+        .then(snapshot => {
+            const users = snapshot.val();
+            processDataForYearlyVipChart(users);
+        })
+        .catch(error => {
+            console.error("Error getting data:", error.message);
+        });
+}
+
+// Add this function for processing yearly VIP data
+function processDataForYearlyVipChart(users) {
+    const yearlyVipData = {};
+
+    // Loop through the list of users
+    for (const userId in users) {
+        const user = users[userId];
+
+        if (user.isVIP && user.startTime) {
+            const startDate = parseDate(user.startTime);
+            const yearKey = startDate.getFullYear();
+
+            // Check if the year has been added to the data, if not, add it
+            if (!yearlyVipData[yearKey]) {
+                yearlyVipData[yearKey] = 1;
+            } else {
+                yearlyVipData[yearKey]++;
+            }
+        }
+    }
+
+    // Call the function to create a chart with the processed data
+    createYearlyVipChart(yearlyVipData);
+}
+
+// Add this function for creating yearly VIP chart
+function createYearlyVipChart(data) {
+    const ctx = document.getElementById('yearVipChart').getContext('2d');
+    const yearlyVipChart = new Chart(ctx, {
+        type: 'bar',
+        data: {
+            labels: Object.keys(data),
+            datasets: [{
+                label: 'Số lượng tài khoản VIP đăng ký hàng năm',
+                data: Object.values(data),
+                backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                borderColor: 'rgba(75, 192, 192, 1)',
+                borderWidth: 1
+            }]
+        },
+        options: {
+            scales: {
+                y: {
+                    beginAtZero: true
+                }
+            }
+        }
+    });
+}
+// Hàm để lấy dữ liệu doanh thu theo tháng
+function getMonthlyRevenueData() {
+    // Làm điều gì đó để lấy dữ liệu doanh thu theo tháng từ Firebase hoặc nguồn dữ liệu khác
+    // Ví dụ:
+    usersRef.once("value")
+        .then(snapshot => {
+            const users = snapshot.val();
+            if (users) {
+                const monthlyRevenueData = processMonthlyRevenueData(users);
+                // Gọi hàm để vẽ biểu đồ với dữ liệu đã xử lý
+                createMonthlyRevenueChart(monthlyRevenueData);
+            } else {
+                console.error("No data found.");
+            }
+        })
+        .catch(error => {
+            console.error("Error getting data:", error.message);
+        });
+}
+
+// Hàm để lấy dữ liệu doanh thu theo năm
+function getAnnualRevenueData() {
+    // Làm điều gì đó để lấy dữ liệu doanh thu theo năm từ Firebase hoặc nguồn dữ liệu khác
+    // Ví dụ:
+    usersRef.once("value")
+        .then(snapshot => {
+            const users = snapshot.val();
+            if (users) {
+                const annualRevenueData = processAnnualRevenueData(users);
+                // Gọi hàm để vẽ biểu đồ với dữ liệu đã xử lý
+                createAnnualRevenueChart(annualRevenueData);
+            } else {
+                console.error("No data found.");
+            }
+        })
+        .catch(error => {
+            console.error("Error getting data:", error.message);
+        });
+}
+
+// Hàm xử lý dữ liệu doanh thu hàng tháng
+function processMonthlyRevenueData(users) {
+    const monthlyRevenueData = {
+        labels: ['Tháng 2','Tháng 4', 'Tháng 6',  'Tháng 8', 'Tháng 10','Tháng 12'],
+        revenue: Array(12).fill(0), // Initialize the array with 0 values for each month
+    };
+
+    // Lặp qua danh sách người dùng
+    for (const userId in users) {
+        const user = users[userId];
+
+        if (user.isVIP && user.amount && user.startTime && user.endTime) {
+            const startTime = new Date(user.startTime);
+            const endTime = new Date(user.endTime);
+
+            // Lặp qua từng tháng để kiểm tra
+            for (let i = 0; i < 12; i++) {
+                // Kiểm tra nếu người dùng trong tháng hiện tại
+                if (startTime.getMonth() === i && startTime.getFullYear() === new Date().getFullYear()) {
+                    monthlyRevenueData.revenue[i] += user.amount;
+                }
+            }
+        }
+    }
+
+    return monthlyRevenueData;
+}
+
+// Hàm xử lý dữ liệu doanh thu hàng năm
+function processAnnualRevenueData(users) {
+    const startYear = 2022;
+    const endYear = 2024;
+    const annualRevenueData = {
+        labels: Array(endYear - startYear + 1).fill().map((_, index) => `Năm ${startYear + index}`),
+        revenue: Array(endYear - startYear + 1).fill(0), // Initialize the array with 0 values for each year
+    };
+
+    // Lặp qua danh sách người dùng
+    for (const userId in users) {
+        const user = users[userId];
+
+        if (user.isVIP && user.amount && user.startTime && user.endTime) {
+            const startTime = new Date(user.startTime);
+            const endTime = new Date(user.endTime);
+
+            // Lặp qua từng năm để kiểm tra
+            for (let i = startYear; i <= endYear; i++) {
+                // Kiểm tra nếu người dùng trong khoảng năm yêu cầu
+                if (startTime.getFullYear() === i && startTime.getFullYear() <= endYear) {
+                    annualRevenueData.revenue[i - startYear] += user.amount;
+                }
+            }
+        }
+    }
+
+    return annualRevenueData;
+}
+
+// Hàm để tạo biểu đồ doanh thu theo tháng
+function createMonthlyRevenueChart(data) {
+    const ctx = document.getElementById('monthlyRevenuechart');
+    if (ctx) {
+        const monthlyRevenueChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Doanh Thu Tháng',
+                    data: data.revenue,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    } else {
+        console.error("Chart container not found.");
+    }
+}
+
+// Hàm để tạo biểu đồ doanh thu theo năm
+function createAnnualRevenueChart(data) {
+    const ctx = document.getElementById('annualRevenuechart');
+    if (ctx) {
+        const annualRevenueChart = new Chart(ctx, {
+            type: 'bar',
+            data: {
+                labels: data.labels,
+                datasets: [{
+                    label: 'Doanh Thu Năm',
+                    data: data.revenue,
+                    backgroundColor: 'rgba(75, 192, 192, 0.2)',
+                    borderColor: 'rgba(75, 192, 192, 1)',
+                    borderWidth: 1
+                }]
+            },
+            options: {
+                scales: {
+                    y: {
+                        beginAtZero: true
+                    }
+                }
+            }
+        });
+    } else {
+        console.error("Chart container not found.");
+    }
+}
+
+  window.onload = function () {
+    getRevenueData();
+    getVipAccountData();
+    getDailyVipData();
+    getMonthVipData();
+    getYearVipData();
+    getMonthlyRevenueData();
+    getAnnualRevenueData();
+  };
+
+</script>
+
+</body>
+</html>
