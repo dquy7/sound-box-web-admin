@@ -294,7 +294,7 @@ button:hover {
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="box-ft">
-     <label style=" margin-top: 10px;" for="startDate">Ngày bắt đầu:</label>
+             <label style=" margin-top: 10px;" for="startDate">Ngày bắt đầu:</label>
             <input type="date" id="startDate">
 
             <label style="margin-top: 10px; margin-left: 10px;" for="endDate">Ngày kết thúc:</label>
@@ -362,6 +362,75 @@ firebase.initializeApp(firebaseConfig);
 const commentsPerPage = 5;
 let currentPage = 1;
 let totalComments = 0;
+let filterStartDate = null;
+let filterEndDate = null;
+
+function filterByDate() {
+    const startDateInput = document.getElementById("startDate");
+    const endDateInput = document.getElementById("endDate");
+
+    filterStartDate = startDateInput.value;
+    filterEndDate = endDateInput.value;
+
+    // Gọi lại hàm để cập nhật dữ liệu với bộ lọc mới
+    fetchDataAndDisplay1();
+}
+
+function fetchDataAndDisplay1() {
+    firebase
+        .database()
+        .ref("comments")
+        .once("value")
+        .then(snapshot => {
+            let index = 0;
+            const comments = [];
+
+            snapshot.forEach(comment => {
+                const songId = comment.key;
+                comments.push({ songId, ...comment.val() });
+            });
+
+            // Lọc bình luận theo ngày bắt đầu và ngày kết thúc
+            const filteredComments = comments.filter(comment => {
+                // Nếu không có ngày bắt đầu hoặc ngày kết thúc, hoặc ngày bình luận nằm trong khoảng thời gian đã chọn
+                return (!filterStartDate || comment.timestamp >= new Date(filterStartDate).getTime()) &&
+                       (!filterEndDate || comment.timestamp <= new Date(filterEndDate).getTime());
+            });
+
+            totalComments = filteredComments.length;
+            const startIndex = (currentPage - 1) * commentsPerPage;
+            const endIndex = Math.min(startIndex + commentsPerPage, totalComments);
+
+            commentTable.innerHTML = ""; // Xóa bảng cũ trước khi hiển thị dữ liệu mới
+
+            for (let i = startIndex; i < endIndex; i++) {
+                const row = commentTable.insertRow();
+                row.insertCell(0).innerText = i + 1;
+                row.insertCell(1).innerText = filteredComments[i].songId;
+                row.insertCell(2).innerText = filteredComments[i].userName;
+                row.insertCell(3).innerText = filteredComments[i].commentText;
+                row.insertCell(4).innerText = new Date(filteredComments[i].timestamp).toLocaleString();
+                const buttonCell = row.insertCell(5);
+                const button = document.createElement("button");
+                button.innerText = "Xem Bình Luận";
+                button.classList.add("comment-button"); // Thêm lớp CSS
+                button.addEventListener("click", () => {
+                    showCommentsForId(filteredComments[i].songId);
+                });
+                buttonCell.appendChild(button);
+                const deleteButton = document.createElement("button");
+                deleteButton.innerText = "Xóa";
+                deleteButton.classList.add("delete-button");
+                deleteButton.addEventListener("click", () => {
+                    confirmDeleteComment(filteredComments[i].songId);
+                });
+                buttonCell.appendChild(deleteButton);
+                index++;
+            }
+
+            displayPagination();
+        });
+}
 
 function fetchDataAndDisplay() {
   firebase
@@ -745,8 +814,40 @@ function closeEditReplyModal() {
     const modal = document.getElementById("editReplyModal");
     modal.style.display = "none";
 }
-    // Gọi hàm để hiển thị dữ liệu ban đầu
-   fetchDataAndDisplay();
+
+
+ // Kiểm tra trạng thái đăng nhập trước khi hiển thị dữ liệu
+function checkLoginStatus() {
+     // Lấy reference đến đối tượng admin trong Realtime Database
+    const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
+
+    adminRef.once('value')
+        .then(snapshot => {
+            const adminData = snapshot.val();
+
+            if (adminData && adminData.loggedIn) {
+                // Trạng thái loggedIn là true, hiển thị dữ liệu
+                // Gọi hàm để hiển thị dữ liệu ban đầu
+                fetchDataAndDisplay();
+            } else {
+                // Trạng thái loggedIn là false hoặc không tìm thấy thông tin admin
+                alert('Vui lòng đăng nhập để xem dữ liệu.');
+                window.location.href = '/'; // Chuyển hướng đến trang đăng nhập
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi kiểm tra trạng thái loggedIn:', error.message);
+            alert('Có lỗi xảy ra khi kiểm tra trạng thái loggedIn.');
+        });
+}
+
+// Sự kiện khi trang web được tải
+window.onload = function () {
+    // Kiểm tra trạng thái đăng nhập khi trang web được tải
+    checkLoginStatus();
+    
+};
+  
 </script>
 </body>
 </html>

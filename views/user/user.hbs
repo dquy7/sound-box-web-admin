@@ -125,7 +125,6 @@
 </div>
     </div>
 
-
  <!-- Bảng hiển thị danh sách bài hát -->
         <table class="table table-bordered mt-4">
             <thead>
@@ -318,21 +317,7 @@ const createdTimeCell = row.insertCell(4); // Tạo ô mới cho thời gian t�
     }
   });
   actionCell.appendChild(deleteButton);
-  // Thêm nút sửa
-  const editButton = document.createElement("button");
-  editButton.textContent = "Sửa";
-  editButton.classList.add("btn", "btn-edit");
-  editButton.addEventListener("click", () => {
-  
-    // Điền hộp thoại với thông tin người dùng để chỉnh sửa
-  document.getElementById("editSongKey").value = user.key;
-  document.getElementById("editTitle").value = user.email || "";
-  document.getElementById("editArtist").value = user.username || "";
-  // ... Điền các trường khác
-  // Hiển thị hộp thoại
-  $("#editModal").modal("show");
-  });
-  actionCell.appendChild(editButton);
+
 
   // Thêm nút khóa/mở khóa
 const lockUnlockButton = document.createElement("button");
@@ -364,7 +349,6 @@ actionCell.appendChild(lockUnlockButton);
 });
 updatePaginationButtons(users.length);
 }
-
   // Cập nhật nút phân trang
 function updatePaginationButtons(totalItems) {
   pagination.innerHTML = "";

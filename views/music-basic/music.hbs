@@ -216,7 +216,7 @@ button:hover {
 
 <div class="nav-menu">
      <div>
-    <button  type="button" class="btn btn-primary1" data-bs-toggle="modal"
+    <button style="margin-top: 5px;" type="button" class="btn btn-primary1" data-bs-toggle="modal"
     data-bs-target="#exampleModal">
     Thêm Bài Hát
 </button>
@@ -236,8 +236,12 @@ button:hover {
         <option value="all">Tất cả</option>
         <option value="copyrighted">Bản quyền</option>
         <option value="non-copyrighted">Không bản quyền</option>
+         <option value="Vietnam">Việt Nam</option>
+        <option value="China">Trung Quốc</option>
+        <option value="Korea">Hàn Quốc</option>
+             <option value="Usuk">Us uk</option>
     </select>
-    <button style="width: 100px; margin-left: 20px;" class="btn btn-primary" onclick="applyFilter()">Áp dụng</button>
+    <button style="width: 100px; margin-left: 20px; margin-top: 0px;" class="btn btn-primary" onclick="applyFilter()">Áp dụng</button>
 </div>
     </div>
 
@@ -263,19 +267,7 @@ button:hover {
                             <label for="exampleauthor">Tác Giả</label>
                             <input type="text" class="form-control" id="exampleauthor" placeholder="Tên tác giả">
                         </div>
-                        <div class="form-group">
-                            <label for="exampleauthor">Bản Quyền</label>
-                            <div class="form-check">
-                                <input type="radio" class="form-check-input" id="copyrighted" name="radio-stacked"
-                                    required>
-                                <label class="form-check-label" for="copyrighted">Có Bản Quyền</label>
-                            </div>
-                            <div class="form-check mb-3">
-                                <input type="radio" class="form-check-input" id="uncopyrighted" name="radio-stacked"
-                                    required>
-                                <label class="form-check-label" for="uncopyrighted">Không Bản Quyền</label>
-                            </div>
-                        </div>
+                
                         <div class="mb-3">
                             <label for="exampgenre">Thể Loại</label>
                             <select class="form-select" id="exampgenre" required aria-label="select example">
@@ -289,6 +281,17 @@ button:hover {
                                 <option value="Nhạc Trẻ">Nhạc Trẻ</option>
                                 <option value="Trữ Tình">Trữ Tình</option>
                                 <option value="Nhạc Khác">Nhạc Khác</option>
+                            </select>
+                        </div>
+                          <div class="mb-3">
+                            <label for="exampnation">Quốc Gia</label>
+                            <select class="form-select" id="exampnation" required aria-label="select example">
+                                <option value="">Quốc Gia</option>
+                                <option value="Vietnam">Việt Nam</option>
+                                <option value="China">Trung Quốc</option>
+                                <option value="Korea">Hàn Quốc</option>
+                                <option value="Usuk">Nhạc Âu Mỹ</option>
+
                             </select>
                         </div>
                         <div class="form-group">
@@ -452,6 +455,9 @@ saveButton.addEventListener("click", function () {
     const url = document.getElementById("exampleurl").value;
     const imageInput = document.getElementById("exampleimg");
     const previewImage = document.getElementById("previewImage");
+    const nation = document.getElementById("exampnation").value;
+      // Set copyrighted mặc định là false
+    const copyrighted = false;
     // Lấy thời gian hiện tại
     const currentTime = new Date().toISOString();
     // Lấy thông tin về file hình ảnh đã chọn
@@ -478,9 +484,10 @@ saveButton.addEventListener("click", function () {
             artist: artist,
             author: author,
             genre: genre,
+            nation: nation,
             url: url,
             image: img,
-            copyrighted: document.getElementById("copyrighted").checked,
+            copyrighted: copyrighted,
             count: 0,
             latest: true,
             timestamp: currentTime,  // Thêm trường timestamp với giá trị là thời gian hiện tại
@@ -496,6 +503,7 @@ saveButton.addEventListener("click", function () {
                 document.getElementById("exampleartist").value = "";
                 document.getElementById("exampleauthor").value = "";
                 document.getElementById("exampgenre").value = "";
+                document.getElementById("exampnation").value = "";
                 document.getElementById("exampleurl").value = "";
                 document.getElementById("exampleimg").value = "";
                 document.getElementById("previewImage").src = ""; // Nếu bạn muốn xóa hình ảnh xem trước
@@ -919,11 +927,20 @@ function applyFilter() {
             filteredSongs = allSongs.filter((song) => song.copyrighted);
         } else if (filterOption === 'non-copyrighted') {
             filteredSongs = allSongs.filter((song) => !song.copyrighted);
+        } else if (filterOption === 'Vietnam') {
+            filteredSongs = allSongs.filter((song) => song.nation === filterOption);
+        } else if (filterOption === 'China') {
+            filteredSongs = allSongs.filter((song) => song.nation === filterOption);
+        } else if (filterOption === 'Korea') {
+            filteredSongs = allSongs.filter((song) => song.nation === filterOption);
+        } else if (filterOption === 'Usuk') {
+            filteredSongs = allSongs.filter((song) => song.nation === filterOption);
         }
 
         updateSongsTable(filteredSongs);
     });
 }
+
   document.getElementById("searchButton").addEventListener("click", function () {
         searchSongs();
     });

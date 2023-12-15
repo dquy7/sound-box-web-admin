@@ -378,6 +378,17 @@ button:hover {
                                 <option value="Nhạc Khác">Nhạc Khác</option>
                             </select>
                         </div>
+                           <div class="mb-3">
+                            <label for="exampnation">Quốc Gia</label>
+                            <select class="form-select" id="exampnation" required aria-label="select example">
+                                <option value="">Quốc Gia</option>
+                                <option value="Vietnam">Việt Nam</option>
+                                <option value="China">Trung Quốc</option>
+                                <option value="Korea">Hàn Quốc</option>
+                                <option value="Usuk">Nhạc Âu Mỹ</option>
+                               
+                            </select>
+                        </div>
                         <div class="form-group">
                             <label for="exampleurl">Link Bài Hát</label>
                             <input type="text" class="form-control" id="exampleurl" placeholder="URL bài hát">
@@ -548,7 +559,7 @@ saveButton.addEventListener("click", function () {
     const author = document.getElementById("exampleauthor").value;
     const genre = document.getElementById("exampgenre").value;
     const url = document.getElementById("exampleurl").value;
-
+    const nation = document.getElementById("exampnation").value;
     // Lấy thời gian hiện tại
     const currentTime = new Date().toISOString();
 
@@ -580,6 +591,7 @@ saveButton.addEventListener("click", function () {
             author: author,
             genre: genre,
             url: url,
+            nation: nation,
             image: img,
             copyrighted: true, // Đặt giá trị mặc định của trường copyrighted là true
             count: 0,
@@ -1091,14 +1103,27 @@ function searchSongs() {
     const searchInput = document.getElementById("searchInput").value.toLowerCase();
 
     getAllSongs().then((allSongs) => {
-        const filteredSongs = allSongs.filter((song) => {
-            return (
-                song.title.toLowerCase().includes(searchInput) ||
-                song.artist.toLowerCase().includes(searchInput) ||
-                song.author.toLowerCase().includes(searchInput) ||
-                song.genre.toLowerCase().includes(searchInput)
-            );
-        });
+        let filteredSongs;
+
+        // Check if searchInput is empty, if yes, show all songs
+        if (searchInput.trim() === "") {
+            filteredSongs = allSongs;
+        } else {
+            // Filter songs based on the search input
+            filteredSongs = allSongs.filter((song) => {
+                const title = (song.title || "").toLowerCase();
+                const artist = (song.artist || "").toLowerCase();
+                const author = (song.author || "").toLowerCase();
+                const genre = (song.genre || "").toLowerCase();
+
+                return (
+                    title.includes(searchInput) ||
+                    artist.includes(searchInput) ||
+                    author.includes(searchInput) ||
+                    genre.includes(searchInput)
+                );
+            });
+        }
 
         currentPage = 1; // Reset current page to 1 when performing a new search
         updatePaginationButtons(filteredSongs.length);
@@ -1107,11 +1132,16 @@ function searchSongs() {
 }
 
 // Sự kiện khi nút tìm kiếm được click
-searchButton.addEventListener("click", function (event) {
-    event.preventDefault(); // Ngăn chặn form từ việc submit (tránh reload trang)
-    // Gọi hàm searchSongs
-    searchSongs();
-});
+const searchButton = document.getElementById("searchButton");
+if (searchButton) {
+    searchButton.addEventListener("click", function (event) {
+        event.preventDefault(); // Ngăn chặn form từ việc submit (tránh reload trang)
+        // Gọi hàm searchSongs
+        searchSongs();
+    });
+} else {
+    console.error("Search button not found. Make sure you have an element with id 'searchButton'");
+}
 
  // Function to apply filter
 function applyFilter() {

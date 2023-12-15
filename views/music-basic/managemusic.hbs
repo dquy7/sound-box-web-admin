@@ -1157,6 +1157,52 @@ function getAllSongs() {
         return [];
     });
 }
+
+// Function to search songs and update the table
+function searchSongs() {
+    const searchInput = document.getElementById("searchInput").value.toLowerCase();
+
+    getAllSongs().then((allSongs) => {
+        let filteredSongs;
+
+        // Check if searchInput is empty, if yes, show all songs
+        if (searchInput.trim() === "") {
+            filteredSongs = allSongs;
+        } else {
+            // Filter songs based on the search input
+            filteredSongs = allSongs.filter((song) => {
+                const title = (song.title || "").toLowerCase();
+                const artist = (song.artist || "").toLowerCase();
+                const author = (song.author || "").toLowerCase();
+                const genre = (song.genre || "").toLowerCase();
+
+                return (
+                    title.includes(searchInput) ||
+                    artist.includes(searchInput) ||
+                    author.includes(searchInput) ||
+                    genre.includes(searchInput)
+                );
+            });
+        }
+
+        currentPage = 1; // Reset current page to 1 when performing a new search
+        updatePaginationButtons(filteredSongs.length);
+        updateSongsTable(filteredSongs); // Update the table with filtered songs
+    });
+}
+
+// Sự kiện khi nút tìm kiếm được click
+const searchButton = document.getElementById("searchButton");
+if (searchButton) {
+    searchButton.addEventListener("click", function (event) {
+        event.preventDefault(); // Ngăn chặn form từ việc submit (tránh reload trang)
+        // Gọi hàm searchSongs
+        searchSongs();
+    });
+} else {
+    console.error("Search button not found. Make sure you have an element with id 'searchButton'");
+}
+
 // Sự kiện khi nút tìm kiếm được click
 searchButton.addEventListener("click", function (event) {
     event.preventDefault(); // Ngăn chặn form từ việc submit (tránh reload trang)
