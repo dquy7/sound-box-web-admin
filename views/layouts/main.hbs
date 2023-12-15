@@ -291,14 +291,6 @@ ul.list-unstyled a i.material-symbols-outlined {
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
 <script>
-
- var firebaseRef = firebase.database().ref("colors");
-    firebaseRef.once("value").then(function(snapshot) {
-        var colors = snapshot.val();
-        document.getElementById("side_nav").style.background = colors.sidebarColor || "#555555";
-        document.getElementById("header-box").style.background = colors.headerColor || "#66CCFF";
-    });
-
 $('.open-btn').on('click', function () {
 $('.sidebar').addClass('active');
 })

@@ -1,0 +1,518 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Quản Lý Người Dùng</title>
+       <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+</head>
+
+<style>/* Style for pagination */
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+    margin-top: 20px;
+    
+}
+
+.pagination li {
+    margin-right: 5px;
+    cursor: pointer;
+    color: #0056b3;
+    border: 1px solid #007bff;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+.pagination a {
+    text-decoration: none;
+}
+
+.pagination li:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
+/* CSS cho box-ft */
+.box-ft {
+  margin-top: 20px;
+  padding: 10px;
+  display: flex;
+  align-items: center;
+}
+
+/* CSS cho label */
+.box-ft label {
+  margin-top: 10px;
+}
+
+/* CSS cho input */
+.box-ft input {
+  margin-top: 10px;
+  margin-left: 5px;
+  padding: 5px;
+  border: 1px solid #ccc;
+  border-radius: 3px;
+}
+
+/* CSS cho button */
+.box-ft button {
+  margin-left: 5px;
+  padding: 8px 12px;
+  background-color: #007bff;
+  color: #fff;
+  border: none;
+  border-radius: 3px;
+  cursor: pointer;
+}
+
+/* CSS cho button khi được hover */
+.box-ft button:hover {
+  background-color: #0056b3;
+}
+#searchForm{
+  position: absolute;
+  right: 10px;
+}
+#filterControls {
+    display: flex;
+    align-items: center;
+}
+
+#filterCopyright {
+    margin-left: 10px;
+    padding: 5px;
+}
+
+#applyFilterButton {
+    width: 100px;
+    margin-left: 20px;
+}
+#filterByEndDateBtn {
+  background-color: tomato; /* Màu nền */
+  color: #ffffff; /* Màu chữ */
+  border: 0px;
+margin: 20px;
+  /* Thêm các thuộc tính CSS khác nếu cần */
+}
+</style>
+<body>
+     <nav style="background-color:aquamarine ; height: 83px;"  class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a style="font-size: 30px; font-weight: bold;" class="navbar-brand" href="./user">Quản Lý Người Dùng VIP</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+           <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./user">Quản Lý người dùng</a>
+        </li>
+        
+      </ul>
+   <!-- Trong phần body của trang web -->
+<form class="d-flex" id="searchForm" role="search">
+  <input class="form-control me-2" type="search" id="searchInput" placeholder="Search" aria-label="Search">
+  <button class="btn btn-outline-success" type="submit">Search</button>
+</form>
+    </div>
+  </div>
+</nav>
+
+ <div class="box-ft">
+     <label style="margin-top: 10px; margin-left: 5px;" for="startDate">Ngày bắt đầu:</label>
+            <input  type="date" id="startDate">
+            <label style="margin-top: 10px;  margin-left: 10px;" style="margin-top: 0px; margin-left: 10px;" for="endDate">Ngày kết thúc:</label>
+            <input   type="date" id="endDate">
+            <button style="margin-top: 10px;" onclick="filterByDate()">Lọc</button>
+            <div  style="position: absolute; right: 20px;" class="box-filter">
+    <label for="filterCopyright">Lọc:</label>
+    <select id="filterCopyright">
+        <option value="all">Tất cả</option>
+        <option value="Lock">Bị Khóa</option>
+        <option value="Often">Thường</option>
+        <option value="VIP-1-month">VIP 1 Tháng</option>
+        <option value="VIP-6-month">VIP 6 Tháng</option>
+        <option value="VIP-1-year">VIP 1 Năm</option>
+    </select>
+    <button style="width: 100px; margin-left: 20px;" class="btn btn-primary" onclick="applyFilter()">Áp dụng</button>
+</div>
+    </div>
+
+<button id="filterByEndDateBtn" class="btn btn-primary">Hôm nay hết hạn VIP</button>
+
+ <!-- Bảng hiển thị danh sách bài hát -->
+        <table class="table table-bordered mt-4">
+            <thead>
+                <tr>
+                    <th>id</th>
+                    <th>Email</th>
+                    <th>Username</th>
+                    <th>Loại Đăng Ký</th>
+                    <th>Bắt Đầu</th>
+                    <th>Kết Thúc</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+            <tbody id="usersTable"></tbody>
+        </table>
+        
+        <ul class="pagination" id="pagination"></ul>
+
+<div class="modal fade" id="editUserInfoModal" tabindex="-1" aria-labelledby="editUserInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="editUserInfoModalLabel">Sửa Thông Tin Người Dùng</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Form để sửa thông tin người dùng -->
+                <form id="editUserForm">
+                    <!-- Thêm các trường để chỉnh sửa thông tin -->
+                    <div class="mb-3">
+                        <label for="editIsVIP" class="form-label">Is VIP</label>
+                        <input type="checkbox" id="editIsVIP" name="editIsVIP">
+                    </div>
+                    <!-- Các trường khác ... -->
+                    <button type="button" class="btn btn-primary" onclick="saveEditedUserInfo()">Lưu Thay Đổi</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+ <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+<!-- Firebase JavaScript SDK -->
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+  <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
+
+<script>
+const firebaseConfig = {
+apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
+authDomain: "soundbox-du-an-md31.firebaseapp.com",
+databaseURL: "https://soundbox-du-an-md31-default-rtdb.firebaseio.com",
+projectId: "soundbox-du-an-md31",
+storageBucket: "soundbox-du-an-md31.appspot.com",
+messagingSenderId: "265264289877",
+appId: "1:265264289877:web:0f88e2fa54c638685e9cdc",
+measurementId: "G-FE9Z9NKJDR"
+};
+firebase.initializeApp(firebaseConfig);
+// Định nghĩa songsRef ở mức toàn cục hoặc một phạm vi có thể truy cập bởi các sự kiện khác
+const database = firebase.database();
+const usersRef = database.ref("users");
+
+let allUsers = []; // Biến toàn cục để lưu danh sách người dùng
+const usersTable = document.getElementById("usersTable");
+const pagination = document.getElementById("pagination");
+const itemsPerPage = 5; // Số người dùng hiển thị trên mỗi trang
+let currentPage = 1;
+let totalUsers = 0;
+
+function getAllUsers() {
+return usersRef.once("value").then((snapshot) => {
+    allUsers = [];
+    snapshot.forEach((childSnapshot) => {
+        const userData = childSnapshot.val();
+        userData.key = childSnapshot.key;
+        allUsers.push(userData);
+    });
+    return allUsers;
+}).catch((error) => {
+    console.error("Lỗi khi lấy dữ liệu từ Firebase: " + error.message);
+    return [];
+});
+}
+console.log(getAllUsers());
+
+// Hàm thực hiện tìm kiếm
+function performSearch() {
+// Lấy giá trị người dùng nhập vào ô tìm kiếm
+const searchQuery = document.getElementById("searchInput").value.toLowerCase();
+
+// Lọc danh sách người dùng dựa trên truy vấn tìm kiếm
+const filteredUsers = allUsers.filter(user =>
+(user.email && user.email.toLowerCase().includes(searchQuery)) ||
+(user.username && user.username.toLowerCase().includes(searchQuery))
+);
+
+// Hiển thị người dùng đã lọc
+displayVIPUsersOnPage(filteredUsers);
+}
+
+// Lắng nghe sự kiện submit của biểu mẫu tìm kiếm
+document.getElementById("searchForm").addEventListener("submit", function (event) {
+event.preventDefault(); // Ngăn chặn hành động mặc định của biểu mẫu
+// Thực hiện tìm kiếm
+performSearch();
+});
+
+// Hàm thực hiện lọc theo ngày
+function filterByDate() {
+// Lấy giá trị ngày bắt đầu và kết thúc từ các trường nhập
+const startDate = document.getElementById("startDate").value;
+const endDate = document.getElementById("endDate").value;
+
+// Kiểm tra xem đã nhập đủ thông tin hay chưa
+if (!startDate || !endDate) {
+alert("Vui lòng nhập cả ngày bắt đầu và ngày kết thúc.");
+return;
+}
+
+// Lọc danh sách người dùng dựa trên ngày tạo tài khoản
+const filteredUsers = allUsers.filter(user => {
+const creationDate = new Date(user.creationTime);
+return creationDate >= new Date(startDate) && creationDate <= new Date(endDate);
+});
+
+// Hiển thị người dùng đã lọc
+displayVIPUsersOnPage(filteredUsers);
+}
+
+// Thêm sự kiện nghe cho nút "Tài khoản đến ngày"
+document.getElementById("filterByEndDateBtn").addEventListener("click", function () {
+  // Lấy ngày hiện tại
+  const currentDate = new Date();
+  const currentDateString = formatDate(currentDate); // Hàm chuyển đổi ngày thành chuỗi "DD/MM/YYYY"
+
+  // Lọc danh sách tài khoản có endTime trùng với ngày hiện tại
+  const accountsWithEndDateToday = allUsers.filter(user => {
+    return user.endTime === currentDateString;
+  });
+
+  // Hiển thị danh sách đã lọc
+  displayVIPUsersOnPage(accountsWithEndDateToday);
+});
+
+// Hàm chuyển đổi ngày thành chuỗi "DD/MM/YYYY"
+function formatDate(date) {
+  const day = date.getDate().toString().padStart(2, '0');
+  const month = (date.getMonth() + 1).toString().padStart(2, '0'); // Lưu ý: Tháng bắt đầu từ 0
+  const year = date.getFullYear();
+  return `${day}/${month}/${year}`;
+}
+function applyFilter() {
+// Lấy giá trị quyền được chọn từ dropdown
+const selectedFilter = document.getElementById("filterCopyright").value;
+
+// Lọc danh sách người dùng dựa trên giá trị đã chọn
+let filteredUsers = [];
+switch (selectedFilter) {
+case "all":
+    filteredUsers = allUsers;
+    break;
+case "Lock":
+    filteredUsers = allUsers.filter(user => user.isLocked);
+    break;
+case "Often":
+    filteredUsers = allUsers.filter(user => !user.isVIP);
+    break;
+case "VIP-1-month":
+    filteredUsers = allUsers.filter(user => user.amount === 10000);
+    break;
+case "VIP-6-month":
+    filteredUsers = allUsers.filter(user => user.amount === 50000);
+    break;
+case "VIP-1-year":
+    filteredUsers = allUsers.filter(user => user.amount === 100000);
+    break;
+default:
+    break;
+}
+
+// Hiển thị người dùng đã lọc
+displayVIPUsersOnPage(filteredUsers);
+}
+// Hàm chuyển đổi giá trị amount thành chuỗi hiển thị thời gian VIP
+function convertAmountToVIPDuration(amount) {
+if (amount === 10000) {
+return "VIP 1 tháng";
+} else if (amount === 50000) {
+return "VIP 6 tháng";
+} else if (amount === 100000) {
+return "VIP 1 năm";
+} else {
+return "Thường";
+}
+}
+// Hiển thị người dùng trên trang hiện tại, chỉ hiển thị tài khoản có isVIP: true
+function displayVIPUsersOnPage(users) {
+const startAt = (currentPage - 1) * itemsPerPage;
+const vipUsersOnCurrentPage = users.filter(user => user.isVIP).slice(startAt, startAt + itemsPerPage);
+
+usersTable.innerHTML = ""; // Xóa nội dung bảng
+
+vipUsersOnCurrentPage.forEach((user, index) => {
+const row = usersTable.insertRow();
+const idCell = row.insertCell(0);
+const emailCell = row.insertCell(1);
+const usernameCell = row.insertCell(2);
+const accountCell = row.insertCell(3);
+const startTimeCell = row.insertCell(4); // Thêm ô mới cho thời gian bắt đầu
+const endTimeCell = row.insertCell(5);   // Thêm ô mới cho thời gian kết thúc
+const actionCell = row.insertCell(6);
+
+idCell.textContent = startAt + index + 1; // ID bắt đầu từ 1
+emailCell.textContent = user.email || "";
+usernameCell.textContent = user.username || "";
+
+const createdTime = new Date(user.creationTime);
+startTimeCell.textContent = user.startTime || "";  // Thêm thông tin thời gian bắt đầu
+endTimeCell.textContent = user.endTime || "";      // Thêm thông tin thời gian kết thúc
+// Thêm nút sửa
+const editButton = document.createElement("button");
+editButton.textContent = "Sửa";
+editButton.classList.add("btn", "btn-info");
+editButton.addEventListener("click", () => {
+ openEditUserInfoModal(user.key);
+});
+actionCell.appendChild(editButton);
+// Thêm ô trạng thái VIP
+accountCell.textContent = convertAmountToVIPDuration(user.amount);
+
+// Thêm nút xóa
+const deleteButton = document.createElement("button");
+deleteButton.textContent = "Xóa";
+deleteButton.classList.add("btn", "btn-danger");
+deleteButton.addEventListener("click", () => {
+const userKeyToDelete = user.key;
+const confirmDelete = confirm("Bạn có chắc chắn muốn xóa người dùng này?");
+if (confirmDelete) {
+usersRef.child(userKeyToDelete).remove();
+getAllUsers().then(displayVIPUsersOnPage);
+alert("Xóa Thành Công");
+}
+});
+actionCell.appendChild(deleteButton);
+
+// Thêm nút khóa/mở khóa
+const lockUnlockButton = document.createElement("button");
+lockUnlockButton.textContent = user.isLocked ? "Mở Khóa" : "Khóa";
+lockUnlockButton.classList.add("btn", user.isLocked ? "btn-success" : "btn-warning");
+lockUnlockButton.addEventListener("click", () => {
+const userKeyIsLocked = user.key;
+const confirmAction = confirm(user.isLocked ? "Bạn có muốn mở khóa người dùng này?" : "Bạn có muốn khóa người dùng này?");
+
+if (confirmAction) {
+const updatedIsLocked = !user.isLocked;
+
+usersRef.child(userKeyIsLocked).update({
+isLocked: updatedIsLocked,
+});
+
+getAllUsers().then((users) => {
+user.isLocked = updatedIsLocked;
+displayVIPUsersOnPage(users);
+});
+}
+});
+
+actionCell.appendChild(lockUnlockButton);
+});
+
+updateVIPPaginationButtons(users.filter(user => user.isVIP).length);
+}
+
+function openEditUserInfoModal(key) {
+  editingUserKey = key;
+  const userToEdit = allUsers.find(user => user.key === key);
+
+  // Đặt giá trị của các trường trong modal theo thông tin người dùng cần sửa
+  document.getElementById("editIsVIP").checked = userToEdit.isVIP;
+  
+  // Mở modal
+  $('#editUserInfoModal').modal('show');
+}
+
+function updateUser(userId, updatedInfo) {
+  return firebase.database().ref('users/' + userId).update(updatedInfo);
+}
+
+function saveEditedUserInfo() {
+  const editedIsVIP = document.getElementById("editIsVIP").checked;
+
+  // Xóa trường endTime và startTime trong đối tượng updatedInfo
+  const updatedInfo = {
+    isVIP: editedIsVIP,
+    // Các trường khác bạn muốn cập nhật...
+  };
+
+  if (editedIsVIP) {
+    delete updatedInfo.endTime;
+    delete updatedInfo.startTime;
+  }
+
+  // Gọi phương thức updateUser để cập nhật trạng thái isVIP của người dùng
+  updateUser(editingUserKey, updatedInfo)
+    .then(() => {
+      // Đóng modal
+      $('#editUserInfoModal').modal('hide');
+
+      // Cập nhật lại danh sách người dùng và hiển thị trên trang
+      getAllUsers().then(displayVIPUsersOnPage);
+    })
+    .catch(error => {
+      console.error("Lỗi khi lưu thay đổi: ", error);
+      // Xử lý lỗi nếu cần
+    });
+}
+// Cập nhật nút phân trang chỉ cho các tài khoản VIP
+function updateVIPPaginationButtons(totalItems) {
+pagination.innerHTML = "";
+const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+if (totalPages === 0) {
+console.log("Không có trang nào để hiển thị.");
+return;
+}
+
+for (let i = 1; i <= totalPages; i++) {
+const pageItem = document.createElement("li");
+pageItem.textContent = i;
+pageItem.addEventListener("click", () => {
+currentPage = i;
+getAllUsers().then(displayVIPUsersOnPage);
+});
+pagination.appendChild(pageItem);
+}
+}
+
+// Kiểm tra trạng thái đăng nhập trước khi hiển thị dữ liệu
+function checkLoginStatus() {
+    // Lấy reference đến đối tượng admin trong Realtime Database
+    const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
+
+        adminRef.once('value')
+        .then(snapshot => {
+        const adminData = snapshot.val();
+
+        if (adminData && adminData.loggedIn) {
+                    // Người dùng đã đăng nhập, có thể hiển thị dữ liệu
+            // Gọi hàm hiển thị dữ liệu hoặc thực hiện các xử lý khác
+            getAllUsers().then((users) => {
+            totalUsers = users.length;
+                displayVIPUsersOnPage(users);
+                });
+            } else {
+                // Người dùng chưa đăng nhập, chuyển hướng hoặc xử lý theo ý của bạn
+            alert('Vui lòng đăng nhập để xem dữ liệu.');
+        window.location.href = '/'; // Chuyển hướng đến trang đăng nhập
+        }
+        })
+        .catch(error => {
+        console.error('Lỗi khi kiểm tra trạng thái loggedIn:', error.message);
+        alert('Có lỗi xảy ra khi kiểm tra trạng thái loggedIn.');
+    });
+}
+
+// Sự kiện khi trang web được tải
+window.onload = function () {
+// Kiểm tra trạng thái đăng nhập khi trang web được tải
+checkLoginStatus();
+};
+
+</script>
+
+</body>
+</html>

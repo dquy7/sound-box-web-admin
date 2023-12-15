@@ -22,6 +22,7 @@ const Musiccopyright = require("./controllers/Musiccopyright.controller");
 const ManageMusic = require("./controllers/ManageBannerMusic");
 const StatisticalRevenue = require("./controllers/StatisticalRevenue");
 const TKRevenue = require("./controllers/TkRevenueController");
+const UserVIP = require("./controllers/UserVipController");
 const { Link } = require("react-router-dom");
 
 app.engine(".hbs", engine({ extname: ".hbs" }));
@@ -49,6 +50,7 @@ app.use("/revenue", RevenueController);
 app.use("/feedback", FeedbackController);
 app.use("/feedbackstatistical", FeedbackStatistical);
 app.use("/tkrevenue", TKRevenue);
+app.use("/uservip", UserVIP);
 
 app.listen(8000, () => {
   console.log("App running at 8000");
