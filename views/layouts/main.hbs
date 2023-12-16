@@ -69,7 +69,7 @@
 .avatar {
     width: 40px;
     height: 40px;
-    margin-right: 10px;
+    margin-right: 5px;
 }
 
 .info {
@@ -88,8 +88,12 @@
     font-size: 0.9rem;
 }
 .dropdown-item:hover{
+    width: 220px;
     border-radius: 20px !important;
     background-color: red !important;
+}
+.dropdown-menu{
+    width: 250px;
 }
 /* Reset CSS */
 body, ul, li, a {
@@ -149,6 +153,7 @@ ul.list-unstyled a i.material-symbols-outlined {
     </style>
     <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:opsz,wght,FILL,GRAD@24,400,0,0" />
+    
 </head>
 
 <body>
@@ -163,11 +168,12 @@ ul.list-unstyled a i.material-symbols-outlined {
                 </div>
                 <!-- Default dropend button -->
             <div class="btn-group dropend">
-            <button style=" width: 100%;  background-color:#66CCFF !important; border: 0px;" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
+            <button style=" width: 50%; margin-top: 0px;  background-color:#66CCFF !important; border: 0px;" type="button" class="btn btn-secondary dropdown-toggle" data-bs-toggle="dropdown" aria-expanded="false">
             </button>
-            <ul style="background-color:  #66CCFF;" class="dropdown-menu">
+            <ul style="background-color:  #eee;" class="dropdown-menu">
                 <!-- Dropdown menu links -->
-                <li><button class="dropdown-item" type="button">Thay Đổi Thông Tin</button></li>
+                <li><button id="changeInfoButton" class="dropdown-item" type="button">Thay Đổi Thông Tin</button>
+</li>
                  <li><button class="dropdown-item change-password-button" type="button">Đổi Mật Khẩu</button></li>
                    <hr />
                   <li><button class="dropdown-item logout-button" type="button">Đăng Xuất</button></li>
@@ -186,29 +192,28 @@ ul.list-unstyled a i.material-symbols-outlined {
          
             <ul class="list-unstyled px-2">
                 <li class=""><a href="/home" class="text-decoration-none px-3 py-2 d-block" role="link">
+                <!-- Màn hình trang chủ -->
                       <i class="material-symbols-outlined">home</i>Trang chủ</a></li>
                 <li class=""><a href="/music" class="text-decoration-none px-3 py-2 d-block" role="link">
+                <!-- Màn hình quản lý bài nhạc -->
                       <i class="material-symbols-outlined">library_music</i>Quản lý bài nhạc</a></li>
                 <li class=""><a href="/comment" class="text-decoration-none px-3 py-2 d-block" role="link">
+                <!-- Màn hình quản lý bình luận -->
                       <i class="material-symbols-outlined">chat</i>Quản lý bình luận</a></li>
                 <li class=""><a href="/user" class="text-decoration-none px-3 py-2 d-block">
+                <!-- Màn hình quản lý tài khoản -->
                       <i class="material-symbols-outlined">account_circle</i>Quản lý tài khoản</a></li>
                 <li class=""><a href="/feedback" class="text-decoration-none px-3 py-2 d-block">
+                <!-- Màn hình quản lý feedback -->
                    <i class="material-symbols-outlined">communication</i>Quản Lý Feedback</a></li>
                 <li class=""><a href="/statisticalrevenue" class="text-decoration-none px-3 py-2 d-block">
+                <!-- Màn hình doanh thu -->
                  <i class="material-symbols-outlined">universal_currency</i>Doanh Thu</a></li>
                 <li class=""><a href="/revenue" class="text-decoration-none px-3 py-2 d-block">
+                <!-- Màn hình thống kê -->
                     <i class="material-symbols-outlined">bar_chart_4_bars</i>Thống Kê</a></li>
             </ul>
-            <hr class="h-color mx-2" style="background: #eee;">
-            <ul class="list-unstyled px-2">
-                <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block">
-                  <i class="material-symbols-outlined">settings</i>Setting</a></li>
-                <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block">
-                   <i class="material-symbols-outlined">notifications</i>Notification</a></li>
-                <li class=""><a href="#" class="text-decoration-none px-3 py-2 d-block">
-                <i class="material-symbols-outlined">logout</i>Đăng Xuất</a></li>
-            </ul>
+          
      
         </div>
 
@@ -256,86 +261,201 @@ ul.list-unstyled a i.material-symbols-outlined {
     </div>
 </div>
 
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
+<!-- Modal for Thay Đổi Thông Tin -->
+<div class="modal fade" id="changeInfoModal" tabindex="-1" aria-labelledby="changeInfoModalLabel" aria-hidden="true">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="changeInfoModalLabel">Thay Đổi Thông Tin</h5>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <!-- Form for changing username and image -->
+                <form id="changeInfoForm">
+                    <div class="mb-3">
+                        <label for="newUsername" class="form-label">Tên người dùng mới</label>
+                        <input type="text" class="form-control" id="newUsername" required>
+                    </div>
+                    <div class="mb-3">
+                        <label for="newImage" class="form-label">Chọn ảnh mới</label>
+                        <input type="file" class="form-control" id="newImage" accept="image/*">
+                        <img id="selectedImage" style="display: none; max-width: 100%; max-height: 200px; margin-top: 10px;">
+                    </div>
+                    <button type="submit" class="btn btn-primary">Lưu Thay Đổi</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
 
-    <script>
-    //$(".sidebar ul li").on('click', function () {
-    //    $(".sidebar ul li.active").removeClass('active');
-    //   $(this).addClass('active');
-    //});
-    $('.open-btn').on('click', function () {
-        $('.sidebar').addClass('active');
-    })
-    $('.close-btn').on('click', function () {
-        $('.sidebar').removeClass('active');
-    })
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.6.0/jquery.min.js"></script>
 
-    document.addEventListener('DOMContentLoaded', function () {
-         // Lấy reference đến đối tượng admin trong Realtime Database
+<script>
+$('.open-btn').on('click', function () {
+$('.sidebar').addClass('active');
+})
+$('.close-btn').on('click', function () {
+$('.sidebar').removeClass('active');
+})
+const changeInfoButton = document.getElementById('changeInfoButton');
+const newImageInput = document.getElementById('newImage');
+const selectedImage = document.getElementById('selectedImage');
+const saveChangesButton = document.querySelector('#changeInfoModal button[type="submit"]');
+
+// Add a click event listener to the button
+changeInfoButton.addEventListener('click', function () {
+    // Show the modal when the button is clicked
+    $('#changeInfoModal').modal('show');
+
+    // Display current image in the modal
+    displayCurrentImage();
+});
+
+// Add an event listener for the change event on the file input
+newImageInput.addEventListener('change', function () {
+    displaySelectedImage();
+});
+
+// Add a click event listener to the save changes button
+saveChangesButton.addEventListener('click', function (event) {
+    event.preventDefault();
+
+    // Retrieve values from the modal's form inputs
+    const newUsernameInput = document.getElementById('newUsername');
+    const newImageInput = document.getElementById('newImage');
+    const newUsername = newUsernameInput.value;
+    const newImageFile = newImageInput.files[0];
+
+    // Check if a new image is selected
+    if (newImageFile) {
+        // Display loading or processing message here if needed
+
+        // For example, if you're using Firebase Storage:
+        const storageRef = firebase.storage().ref('profile-images/' + newImageFile.name);
+        
+        storageRef.put(newImageFile).then(snapshot => {
+            return snapshot.ref.getDownloadURL();
+        }).then(downloadURL => {
+            // Update the username and img fields in the Realtime Database
+            updateUserInfo(newUsername, downloadURL);
+        }).catch(error => {
+            console.error('Error uploading image:', error.message);
+            // Handle error or display an error message
+        });
+    } else {
+        // If no new image is selected, update only the username
+        updateUserInfo(newUsername, null);
+    }
+});
+
+// Function to display the selected image
+function displaySelectedImage() {
+    const selectedFile = newImageInput.files[0];
+
+    if (selectedFile) {
+        const reader = new FileReader();
+
+        reader.onload = function (e) {
+            selectedImage.src = e.target.result;
+            selectedImage.style.display = 'block';
+        };
+
+        reader.readAsDataURL(selectedFile);
+    } else {
+        selectedImage.style.display = 'none';
+    }
+}
+
+// Function to display the current image
+function displayCurrentImage() {
     const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
 
-        // Thực hiện lấy dữ liệu từ Realtime Database
-        adminRef.once('value')
-            .then(snapshot => {
-                const adminData = snapshot.val();
+    adminRef.once('value')
+        .then(snapshot => {
+            const adminData = snapshot.val();
 
-                if (adminData && adminData.loggedIn) {
-                    // Hiển thị thông tin người dùng
-                    const avatarElement = document.querySelector('.avatar');
-                    const usernameElement = document.querySelector('.username');
-                    const emailElement = document.querySelector('.email');
+            if (adminData && adminData.img) {
+                selectedImage.src = adminData.img;
+                selectedImage.style.display = 'block';
+            } else {
+                selectedImage.style.display = 'none';
+            }
+        })
+        .catch(error => {
+            console.error('Error getting data from Realtime Database:', error.message);
+        });
+}
 
-                    // Cập nhật giá trị từ dữ liệu Realtime Database
-                    avatarElement.src = adminData.img || 'default-avatar.jpg';
-                    usernameElement.textContent = adminData.username || 'Username';
-                    emailElement.textContent = adminData.email || 'user@example.com';
+// Function to update username and img fields in the Realtime Database
+function updateUserInfo(newUsername, newImgURL) {
+    console.log('Calling updateUserInfo with newUsername:', newUsername, 'and newImgURL:', newImgURL);
 
-                    // Hiển thị phần dropdown khi đăng nhập
-                    document.querySelector('.btn-group.dropend').style.display = 'block';
-                    document.querySelector('.user-options-nav').style.display = 'block';
+    // Get a reference to the user in the Realtime Database (replace "userId" with the actual user ID)
+    const userId = "0Syobn6farX70IvRip7uOM1ttt03";
+    const userRef = firebase.database().ref('users').child(userId);
 
-                    // Sự kiện khi click vào thay đổi thông tin
-                    const changeInfoOption = document.querySelector('.change-info');
-                    changeInfoOption.addEventListener('click', () => {
-                        alert('Chức năng thay đổi thông tin đang được phát triển.');
-                    });
+    // Create an object with the new data
+    const newData = {
+        username: newUsername
+    };
 
-                    // Sự kiện khi click vào đăng xuất
-                    const logoutOption = document.querySelector('.logout');
-                    logoutOption.addEventListener('click', () => {
-                        // Thực hiện các thao tác đăng xuất, ví dụ: xóa token, cập nhật trạng thái loggedIn, ...
-                        
-                        // Cập nhật trường loggedIn trong Realtime Database thành false
-                        updateLoggedInStatus(false);
+    // Add the img field to newData only if a new image URL is provided
+    if (newImgURL !== null) {
+        newData.img = newImgURL;
+    }
 
-                        // Sau đó, chuyển hướng về trang đăng nhập hoặc trang chính của bạn
-                        window.location.href = '/'; // Thay đổi '/' bằng đường dẫn mong muốn
-                    });
+    // Update the data in the Realtime Database
+    userRef.update(newData)
+        .then(() => {
+            // Update successful
+            console.log('User information updated successfully.');
+            // Close the modal if needed
+            $('#changeInfoModal').modal('hide');
+            
+            // Reload the page after a short delay (you can adjust the delay)
+            setTimeout(() => {
+                location.reload();
+            }, 1000); // 1000 milliseconds = 1 second
+        })
+        .catch(error => {
+            // Update failed
+            console.error('Error updating user information:', error.message);
+        });
+}
 
-                    // Sự kiện khi click vào đổi mật khẩu
-                    const changePasswordOption = document.querySelector('.change-password');
-                    changePasswordOption.addEventListener('click', () => {
-                        // Gọi hàm đổi mật khẩu
-                        changePassword();
-                    });
-                } else {
-                    // Người dùng không đăng nhập hoặc thông tin không tồn tại
-                    console.error('Người dùng không đăng nhập hoặc không tìm thấy thông tin trong Realtime Database.');
-                    // Ẩn phần dropdown khi chưa đăng nhập
-                    document.querySelector('.btn-group.dropend').style.display = 'none';
-                    document.querySelector('.user-options-nav').style.display = 'none';
-                }
-            })
-            .catch(error => {
-              
+document.addEventListener('DOMContentLoaded', function () {
+    // Lấy reference đến đối tượng admin trong Realtime Database
+const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
+
+// Thực hiện lấy dữ liệu từ Realtime Database
+adminRef.once('value')
+    .then(snapshot => {
+        const adminData = snapshot.val();
+
+        if (adminData && adminData.loggedIn) {
+            // Hiển thị thông tin người dùng
+            const avatarElement = document.querySelector('.avatar');
+            const usernameElement = document.querySelector('.username');
+            const emailElement = document.querySelector('.email');
+
+            // Cập nhật giá trị từ dữ liệu Realtime Database
+            avatarElement.src = adminData.img || 'default-avatar.jpg';
+            usernameElement.textContent = adminData.username || 'Username';
+            emailElement.textContent = adminData.email || 'user@example.com';
+
+            // Hiển thị phần dropdown khi đăng nhập
+            document.querySelector('.btn-group.dropend').style.display = 'block';
+            document.querySelector('.user-options-nav').style.display = 'block';
+
+            // Sự kiện khi click vào thay đổi thông tin
+            const changeInfoOption = document.querySelector('.change-info');
+            changeInfoOption.addEventListener('click', () => {
+                alert('Chức năng thay đổi thông tin đang được phát triển.');
             });
-    });
 
-    document.addEventListener('DOMContentLoaded', function () {
-        const logoutButton = document.querySelector('.logout-button');
-
-        if (logoutButton) {
-            logoutButton.addEventListener('click', function () {
+            // Sự kiện khi click vào đăng xuất
+            const logoutOption = document.querySelector('.logout');
+            logoutOption.addEventListener('click', () => {
                 // Thực hiện các thao tác đăng xuất, ví dụ: xóa token, cập nhật trạng thái loggedIn, ...
                 
                 // Cập nhật trường loggedIn trong Realtime Database thành false
@@ -344,100 +464,132 @@ ul.list-unstyled a i.material-symbols-outlined {
                 // Sau đó, chuyển hướng về trang đăng nhập hoặc trang chính của bạn
                 window.location.href = '/'; // Thay đổi '/' bằng đường dẫn mong muốn
             });
+
+            // Sự kiện khi click vào đổi mật khẩu
+            const changePasswordOption = document.querySelector('.change-password');
+            changePasswordOption.addEventListener('click', () => {
+                // Gọi hàm đổi mật khẩu
+                changePassword();
+            });
+        } else {
+            // Người dùng không đăng nhập hoặc thông tin không tồn tại
+            console.error('Người dùng không đăng nhập hoặc không tìm thấy thông tin trong Realtime Database.');
+            // Ẩn phần dropdown khi chưa đăng nhập
+            document.querySelector('.btn-group.dropend').style.display = 'none';
+            document.querySelector('.user-options-nav').style.display = 'none';
         }
+    })
+    .catch(error => {
+        
     });
+});
 
-    // Hàm cập nhật trạng thái loggedIn trong Realtime Database
-    function updateLoggedInStatus(loggedIn) {
-          // Lấy reference đến đối tượng admin trong Realtime Database
-    const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
+document.addEventListener('DOMContentLoaded', function () {
+const logoutButton = document.querySelector('.logout-button');
 
-        // Thực hiện cập nhật trường loggedIn
-        adminRef.update({
-            loggedIn: loggedIn
-        })
-        .then(() => {
-            // Cập nhật thành công
-            console.log('Đã cập nhật trạng thái loggedIn.');
-        })
-        .catch((error) => {
-            // Xảy ra lỗi trong quá trình cập nhật
-            console.error('Lỗi khi cập nhật trạng thái loggedIn:', error.message);
-        });
-    }
+if (logoutButton) {
+    logoutButton.addEventListener('click', function () {
+        // Thực hiện các thao tác đăng xuất, ví dụ: xóa token, cập nhật trạng thái loggedIn, ...
+        
+        // Cập nhật trường loggedIn trong Realtime Database thành false
+        updateLoggedInStatus(false);
 
-        const changePasswordButton = document.querySelector('.change-password-button');
-       changePasswordButton.addEventListener('click', () => {
-    // Mở modal đổi mật khẩu
-            $('#changePasswordModal').modal('show');
-        });
+        // Sau đó, chuyển hướng về trang đăng nhập hoặc trang chính của bạn
+        window.location.href = '/'; // Thay đổi '/' bằng đường dẫn mong muốn
+    });
+}
+});
+
+// Hàm cập nhật trạng thái loggedIn trong Realtime Database
+function updateLoggedInStatus(loggedIn) {
+    // Lấy reference đến đối tượng admin trong Realtime Database
+const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
+
+// Thực hiện cập nhật trường loggedIn
+adminRef.update({
+    loggedIn: loggedIn
+})
+.then(() => {
+    // Cập nhật thành công
+    console.log('Đã cập nhật trạng thái loggedIn.');
+})
+.catch((error) => {
+    // Xảy ra lỗi trong quá trình cập nhật
+    console.error('Lỗi khi cập nhật trạng thái loggedIn:', error.message);
+});
+}
+
+const changePasswordButton = document.querySelector('.change-password-button');
+changePasswordButton.addEventListener('click', () => {
+// Mở modal đổi mật khẩu
+    $('#changePasswordModal').modal('show');
+});
 
 // Thêm sự kiện khi submit form đổi mật khẩu
 const changePasswordForm = document.getElementById('changePasswordForm');
 changePasswordForm.addEventListener('submit', function (event) {
-    event.preventDefault();
+event.preventDefault();
 
-    // Lấy giá trị từ input
-    const currentPassword = document.getElementById('currentPassword').value;
-    const newPassword = document.getElementById('newPassword').value;
-    const confirmNewPassword = document.getElementById('confirmNewPassword').value;
+// Lấy giá trị từ input
+const currentPassword = document.getElementById('currentPassword').value;
+const newPassword = document.getElementById('newPassword').value;
+const confirmNewPassword = document.getElementById('confirmNewPassword').value;
 
-    // Kiểm tra mật khẩu mới và xác nhận mật khẩu mới
-    if (newPassword !== confirmNewPassword) {
-        alert('Mật khẩu mới và xác nhận mật khẩu mới không khớp.');
-        return;
-    }
+// Kiểm tra mật khẩu mới và xác nhận mật khẩu mới
+if (newPassword !== confirmNewPassword) {
+alert('Mật khẩu mới và xác nhận mật khẩu mới không khớp.');
+return;
+}
 
-    // Gọi hàm đổi mật khẩu với thông tin vừa nhập
-    changePassword(currentPassword, newPassword);
+// Gọi hàm đổi mật khẩu với thông tin vừa nhập
+changePassword(currentPassword, newPassword);
 });
 
 // Hàm đổi mật khẩu
 function changePassword() {
-    // Lấy giá trị từ các trường input
-    const currentPassword = $('#currentPassword').val();
-    const newPassword = $('#newPassword').val();
-    const confirmNewPassword = $('#confirmNewPassword').val();
+// Lấy giá trị từ các trường input
+const currentPassword = $('#currentPassword').val();
+const newPassword = $('#newPassword').val();
+const confirmNewPassword = $('#confirmNewPassword').val();
 
-    // Kiểm tra xác nhận mật khẩu mới
-    if (newPassword !== confirmNewPassword) {
-        alert('Xác nhận mật khẩu mới không khớp.');
-        return;
-    }
-    // Lấy reference đến đối tượng admin trong Realtime Database
-    const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
-    // Thực hiện lấy dữ liệu từ Realtime Database
-    adminRef.once('value')
-        .then(snapshot => {
-            const adminData = snapshot.val();
+// Kiểm tra xác nhận mật khẩu mới
+if (newPassword !== confirmNewPassword) {
+alert('Xác nhận mật khẩu mới không khớp.');
+return;
+}
+// Lấy reference đến đối tượng admin trong Realtime Database
+const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
+// Thực hiện lấy dữ liệu từ Realtime Database
+adminRef.once('value')
+.then(snapshot => {
+    const adminData = snapshot.val();
 
-            // Kiểm tra mật khẩu hiện tại
-            if (adminData && adminData.password === currentPassword) {
-                // Thực hiện cập nhật mật khẩu mới
-                adminRef.update({
-                    password: newPassword
-                })
-                .then(() => {
-                    // Mật khẩu đã được cập nhật thành công
-                    // Đóng modal và hiển thị thông báo thành công
-                    $('#changePasswordModal').modal('hide');
-                    alert('Đã đổi mật khẩu thành công.');
-                })
-                .catch(error => {
-                    console.error('Lỗi khi cập nhật mật khẩu mới:', error.message);
-                    alert('Có lỗi xảy ra khi cập nhật mật khẩu mới.');
-                });
-            } else {
-                // Mật khẩu hiện tại không chính xác
-                alert('Mật khẩu hiện tại không chính xác.');
-            }
+    // Kiểm tra mật khẩu hiện tại
+    if (adminData && adminData.password === currentPassword) {
+        // Thực hiện cập nhật mật khẩu mới
+        adminRef.update({
+            password: newPassword
+        })
+        .then(() => {
+            // Mật khẩu đã được cập nhật thành công
+            // Đóng modal và hiển thị thông báo thành công
+            $('#changePasswordModal').modal('hide');
+            alert('Đã đổi mật khẩu thành công.');
         })
         .catch(error => {
-   
+            console.error('Lỗi khi cập nhật mật khẩu mới:', error.message);
+            alert('Có lỗi xảy ra khi cập nhật mật khẩu mới.');
         });
+    } else {
+        // Mật khẩu hiện tại không chính xác
+        alert('Mật khẩu hiện tại không chính xác.');
+    }
+})
+.catch(error => {
+
+});
 }
 </script>
-
 </body>
 
 </html>

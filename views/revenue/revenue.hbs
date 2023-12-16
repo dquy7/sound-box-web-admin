@@ -493,8 +493,19 @@ function getTotalUsers() {
     return database.ref('users').once('value').then(snapshot => snapshot.numChildren());
 }
 
-   window.onload = function () {
-        getAllUsers().then((users) => {
+
+ // Kiểm tra trạng thái đăng nhập trước khi hiển thị dữ liệu
+function checkLoginStatus() {
+     // Lấy reference đến đối tượng admin trong Realtime Database
+    const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
+
+    adminRef.once('value')
+        .then(snapshot => {
+            const adminData = snapshot.val();
+
+            if (adminData && adminData.loggedIn) {
+                // Trạng thái loggedIn là true, hiển thị dữ liệu
+                   getAllUsers().then((users) => {
             totalUsers = users.length;
             const registrationTimeline = calculateRegistrationTimeline(users);
             displayRegistrationTimelineChart(registrationTimeline);
@@ -515,7 +526,26 @@ function getTotalUsers() {
     displayYearlyLoginChart(yearlyStatistics.logins);
         }); // Gọi hàm lấy tổng số người dùng và hiển thị lên trang web
     getTotalUsers().then(displayTotalUsers);
-    };
+
+
+            } else {
+                // Trạng thái loggedIn là false hoặc không tìm thấy thông tin admin
+                alert('Vui lòng đăng nhập để xem dữ liệu.');
+                window.location.href = '/'; // Chuyển hướng đến trang đăng nhập
+            }
+        })
+        .catch(error => {
+            console.error('Lỗi khi kiểm tra trạng thái loggedIn:', error.message);
+            alert('Có lỗi xảy ra khi kiểm tra trạng thái loggedIn.');
+        });
+}
+
+// Sự kiện khi trang web được tải
+window.onload = function () {
+    // Kiểm tra trạng thái đăng nhập khi trang web được tải
+    checkLoginStatus();
+    
+};
   </script>
 
 </body>

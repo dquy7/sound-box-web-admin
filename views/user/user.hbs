@@ -96,6 +96,11 @@
       <span class="navbar-toggler-icon"></span>
     </button>
     <div class="collapse navbar-collapse" id="navbarSupportedContent">
+        <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+          <li class="nav-item">
+          <a class="nav-link active" aria-current="page" href="./uservip">Quản Lý người dùng VIP</a>
+        </li>
+      </ul>
    <!-- Trong phần body của trang web -->
 <form class="d-flex" id="searchForm" role="search">
   <input class="form-control me-2" type="search" id="searchInput" placeholder="Search" aria-label="Search">
@@ -124,7 +129,6 @@
     <button style="width: 100px; margin-left: 20px;" class="btn btn-primary" onclick="applyFilter()">Áp dụng</button>
 </div>
     </div>
-
 
  <!-- Bảng hiển thị danh sách bài hát -->
         <table class="table table-bordered mt-4">
@@ -318,21 +322,7 @@ const createdTimeCell = row.insertCell(4); // Tạo ô mới cho thời gian t�
     }
   });
   actionCell.appendChild(deleteButton);
-  // Thêm nút sửa
-  const editButton = document.createElement("button");
-  editButton.textContent = "Sửa";
-  editButton.classList.add("btn", "btn-edit");
-  editButton.addEventListener("click", () => {
-  
-    // Điền hộp thoại với thông tin người dùng để chỉnh sửa
-  document.getElementById("editSongKey").value = user.key;
-  document.getElementById("editTitle").value = user.email || "";
-  document.getElementById("editArtist").value = user.username || "";
-  // ... Điền các trường khác
-  // Hiển thị hộp thoại
-  $("#editModal").modal("show");
-  });
-  actionCell.appendChild(editButton);
+
 
   // Thêm nút khóa/mở khóa
 const lockUnlockButton = document.createElement("button");
@@ -364,7 +354,6 @@ actionCell.appendChild(lockUnlockButton);
 });
 updatePaginationButtons(users.length);
 }
-
   // Cập nhật nút phân trang
 function updatePaginationButtons(totalItems) {
   pagination.innerHTML = "";
