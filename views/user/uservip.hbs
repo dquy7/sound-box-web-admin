@@ -94,6 +94,15 @@
 margin: 20px;
   /* Thêm các thuộc tính CSS khác nếu cần */
 }
+
+
+#usersTable th,
+#usersTable td {
+  text-align: center;
+  border: 1px solid #ddd;
+  padding: 8px;
+  font-style: italic;
+}
 </style>
 <body>
      <nav style="background-color:aquamarine ; height: 83px;"  class="navbar navbar-expand-lg bg-body-tertiary">
@@ -142,7 +151,7 @@ margin: 20px;
 
  <!-- Bảng hiển thị danh sách bài hát -->
         <table class="table table-bordered mt-4">
-            <thead>
+            <thead  style="background-color: #1eabc4; color: white; text-align: center;">
                 <tr>
                     <th>id</th>
                     <th>Email</th>
@@ -170,7 +179,7 @@ margin: 20px;
                 <form id="editUserForm">
                     <!-- Thêm các trường để chỉnh sửa thông tin -->
                     <div class="mb-3">
-                        <label for="editIsVIP" class="form-label">Is VIP</label>
+                        <label for="editIsVIP" class="form-label">Hủy dịch vụ VIP của tài khoản này </label>
                         <input type="checkbox" id="editIsVIP" name="editIsVIP">
                     </div>
                     <!-- Các trường khác ... -->

@@ -157,6 +157,27 @@ button:hover {
 .totalAmountByAccount{
   font-weight: bold;
 }
+#usersTable th,
+#usersTable td {
+  text-align: center;
+  border: 1px solid #ddd;
+  padding: 8px;
+  font-style: italic;
+}
+.amountCell{
+  color: red;
+    font-weight: bold;
+}    
+.startTimeCell{
+  color: #007bff;
+}
+.endTimeCell{
+  color: #45a049
+}
+.idCell{
+  font-weight: bold
+}
+
 </style>
 </head>
 <body>
@@ -205,7 +226,7 @@ button:hover {
 </div>
 
         <table class="table table-bordered">
-            <thead>
+            <thead style="background-color: #3498db; text-align: center;">
                <!-- form -->
                 <tr>
                     <th>ID</th>
@@ -258,10 +279,12 @@ let filteredUsers = []; // Initialize filteredUsers
 
 // Function to parse date string to Date object
 function parseDate(dateString) {
+  if (typeof dateString !== 'string') {
+    return null; // Return null if not a string
+  }
   const parts = dateString.split('/');
   return new Date(parts[2], parts[1] - 1, parts[0]);
 }
-
 // Function to filter users by date
 function filterByDate() {
   const startDateInput = document.getElementById("startDate");
@@ -391,7 +414,7 @@ function displayVIPUsers(users) {
  totalAmountOnCurrentPage = 0;
   let stt = (currentPage - 1) * usersPerPage + 1;
 
-  users.forEach(user => {
+users.forEach(user => {
     const row = usersTable.insertRow();
     const idCell = row.insertCell(0);
     const emailCell = row.insertCell(1);
@@ -402,17 +425,27 @@ function displayVIPUsers(users) {
     const startTimeCell = row.insertCell(6);
     const endTimeCell = row.insertCell(7);
 
+    // Add classes to the cells
+    idCell.classList.add("idCell");
+    emailCell.classList.add("emailCell");
+    usernameCell.classList.add("usernameCell");
+    accountCell.classList.add("accountCell");
+    createdTimeCell.classList.add("createdTimeCell");
+    amountCell.classList.add("amountCell");
+    startTimeCell.classList.add("startTimeCell");
+    endTimeCell.classList.add("endTimeCell");
+
     idCell.textContent = stt++;
     emailCell.textContent = user.email || "";
     usernameCell.textContent = user.username || "";
 
     let subscriptionType = "";
     if (user.amount === 10000) {
-      subscriptionType = "VIP 1 Tháng";
+        subscriptionType = "VIP 1 Tháng";
     } else if (user.amount === 50000) {
-      subscriptionType = "VIP 6 Tháng";
+        subscriptionType = "VIP 6 Tháng";
     } else if (user.amount === 100000) {
-      subscriptionType = "VIP 1 Năm";
+        subscriptionType = "VIP 1 Năm";
     }
 
     accountCell.textContent = user.isVIP ? subscriptionType : "Nghe Nhạc";
@@ -423,13 +456,14 @@ function displayVIPUsers(users) {
     const year = createdTime.getFullYear();
     createdTimeCell.textContent = `${day}/${month}/${year}`;
 
-    if (user.isVIP) {
-      amountCell.textContent = user.amount || "";
-        totalAmountOnCurrentPage += user.amount || 0; 
-      startTimeCell.textContent = user.startTime || "";
-      endTimeCell.textContent = user.endTime || "";
-    }
-  });
+if (user.isVIP) {
+    amountCell.textContent = user.amount ? `${user.amount.toLocaleString()} VND` : "";
+    totalAmountOnCurrentPage += user.amount || 0;
+    startTimeCell.textContent = user.startTime || "";
+    endTimeCell.textContent = user.endTime || "";
+}
+
+});
   calculateTotalAmount(users);
 }
 
@@ -450,7 +484,6 @@ function getVIPUsers() {
     });
 }
 
-// Function to check login status before displaying data
 function checkLoginStatus() {
   const adminRef = firebase.database().ref('users').child("0Syobn6farX70IvRip7uOM1ttt03");
 
@@ -460,9 +493,9 @@ function checkLoginStatus() {
 
       if (adminData && adminData.loggedIn) {
         getVIPUsers().then(users => {
-          filteredUsers = users; // Initialize filteredUsers
+          filteredUsers = users; 
           updatePage();
-          calculateTotalAmount(filteredUsers); // Calculate total amount
+          calculateTotalAmount(filteredUsers); 
           calculateTotalAmountByAccountType(filteredUsers);
         });
       } else {
@@ -476,9 +509,8 @@ function checkLoginStatus() {
     });
 }
 
-// Function to export data to Excel
+
 function exportToExcel() {
-  // Get data from the table or your data array
   const data = filteredUsers.map(user => [
     user.email || "",
     user.username || "",
@@ -489,20 +521,17 @@ function exportToExcel() {
     user.endTime || "",
   ]);
 
-  // Create a new Workbook
+
   const wb = XLSX.utils.book_new();
 
-  // Create a new Worksheet from the data
   const ws = XLSX.utils.aoa_to_sheet([["Email", "Username", "Account", "Created Time", "Amount", "Start Time", "End Time"], ...data]);
 
-  // Add the Worksheet to the Workbook
   XLSX.utils.book_append_sheet(wb, ws, "DanhSachNguoiDung");
 
-  // Export the Excel file
   XLSX.writeFile(wb, "DanhSachNguoiDung.xlsx");
 }
 
-// Function to calculate and display the total amount
+
 function calculateTotalAmount(users) {
   const totalAmountOnCurrentPage = users.reduce((sum, user) => sum + (user.amount || 0), 0);
   const totalAmountElement = document.getElementById("totalAmount");
@@ -512,13 +541,12 @@ function calculateTotalAmount(users) {
 }
 
 
-// Function to format currency
+
 function formatCurrency(amount) {
   const formattedAmount = new Intl.NumberFormat('vi-VN', { style: 'currency', currency: 'VND' }).format(amount);
   return formattedAmount;
 }
 
-// Function to calculate and display the total amount by account type
 function calculateTotalAmountByAccountType(users) {
   const totalAmountByAccountType = {};
 
@@ -530,7 +558,7 @@ function calculateTotalAmountByAccountType(users) {
   displayTotalAmountByAccountType(totalAmountByAccountType);
 }
 
-// Function to get subscription type based on the amount
+
 function getSubscriptionType(amount) {
   switch (amount) {
     case 10000:
@@ -544,7 +572,6 @@ function getSubscriptionType(amount) {
   }
 }
 
-// Function to display total amount by account type
 function displayTotalAmountByAccountType(totalAmountByAccountType) {
   const totalAmountByAccountTypeElement = document.getElementById("totalAmountByAccountType");
   totalAmountByAccountTypeElement.innerHTML = "";
