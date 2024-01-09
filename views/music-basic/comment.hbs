@@ -678,7 +678,11 @@ function showReplies(commentId, songId, replyTable) {
     }
 }
 
-// Hàm xử lý xóa trả lời
+
+
+
+// traloi comment
+
 function deleteReplyHandler(replyId, songId, commentId) {
     // Thêm xác nhận trước khi xóa
     const confirmDelete = confirm("Bạn có chắc muốn xóa trả lời này không?");
@@ -687,30 +691,31 @@ function deleteReplyHandler(replyId, songId, commentId) {
         
     }
 }
-// Hàm xử lý xóa trả lời
+// xu li tra loi comment
+
+
 function loadwebHandler() {
     // Thêm xác nhận trước khi xóa
     const loadWeb = confirm("Bạn có muốn load lại trang");
-    if (loadWeb) {
+   
          window.location.reload();
-    }
+    
 }
 
-// Hàm để xóa trả lời
-function deleteReply(replyId, songId, commentId) {
-    const replyTable = document.getElementById(`replyTable_${commentId}`);
-    const replyRef = firebase.database().ref(`commentreply/${songId}/${replyId}`);
-    console.log(replyRef);
-    replyRef.remove().then(() => {
-        alert("Bình luận đã được xóa trong dữ liệu!");
-        //load lại trang web
-        loadwebHandler()
-      {/*  window.location.reload();*/}
-         
-    }).catch(error => {
-        console.error("Lỗi khi xóa trả lời:", error);
-    });
+//xoas trar loi
+
+
+function loadwebHandler() {
+    // Thêm xác nhận trước khi xóa
+    const loadWeb = confirm("Bạn có muốn load lại trang");
+   
+         window.location.reload();
+    
 }
+
+
+
+// bieeu do
 
 // Đoạn mã JavaScript để vẽ biểu đồ cột
 function drawBarChart(data) {
@@ -737,6 +742,9 @@ function drawBarChart(data) {
         }
     });
 }
+
+
+
 
 // Hàm xử lý sửa reply
 function editReplyHandler(replyId, songId, commentId) {
