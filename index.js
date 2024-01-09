@@ -23,6 +23,7 @@ const ManageMusic = require("./controllers/ManageBannerMusic");
 const StatisticalRevenue = require("./controllers/StatisticalRevenue");
 const TKRevenue = require("./controllers/TkRevenueController");
 const UserVIP = require("./controllers/UserVipController");
+const Video = require("./controllers/videoController");
 const { Link } = require("react-router-dom");
 
 app.engine(".hbs", engine({ extname: ".hbs" }));
@@ -43,7 +44,7 @@ app.use("/statisticalrevenue", StatisticalRevenue);
 app.use("/comment", comment);
 app.use("/signup", SingupController);
 app.use("/user", UserController);
-app.use("/user", UserController);
+app.use("/video", Video);
 app.use("/resetpassword", resetpassword);
 app.use("/userstatistics", UserStatisticsController);
 app.use("/revenue", RevenueController);

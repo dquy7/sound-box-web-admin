@@ -1,0 +1,1059 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Quản lý âm nhạc</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/css/bootstrap.min.css">
+    <style>
+    * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+    }
+    .Textcenter {
+        text-align: center;
+        font-weight: bold;
+    }
+
+    .btn-group {
+        margin-top: 9px;
+    }
+    .title-cell {
+    width: 200px;
+    font-weight: bold;
+    color: #333;
+}
+    
+.image-cell {
+  width: 160px;
+  text-align: center;
+   justify-content: space-around;
+  align-items: center;
+}
+
+.genre-cell {
+     width: 200px;
+  font-style: italic;
+}
+
+.action-cell {
+  display: flex;
+  justify-content: space-around;
+  align-items: center;
+}
+
+/* Style cho table */
+#songsTable {
+  width: 100%;
+  border-collapse: collapse;
+}
+
+#songsTable th,
+#songsTable td {
+height: 80px;
+  border: 1px solid #ddd;
+  padding: 8px;
+  text-align: center;
+  font-style: italic;
+}
+
+#songsTable th {
+  background-color: #f2f2f2;
+  color: #333;
+}
+.nav-menu{
+    display: inline-flex;
+   background-color: #f8f9fa;
+}
+
+/* Style for pagination */
+.pagination {
+    display: flex;
+    list-style: none;
+    padding: 0;
+    justify-content: center;
+    margin-top: 20px;
+}
+
+.pagination li {
+    margin-right: 5px;
+    cursor: pointer;
+    color: #fff;
+    border: 1px solid #007bff;
+    padding: 5px 10px;
+    border-radius: 3px;
+}
+.pagination a {
+    text-decoration: none;
+}
+
+.pagination li:hover {
+    background-color: #0056b3;
+    color: #fff;
+}
+
+.btn-primary{
+    background-color: orange;
+    border: 0px;
+    margin-left: 5px;
+}
+ .btn-primary:hover{
+    border: 0px;
+    margin-left: 5px;
+    background-color: tomato;
+ }
+.box-filter{
+    position: absolute;
+    top: 100px;
+    right: 20px;
+}
+    .nav-item:hover{
+        border-radius: 20px;
+        background-color: yellow;
+    }
+    .box-filter {
+    display: flex;
+    align-items: center;
+    margin-bottom: 20px;
+}
+
+label {
+    margin-right: 10px;
+}
+
+#filterCopyright {
+    border-radius: 50px;
+    width: 140px;
+    height: 40px;
+}
+
+.btn {
+    padding: 8px;
+    cursor: pointer;
+    background-color: #007bff;
+    color: #fff;
+    border: none;
+    border-radius: 4px;
+}
+
+.btn:hover {
+    background-color: #0056b3;
+}
+label {
+    margin-top: 10px;
+}
+
+#startDate,
+#endDate {
+    padding: 8px;
+    margin: 10px;
+    margin-top: 20px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+}
+
+button {
+    margin-top: 20px;
+    height: 40px;
+    margin-left: 10px;
+    padding: 10px;
+    background-color: #4CAF50;
+    color: white;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+}
+
+button:hover {
+    background-color: #45a049;
+}
+#progress-container {
+    width: 100%;
+    height: 20px;
+    border: 1px solid #ccc;
+    position: relative;
+    margin-top: 10px;
+    display: flex;
+    border-radius: 20px;
+    font-size: 12px;
+}
+
+#progress-bar {
+    height: 100%;
+    width: 0;
+    background-color: #4CAF50;
+}
+#progress-container {
+    display: none;
+}
+
+#progress-bar {
+    position: relative;
+    height: 20px; /* Điều chỉnh chiều cao của thanh tiến trình */
+    background-color: #4CAF50;
+    border-radius: 20px;
+}
+
+#progress-text {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    color: #000;
+    font-weight: bold;
+}
+.box-main{
+    background-color: #EEEEEE;
+    margin: 50px;
+    padding: 20px;
+    border-radius: 30px;
+}
+.btn-primary1{
+    background-color: black;
+    color: white;
+    font-size: 15px;
+    font-weight: bold;
+    text-align: center;
+    border-radius: 50px;
+    margin-bottom: 20px;
+}
+.box-filterByDate{
+    display: inline;
+    padding: 30px;
+    margin: 30px;
+    margin-top: 30px;
+ 
+}
+.btn-filter{
+    
+    border-radius: 50px;
+    background-color: #000;
+}
+</style>
+   
+    <link rel="stylesheet" href="https://pro.fontawesome.com/releases/v5.10.0/css/all.css">
+   
+</head>
+
+<body style="background-color: white;">
+    <nav  style="background-color:#EEEEEE ; height: 83px;" class="navbar navbar-expand-lg bg-body-tertiary">
+  <div class="container-fluid">
+    <a style="font-weight: bold; font-size: 30px; " class="navbar-brand" href="./video">Quản Lý Video</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+
+            <form style="margin-left: 700px;" class="d-flex" role="search">
+             <input style="height: 40px; margin-top: 10px;" class="form-control me-2" type="search" id="searchInput" placeholder="Tìm kiếm MV" aria-label="Search">
+              <button style="margin-top: 10px; background-color: tomato !important;" id="searchButton" class="btn btn-outline-success" type="button">Search</button>
+            </form>
+    </div>
+  </div>
+</nav>
+
+    <!-- Modal -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h1 class="modal-title fs-5" id="exampleModalLabel">Thêm MV Mới</h1>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                        <div class="form-group">
+                            <label for="exampletitle">Tên MV</label>
+                            <input type="text" class="form-control" id="exampletitle" placeholder="Tên bài hát">
+                        </div>
+                        <div class="form-group">
+                            <label for "exampleartist">Ca Sĩ</label>
+                            <input type="text" class="form-control" id="exampleartist" placeholder="Tên ca sĩ">
+                        </div>
+
+                      <div class="form-group">
+                        <label for="editCopyrighted">Bản Quyền:</label>
+                        <input style="margin-top: 15px;" type="radio" class="form-check-input" id="editYesCopyrighted" name="copyrightRadio" required>
+                        <label class="form-check-label" for="editYesCopyrighted">Có Bản Quyền</label>
+
+                        <input style="margin-top: 15px;" type="radio" class="form-check-input" id="editNoCopyrighted" name="copyrightRadio" required>
+                        <label class="form-check-label" for="editNoCopyrighted">Không Bản Quyền</label>
+                    </div>
+
+                    <div class="form-group2">
+                        <label for="editOutstanding">Nổi Bật:</label>
+                        <input style="margin-top: 15px;" type="radio" class="form-check-input" id="editYesOutstanding" name="outstandingRadio" required>
+                        <label class="form-check-label" for="editYesOutstanding">Có</label>
+
+                        <input style="margin-top: 15px;" type="radio" class="form-check-input" id="editNoOutstanding" name="outstandingRadio" required>
+                        <label class="form-check-label" for="editNoOutstanding">Không</label>
+                    </div>
+                        <div class="mb-3">
+                            <label for="exampgenre">Thể Loại</label>
+                            <select class="form-select" id="exampgenre" required aria-label="select example">
+                                <option value="">Thể Loại</option>
+                                <option value="Pop">Pop</option>
+                                <option value="Hip-hop/Rap">Hip-hop/Rap</option>
+                                <option value="Jazz">Jazz</option>
+                                <option value="Classical">Classical</option>
+                                <option value="Reggae">Reggae</option>
+                                <option value="Blues">Blues</option>
+                                <option value="Nhạc Trẻ">Nhạc Trẻ</option>
+                                <option value="Trữ Tình">Trữ Tình</option>
+                                <option value="Nhạc Khác">Nhạc Khác</option>
+                            </select>
+                        </div>
+                          <div class="mb-3">
+                            <label for="exampnation">Quốc Gia</label>
+                            <select class="form-select" id="exampnation" required aria-label="select example">
+                                <option value="">Quốc Gia</option>
+                                <option value="Vietnam">Việt Nam</option>
+                                <option value="China">Trung Quốc</option>
+                                <option value="Korea">Hàn Quốc</option>
+                                <option value="Usuk">Nhạc Âu Mỹ</option>
+
+                            </select>
+                        </div>
+                        <div class="form-group">
+                            <label for="exampledescription">Mô tả:</label>
+                            <textarea class="form-control" id="exampledescription" rows="3"></textarea>
+                        </div>
+                      <div class="form-group">
+                        <label for="examplefile">Tải Lên Video</label>
+                        <input type="file" id="fileInput" accept=".mp4">
+                      </div>
+                         <div class="form-group">
+                        <label for="exampleimg">Hình Ảnh</label>
+                        <input type="file" class="form-control" id="exampleimg" accept="image/*">
+                        <img id="previewImage" style="display: none; max-width: 100%; max-height: 200px; margin-top: 10px;">
+                    </div>
+                      <div id="progress-container">
+                            <div id="progress-bar"></div>
+                             <div id="progress-text">0%</div>
+                        </div>
+                    </form>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Thoát</button>
+                    <button type="button" class="btn btn-primary" id="save">Lưu</button>
+                </div>
+            </div>
+        </div>
+    </div>
+    <!-- Modal sửa MV -->
+    <div class="modal fade" id="editModal" tabindex="-1" aria-labelledby="editModalLabel" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editModalLabel">Sửa MV</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <form>
+                          <input type="hidden" id="editVideoKey">
+                        <div class="form-group">
+                            <label for="editTitle">Tên MV</label>
+                            <input type="text" class="form-control" id="editTitle">
+                        </div>
+                        <div class="form-group">
+                            <label for="editArtist">Ca Sĩ</label>
+                            <input type="text" class="form-control" id="editArtist">
+                        </div>
+                   <div class="form-group">
+                            <label for="editCopyrighted">Bản Quyền:</label>
+                        
+                            <input style="margin-top: 15px;" type="radio" class="form-check-input" id="editYesCopyrighted" name="editRadio" required>
+                                <label class="form-check-label" for="editYesCopyrighted">Có Bản Quyền</label>
+
+                                <input style="margin-top: 15px;" type="radio" class="form-check-input" id="editNoCopyrighted" name="editRadio" required>
+                                <label class="form-check-label" for="editNoCopyrighted">Không Bản Quyền</label>
+                    
+                        </div>
+
+            <div class="form-group2">
+                <label for="editOutstanding">Nổi Bật:</label>
+                <div class="form-check">
+                    <input style="margin-top: 15px;" type="radio" class="form-check-input" id="editYesOutstanding" name="outstandingRadio" required>
+                    <label class="form-check-label" for="editYesOutstanding">Có</label>
+                </div>
+                <div class="form-check">
+                    <input style="margin-top: 15px;" type="radio" class="form-check-input" id="editNoOutstanding" name="outstandingRadio" required>
+                    <label class="form-check-label" for="editNoOutstanding">Không</label>
+                </div>
+            </div>
+                        <div class="mb-3">
+                            <label for="editGenre">Thể Loại</label>
+                            <select class="form-select" id="editGenre" required aria-label="select example">
+                                <option value="">Thể Loại</option>
+                                <option value="Pop">Pop</option>
+                                <option value="Hip-hop/Rap">Hip-hop/Rap</option>
+                                <option value="Jazz">Jazz</option>
+                                <option value="Classical">Classical</option>
+                                <option value="Reggae">Reggae</option>
+                                <option value="Blues">Blues</option>
+                                <option value="Nhạc Trẻ">Nhạc Trẻ</option>
+                                <option value="Trữ Tình">Trữ Tình</option>
+                                <option value="Nhạc Khác">Nhạc Khác</option>
+                            </select>
+                        </div>
+                    <div class="form-group">
+                    <label for="editDescription">Mô tả:</label>
+                    <textarea class="form-control" id="editDescription" rows="3"></textarea>
+                  </div>
+                  <div class="form-group">
+                    <label for="editVideoFile">Tải Lên Video</label>
+                   <input type="file" id="editVideoFile">
+                 <div id="editUrlDisplay"></div>
+                  </div>
+
+                    <label for="editImage">Hình ảnh:</label>
+                  <input type="file" id="editImage">
+                    <img id="editImagePreview" alt="Song Image" style="max-width: 200px; max-height: 200px; padding: 10px;">
+                      
+                        <div id="progress-container">
+                            <div id="progress-bar"></div>
+                             <div id="progress-text">0%</div>
+                        </div>
+                    </form>
+
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+                    <button type="button" class="btn btn-primary" id="saveEdit">Lưu Sửa</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+<div class="box-main">
+<button type="button" class="btn btn-primary1" data-bs-toggle="modal" data-bs-target="#exampleModal">
+    <img src="https://img.favpng.com/6/9/22/add-icon-plus-icon-png-favpng-xfmi49ZLsjALAzkn9WMDr0yaQ.jpg" alt="Logo" style="width: 20px; height: 20px; margin-right: 5px; border-radius: 60px;">
+    Add Video
+</button>
+
+
+<label style="font-weight: bold; margin-left: 50px;" for="startDate">Đầu:</label>
+<input type="date" id="startDate">
+<label style="font-weight: bold;" for="endDate">Cuối:</label>
+<input type="date" id="endDate">
+
+<button class="btn-filter" onclick="filterByDate()">
+    <i class="material-symbols-outlined">filter_alt</i>
+</button>
+<label style="font-weight: bold; margin-left: 50px;" for="filter">Lọc:</label>
+<select id="filter">
+    <option value="all">Tất cả</option>
+    <option value="copyrighted">Bản quyền</option>
+    <option value="non-copyrighted">Không bản quyền</option>
+    <option value="Vietnam">Việt Nam</option>
+    <option value="China">Trung Quốc</option>
+    <option value="Korea">Hàn Quốc</option>
+    <option value="Usuk">Us uk</option>
+    <option value="low">Dưới 100 lượt xem</option>
+    <option value="medium">Từ 100 đến 1000 lượt xem</option>
+    <option value="high">Trên 1000 lượt xem</option>
+</select>
+
+<button style="margin-bottom: 30px;" class="btn btn-primary1" onclick="applyFilter()">Áp dụng</button>
+
+
+      <!-- Bảng hiển thị danh sách bài hát -->
+        <table class="table table-bordered mt-4">
+            <thead style="color: black; text-align: center;">
+                <tr>
+                     <th>STT</th>
+                    <th>Tiêu đề</th>
+                    <th>Ca sĩ</th>
+                    <th>Hình ảnh</th>
+                    <th>Thời Gian</th>
+                     <th>View</th>
+                    <th>Thể loại</th>
+                    <th>Chức năng</th>
+                </tr>
+            </thead>
+            <tbody id="tableBody"></tbody>
+        </table>
+        
+    <ul class="pagination" id="pagination"></ul>
+
+</div>
+
+
+    <script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.3/dist/js/bootstrap.min.js"></script>
+    <!-- Firebase JavaScript SDK -->
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-app.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-database.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/8.8.0/firebase-storage.js"></script>
+<script>
+  // Khởi tạo Firebase
+  const firebaseConfig = {
+    apiKey: "AIzaSyCZgZP878mOAM2ec-hz1WFwORxSw_J6d2k",
+    authDomain: "soundbox-du-an-md31.firebaseapp.com",
+    databaseURL: "https://soundbox-du-an-md31-default-rtdb.firebaseio.com",
+    projectId: "soundbox-du-an-md31",
+    storageBucket: "soundbox-du-an-md31.appspot.com",
+    messagingSenderId: "265264289877",
+    appId: "1:265264289877:web:0f88e2fa54c638685e9cdc",
+    measurementId: "G-FE9Z9NKJDR"
+  };
+  firebase.initializeApp(firebaseConfig);
+
+  const storage = firebase.storage();
+  const database = firebase.database();
+  const videosRef = database.ref("videos");
+
+  const saveButton = document.getElementById("save");
+  const pagination = document.getElementById("pagination");
+  const itemsPerPage = 5; // Điều chỉnh nếu cần
+  let currentPage = 1;
+
+saveButton.addEventListener("click", function () {
+    const title = document.getElementById("exampletitle").value;
+    const artist = document.getElementById("exampleartist").value;
+    const genre = document.getElementById("exampgenre").value;
+    const nation = document.getElementById("exampnation").value;
+    const outstanding = document.querySelector('input[name="outstandingRadio"]:checked').id === "editYesOutstanding";
+    const copyrighted = document.querySelector('input[name="copyrightRadio"]:checked').id === "editYesCopyrighted";
+    const audioFile = document.getElementById("fileInput").files[0];
+    const imageInput = document.getElementById("exampleimg");
+    const description = document.getElementById("exampledescription").value;
+    const imageFile = imageInput.files[0];
+
+    if (!title || !artist || !genre || !nation || !audioFile || !imageFile) {
+        console.error("Vui lòng điền đầy đủ thông tin.");
+        alert("Vui lòng điền đầy đủ thông tin.");
+        return;
+    }
+
+    const randomKey = Math.floor(Math.random() * (999999 - 100000 + 1) + 100000);
+    const storageRef = storage.ref();
+    const audioStorageRef = storageRef.child('video/' + randomKey + '.mp4');
+
+    const progressContainer = document.getElementById("progress-container");
+    progressContainer.style.display = "block";
+    const progressBar = document.getElementById("progress-bar");
+    const progressText = document.getElementById("progress-text");
+
+    const uploadTask = audioStorageRef.put(audioFile);
+    uploadTask.on(
+        "state_changed",
+        function (snapshot) {
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            progressBar.style.width = progress + "%";
+            progressText.innerText = Math.round(progress) + "%";
+        },
+        function (error) {
+            console.error("Lỗi khi tải lên tệp âm thanh: " + error.message);
+            alert("Đã xảy ra lỗi khi tải lên tệp âm thanh. Vui lòng thử lại sau.");
+            progressContainer.style.display = "none";
+        },
+        function () {
+            audioStorageRef.getDownloadURL().then(function (audioUrl) {
+                const imageReader = new FileReader();
+                imageReader.onload = function () {
+                    const img = imageReader.result;
+                    const newVideo = {
+                        id: randomKey,
+                        title: title,
+                        singer: artist,
+                        genre: genre,
+                        nation: nation,
+                        outstanding: outstanding,
+                        copyrighted: copyrighted,
+                        description: description,
+                        videoUrl: audioUrl,
+                        img: img,
+                        view: 0,
+                        timestamp: new Date().toISOString(),
+                    };
+
+                    videosRef.child(newVideo.id).set(newVideo)
+                        .then(function () {
+                            console.log("Thông tin video đã được lưu vào Firebase Realtime Database.");
+                            resetForm();
+                            $("#exampleModal").modal("hide");
+                            progressContainer.style.display = "none";
+                            displayData();
+                        })
+                        .catch(function (error) {
+                            console.error("Lỗi khi lưu video vào Firebase Realtime Database: " + error.message);
+                            resetForm();
+                            $("#exampleModal").modal("hide");
+                            progressContainer.style.display = "none";
+                        });
+                };
+
+                imageReader.readAsDataURL(imageFile);
+            });
+        }
+    );
+});
+  function resetForm() {
+    document.getElementById("exampletitle").value = "";
+    document.getElementById("exampleartist").value = "";
+    document.getElementById("exampgenre").value = "";
+    document.getElementById("exampnation").value = "";
+    document.getElementById("exampleimg").value = "";
+    document.getElementById("previewImage").src = "";
+      document.getElementById("exampledescription").value = "";
+  }
+
+function applyFilter() {
+    // Lấy giá trị được chọn từ dropdown
+    const filterValue = document.getElementById("filter").value;
+
+    // Gọi hàm để lọc dữ liệu và hiển thị kết quả
+    filterData(filterValue);
+}
+
+function filterData(filterValue) {
+    // Lấy tất cả video từ Firebase Realtime Database
+    getAllVideos().then((videos) => {
+        // Kiểm tra giá trị được chọn và lọc dữ liệu tương ứng
+        let filteredVideos = videos;
+
+        if (filterValue !== "all") {
+            if (filterValue === "low") {
+                // Lọc lượt xem dưới 100
+                filteredVideos = filteredVideos.filter((video) => video.view < 100);
+            } else if (filterValue === "medium") {
+                // Lọc lượt xem từ 100 đến 1000
+                filteredVideos = filteredVideos.filter((video) => video.view >= 100 && video.view <= 1000);
+            } else if (filterValue === "high") {
+                // Lọc lượt xem trên 1000
+                filteredVideos = filteredVideos.filter((video) => video.view > 1000);
+            } else {
+                // Lọc theo trạng thái bản quyền hoặc quốc gia
+                filteredVideos = filteredVideos.filter((video) => video.copyrighted === (filterValue === "copyrighted") ||
+                                                                   video.nation === filterValue);
+            }
+        }
+
+        // Hiển thị dữ liệu lọc
+        updateVideosTable(filteredVideos);
+    });
+}
+function filterByDate() {
+    // Lấy giá trị ngày bắt đầu và ngày kết thúc từ input
+    const startDate = document.getElementById("startDate").value;
+    const endDate = document.getElementById("endDate").value;
+
+    // Gọi hàm để lọc dữ liệu và hiển thị kết quả
+    filterDataByDate(startDate, endDate);
+}
+
+function filterDataByDate(startDate, endDate) {
+    // Lấy tất cả video từ Firebase Realtime Database
+    getAllVideos().then((videos) => {
+        // Lọc dữ liệu dựa trên ngày bắt đầu và kết thúc
+        const filteredVideos = videos.filter((video) => {
+            const videoTimestamp = new Date(video.timestamp);
+            return videoTimestamp >= new Date(startDate) && videoTimestamp <= new Date(endDate);
+        });
+
+        // Hiển thị dữ liệu lọc
+        updateVideosTable(filteredVideos);
+    });
+}
+
+const searchButton = document.getElementById("searchButton");
+searchButton.addEventListener("click", searchVideos);
+function searchVideos() {
+    // Lấy giá trị từ ô nhập liệu tìm kiếm
+    const searchTerm = document.getElementById("searchInput").value.toLowerCase();
+
+    // Lấy tất cả video từ Firebase Realtime Database
+    getAllVideos().then((videos) => {
+        // Lọc video dựa trên từ khóa tìm kiếm
+        const filteredVideos = videos.filter((video) => {
+            const title = video.title.toLowerCase();
+            const artist = video.singer.toLowerCase();
+            const genre = video.genre.toLowerCase();
+
+            // Kiểm tra xem từ khóa tìm kiếm có xuất hiện trong tiêu đề, nghệ sĩ hoặc thể loại không
+            return title.includes(searchTerm) || artist.includes(searchTerm) || genre.includes(searchTerm);
+        });
+
+        // Hiển thị kết quả tìm kiếm
+        updateVideosTable(filteredVideos);
+    });
+}
+
+
+  function updatePaginationButtons(totalItems) {
+    const pagination = document.getElementById("pagination");
+    pagination.innerHTML = "";
+
+    const totalPages = Math.ceil(totalItems / itemsPerPage);
+
+    if (totalPages === 0) {
+      console.log("Không có trang nào để hiển thị.");
+      return;
+    }
+
+    const previousButton = createPaginationButton('«', () => {
+      if (currentPage > 1) {
+        currentPage--;
+        handlePaginationClick(currentPage);
+      }
+    });
+    pagination.appendChild(previousButton);
+
+    for (let i = 1; i <= totalPages; i++) {
+      const pageItem = createPaginationButton(i, () => {
+        currentPage = i;
+        handlePaginationClick(currentPage);
+      }, i === currentPage);
+
+      pagination.appendChild(pageItem);
+    }
+
+    const nextButton = createPaginationButton('»', () => {
+      if (currentPage < totalPages) {
+        currentPage++;
+        handlePaginationClick(currentPage);
+      }
+    });
+    pagination.appendChild(nextButton);
+  }
+
+  function createPaginationButton(label, onClick, isCurrent) {
+    const pageItem = document.createElement("li");
+    const pageLink = document.createElement("a");
+    pageLink.href = "#";
+    pageLink.innerText = label;
+    pageLink.addEventListener("click", function (event) {
+      event.preventDefault();
+      onClick();
+    });
+
+    if (isCurrent) {
+      pageItem.classList.add("active");
+    }
+
+    pageItem.appendChild(pageLink);
+    return pageItem;
+  }
+
+  function handlePaginationClick(page) {
+    currentPage = page;
+    getAllVideos().then((videos) => getPaginatedVideos((page - 1) * itemsPerPage, videos));
+  }
+
+  function getPaginatedVideos(startIndex, allVideos) {
+    const endIndex = startIndex + itemsPerPage;
+    const paginatedVideos = allVideos.slice(startIndex, endIndex);
+
+    updateVideosTable(paginatedVideos);
+    updatePaginationButtons(allVideos.length);
+  }
+
+  function displayData() {
+    getAllVideos().then((videos) => getPaginatedVideos(0, videos));
+  }
+
+  function getAllVideos() {
+    return new Promise((resolve, reject) => {
+      videosRef.once("value", (snapshot) => {
+        const videos = [];
+        snapshot.forEach((childSnapshot) => {
+          const video = childSnapshot.val();
+          videos.push(video);
+        });
+        resolve(videos);
+      });
+    });
+  }
+
+ function formatFirebaseTimestamp(firebaseTimestamp) {
+    const date = new Date(firebaseTimestamp);
+    const options = { year: 'numeric', month: 'numeric', day: 'numeric' };
+    return date.toLocaleDateString(undefined, options);
+}
+
+function updateVideosTable(videos) {
+    if (!Array.isArray(videos)) {
+        console.error("Mảng video không hợp lệ.");
+        return;
+    }
+
+    const tableBody = document.getElementById("tableBody");
+
+    if (!tableBody) {
+        console.error("Không tìm thấy bảng.");
+        return;
+    }
+
+    tableBody.innerHTML = "";
+
+    videos.forEach((video, index) => {
+        const row = tableBody.insertRow();
+
+        const sttCell = row.insertCell(0);
+        const titleCell = row.insertCell(1);
+        const artistCell = row.insertCell(2);
+        const imageCell = row.insertCell(3);
+        const authorCell = row.insertCell(4);
+        const viewCell = row.insertCell(5);
+        const genreCell = row.insertCell(6);
+        const buttonCell = row.insertCell(7);
+        // Thêm kiểm tra giá trị trước khi hiển thị
+        sttCell.textContent = index + 1;
+        titleCell.textContent = video.title || "";
+        artistCell.textContent = video.singer || "";
+        imageCell.innerHTML = `<img src="${video.img}" alt="Hình ảnh bài hát" style="max-width: 100px; max-height: 100px;">`;
+        authorCell.textContent = formatFirebaseTimestamp(video.timestamp) || "";
+        viewCell.textContent = video.view || "";
+        genreCell.textContent = video.genre || "";
+           // Thêm nút sửa và xóa
+        const editButton = document.createElement("button");
+        editButton.textContent = "Sửa";
+        editButton.addEventListener("click", () => {
+               $("#editModal").modal("show");
+        document.getElementById("editVideoKey").value = video.id;
+        document.getElementById("editTitle").value = video.title || "";
+        document.getElementById("editArtist").value = video.singer || "";
+        document.getElementById("editGenre").value = video.genre || "";
+        document.getElementById("editDescription").value = video.description || "";
+      const editUrlDisplay = document.getElementById("editUrlDisplay");
+        editUrlDisplay.textContent = video.videoUrl || "";
+
+        // Cập nhật giá trị của radio buttons
+        document.getElementById("editYesCopyrighted").checked = video.copyrighted === true;
+        document.getElementById("editNoCopyrighted").checked = video.copyrighted === false;
+        document.getElementById("editYesOutstanding").checked = video.outstanding === true;
+        document.getElementById("editNoOutstanding").checked = video.outstanding === false;
+
+        // Thêm đường dẫn hình ảnh vào thẻ <img>
+        const editImagePreview = document.getElementById("editImagePreview");
+        editImagePreview.src = video.img || ""; // Cập nhật src của thẻ <img>
+            console.log("Image Source:", editImagePreview.src);
+
+            // Kiểm tra xem có hình ảnh trong song hay không
+        if (video.img) {
+            editImagePreview.src = video.img; // Nếu có, hiển thị hình ảnh
+        } else {
+            editImagePreview.src = ""; // Nếu không, đặt src thành rỗng
+        }   
+
+        // Lắng nghe sự kiện khi người dùng chọn ảnh mới
+            const editImageInput = document.getElementById("editImage");
+            editImageInput.addEventListener("change", function () {
+                if (!this.files || !this.files[0]) {
+                    alert("Vui lòng chọn một hình ảnh.");
+                    return;
+                }
+                const imageFile = this.files[0];
+                const reader = new FileReader();
+
+                // Xử lý sự kiện khi đọc file thành công
+                reader.onload = function (e) {
+                    // Hiển thị hình ảnh mới
+                    editImagePreview.src = e.target.result;
+                };
+
+                // Đọc nội dung của file hình ảnh
+                reader.readAsDataURL(imageFile);
+            });
+        });
+        
+        buttonCell.appendChild(editButton);
+        const deleteButton = document.createElement("button");
+        deleteButton.textContent = "Xóa";
+        deleteButton.addEventListener("click", () => {
+           // Gọi hàm xác nhận xóa với key của bài hát
+                deleteSong(video.id);
+                console.log(video.id);
+        });
+
+        buttonCell.appendChild(deleteButton);
+    });
+}
+
+// Hàm điền dữ liệu vào form sửa
+// Hàm điền dữ liệu vào form sửa
+function populateEditForm(video) {
+   
+}
+
+
+
+const saveEditButton = document.getElementById("saveEdit");
+const editImageInput = document.getElementById("editImage");
+const editImagePreview = document.getElementById("editImagePreview");
+
+// Gọi hàm khi nút Save được nhấn trong modal sửa
+saveEditButton.addEventListener("click", function () {
+    const editedVideoKey = document.getElementById("editVideoKey").value;
+    const editedTitle = document.getElementById("editTitle").value;
+    const editedArtist = document.getElementById("editArtist").value;
+    const editedGenre = document.getElementById("editGenre").value;
+    const editedImagePreview = document.getElementById("editImagePreview");
+    const isEditedCopyrighted = document.getElementById("editYesCopyrighted").checked;
+    const isEditedOutstanding = document.getElementById("editYesOutstanding").checked;
+    const videoFile = document.getElementById("editVideoFile").files[0];
+    const imageFile = document.getElementById("editImage").files[0];
+    const editedDescription = document.getElementById("editDescription").value;
+    // Kiểm tra các trường nhập liệu
+    if (!editedTitle || !editedArtist || !editedGenre) {
+        console.error("Vui lòng điền đầy đủ thông tin cho video.");
+        alert("Vui lòng điền đầy đủ thông tin cho video.");
+        return;
+    }
+
+    // Hiển thị thanh tiến trình
+    const progressBar = document.getElementById("progress-bar");
+    const progressText = document.getElementById("progress-text");
+    const progressContainer = document.getElementById("progress-container");
+    progressContainer.style.display = "block";
+
+    // Tạo tham chiếu đến Firebase Storage
+    const storageRef = firebase.storage().ref();
+    const videoStorageRef = storageRef.child('video/' + editedVideoKey + '.mp4');
+
+    // Thực hiện upload file video lên Firebase Storage
+    const uploadTask = videoStorageRef.put(videoFile);
+
+    // Lắng nghe sự kiện khi upload thành công
+    uploadTask.on(
+        "state_changed",
+        function (snapshot) {
+            // Cập nhật thanh tiến trình và số phần trăm
+            const progress = (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+            progressBar.style.width = progress + "%";
+            progressText.innerText = Math.round(progress) + "%";
+        },
+        function (error) {
+            console.error("Lỗi khi tải lên file video: " + error.message);
+            alert("Đã xảy ra lỗi khi tải lên file video. Vui lòng thử lại sau.");
+            // Ẩn thanh tiến trình khi có lỗi
+            progressContainer.style.display = "none";
+        },
+        function () {
+            // Lấy URL của file video từ Firebase Storage
+            videoStorageRef.getDownloadURL().then(function (videoUrl) {
+                // Lấy đường dẫn hình ảnh từ preview hoặc chọn mới từ input
+                const imageUrl = editedImagePreview.src || "";
+                const imageReader = new FileReader();
+
+                // Nếu người dùng chọn ảnh mới
+                if (imageFile) {
+                    // Đọc nội dung của file hình ảnh
+                    imageReader.onload = function (imageEvent) {
+                        // Cập nhật đường dẫn hình ảnh trong preview
+                        editedImagePreview.src = imageEvent.target.result;
+                        // Gọi hàm updateVideo để cập nhật thông tin video
+                        updateVideo(editedVideoKey, editedTitle, editedArtist, editedGenre, videoUrl, imageEvent.target.result, isEditedCopyrighted, isEditedOutstanding, editedDescription, progressContainer);
+                    };
+                    // Đọc nội dung của file hình ảnh
+                    imageReader.readAsDataURL(imageFile);
+                } else {
+                    // Gọi hàm updateVideo để cập nhật thông tin video mà không có hình ảnh mới
+                      updateVideo(editedVideoKey, editedTitle, editedArtist, editedGenre, videoUrl, imageUrl, isEditedCopyrighted, isEditedOutstanding, editedDescription, progressContainer);
+                }
+            });
+        }
+    );
+});
+
+// Hàm cập nhật thông tin video trong Firebase Realtime Database
+function updateVideo(key, title, singer, genre, url, image, copyrighted, outstanding, description, progressContainer) {
+    const editedVideoRef = videosRef.child(key);
+
+    // Kiểm tra xem người dùng đã chọn file video mới hay không
+    if (url === undefined) {
+        // Nếu không có video mới, giữ nguyên URL cũ
+        editedVideoRef.once("value").then(function (snapshot) {
+            const oldUrl = snapshot.val().videoUrl;
+            url = oldUrl;
+        });
+    }
+
+    // Kiểm tra xem người dùng đã chọn ảnh mới hay không
+    if (image === undefined) {
+        // Nếu không có ảnh mới, giữ nguyên URL cũ
+        editedVideoRef.once("value").then(function (snapshot) {
+            const oldImage = snapshot.val().img;
+            image = oldImage;
+        });
+    }
+
+    // Cập nhật thông tin video trong Firebase Realtime Database
+    editedVideoRef.update({
+        title: title,
+        singer: singer,
+        genre: genre,
+        videoUrl: url,
+        img: image,
+        copyrighted: copyrighted,
+        outstanding: outstanding,
+         description: description,
+        // Các trường khác mà bạn muốn cập nhật
+    }).then(function () {
+        console.log("Video đã được cập nhật thành công.");
+        // Đặt lại giá trị của các ô input về trống (nếu bạn muốn)
+        // ...
+        // Ẩn thanh tiến trình khi tải lên hoàn thành
+        progressContainer.style.display = "none";
+        // Đóng modal (nếu bạn đang sử dụng modal)
+        $("#editModal").modal("hide");
+        // Hiển thị lại dữ liệu sau khi cập nhật
+        displayData();
+    }).catch(function (error) {
+        console.error("Lỗi khi cập nhật thông tin video: " + error.message);
+        // Đặt lại giá trị của các ô input về trống (nếu bạn muốn)
+        // ...
+        // Ẩn thanh tiến trình khi có lỗi
+        progressContainer.style.display = "none";
+    });
+}
+
+function deleteSong(songId) {
+    // Hiển thị xác nhận xóa
+    const isConfirmed = confirm("Bạn có chắc chắn muốn xóa bài hát này?");
+
+    if (!isConfirmed) {
+        return; // Không xóa nếu không được xác nhận
+    }
+
+    const videoRef = videosRef.child(songId);
+
+    // Lấy URL của bài hát từ Firebase Realtime Database
+    videoRef.child('videoUrl').once('value').then(function(snapshot) {
+        const audioUrl = snapshot.val();
+
+        // Nếu có URL, thì xóa nó từ Firebase Storage
+        if (audioUrl) {
+            // Tạo tham chiếu đến Firebase Storage
+            const storageRef = firebase.storage().ref();
+            const videoStorageRef = storageRef.child('video/' + songId + '.mp4');
+
+            // Thực hiện xóa URL từ Storage
+            videoStorageRef.delete().then(function() {
+                console.log('URL của video đã được xóa từ Storage thành công.');
+            }).catch(function(error) {
+                console.error('Lỗi khi xóa URL từ Storage: ' + error.message);
+            });
+        }
+
+        // Tiếp theo, xóa bài hát từ Firebase Realtime Database
+        videoRef.remove().then(function () {
+            console.log("video đã được xóa thành công.");
+            // Gọi hàm để cập nhật bảng sau khi xóa
+            displayData();
+        }).catch(function (error) {
+            console.error("Lỗi khi xóa bài hát: " + error.message);
+        });
+    });
+}
+  // Cập nhật hiển thị ban đầu sử dụng phân trang
+  displayData();
+</script>
+
+
+</body>
+
+</html>
